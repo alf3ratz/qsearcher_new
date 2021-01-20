@@ -1,23 +1,26 @@
 package course.ru.qsearcher.activities
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.NonNull
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import course.ru.qsearcher.EventsAdapter
 import course.ru.qsearcher.R
+import course.ru.qsearcher.adapters.EventsAdapter
 import course.ru.qsearcher.databinding.ActivityMainBinding
+import course.ru.qsearcher.listeners.EventListener
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
 
-class MainActivity : AppCompatActivity() {
+
+class MainActivity : AppCompatActivity(),EventListener {
     private lateinit var viewModel: MostPopularEventsViewModel
     private lateinit var activityMainBinding: ActivityMainBinding
 
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var eventsAdapter: EventsAdapter
     private var currentPage: Int = 1;
     private var totalAvailablePages: Int = 1
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.java)
         var activity: MostPopularEventsViewModel
 
-        eventsAdapter = EventsAdapter(events)
+        eventsAdapter = EventsAdapter(events, this)
         activityMainBinding.apply {
             activityMainBinding.eventsRecyclerView.adapter = eventsAdapter
             invalidateAll()
@@ -80,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                     Log.i("response", "список событий  налл")
                 }
             }
-            Toast.makeText(applicationContext, "page = ${t?.totalPages}", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(applicationContext, "page = ${t?.totalPages}", Toast.LENGTH_SHORT).show()
         })
 //        viewModel.getMostPopularEvents(0).observe(this, Observer { eventsResponse: EventResponse ->
 //            Toast.makeText(
@@ -93,6 +97,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun toggleLoading() {
+
         if (currentPage == 1) {
             activityMainBinding.isLoading =
                 !(activityMainBinding.isLoading != null && activityMainBinding.isLoading!!)
@@ -100,6 +105,34 @@ class MainActivity : AppCompatActivity() {
             activityMainBinding.isLoadingMore =
                 !(activityMainBinding.isLoadingMore != null && activityMainBinding.isLoadingMore!!)
         }
+    }
+
+    override fun onEventClicked(event: Event) {
+        val intent: Intent = Intent(applicationContext, EventDetailFragment::class.java).apply{
+            putExtra("title", event.name)
+            putExtra("shortTitle", event.shortTitle)
+            putExtra("bodyText", event.bodyText)
+            putExtra("siteUrl", event.siteUrl)
+            putExtra("image", event.images?.get(0)?.image)
+        }
+        Toast.makeText(applicationContext, "в МейнАктивити", Toast.LENGTH_SHORT)
+        val bundle = Bundle().apply {
+            putString("title", event.name)
+            putString("shortTitle", event.shortTitle)
+            putString("bodyText", event.bodyText)
+            putString("siteUrl", event.siteUrl)
+            putString("image", event.images?.get(0)?.image)
+        }
+        val frag = EventDetailFragment()
+        frag.setArguments(bundle)
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.add(R.id.mainLayout, frag)
+        ft.commit()//проблэмы
+
+
+        //this.navigateUpTo(intent)
+             //this.startActivity(intent)
+
     }
 }
 
