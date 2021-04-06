@@ -12,5 +12,8 @@ class EventResponse {
     var totalPages:String?=null
 
     @SerializedName("results")
-    var events:List<Event>?=null
+    var events:ArrayList<Event>?=null
+
+
+    //fun getEvents():List<Event> =events
 }

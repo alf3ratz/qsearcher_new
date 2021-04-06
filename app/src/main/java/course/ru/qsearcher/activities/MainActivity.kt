@@ -23,6 +23,7 @@ import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
 class MainActivity : AppCompatActivity(),EventListener {
     private lateinit var viewModel: MostPopularEventsViewModel
     private lateinit var activityMainBinding: ActivityMainBinding
+            //ActivityMainBinding
 
     private var events: ArrayList<Event> = ArrayList()
     private lateinit var eventsAdapter: EventsAdapter
@@ -108,12 +109,18 @@ class MainActivity : AppCompatActivity(),EventListener {
     }
 
     override fun onEventClicked(event: Event) {
+        var images:ArrayList<String> =  arrayListOf<String>()
+        for (elem in event.images!!){
+            images.plusAssign(elem.toString())
+        }
         val intent: Intent = Intent(applicationContext, EventDetailActivity::class.java).apply{
             putExtra("title", event.name)
             putExtra("shortTitle", event.shortTitle)
             putExtra("bodyText", event.bodyText)
             putExtra("siteUrl", event.siteUrl)
-            putExtra("image", event.images?.get(0)?.image)
+
+            putStringArrayListExtra("images", images);
+            //putExtra("image", event.images)
         }
         startActivity(intent);
 //        Toast.makeText(applicationContext, "в МейнАктивити", Toast.LENGTH_SHORT)

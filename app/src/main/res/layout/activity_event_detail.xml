@@ -25,7 +25,7 @@
             android:orientation="horizontal"
             android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"/>
-        <view
+        <View
             android:id="@+id/viewFadingEdge"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"

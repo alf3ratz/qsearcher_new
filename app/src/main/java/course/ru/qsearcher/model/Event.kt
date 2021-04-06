@@ -1,5 +1,6 @@
 package course.ru.qsearcher.model
 
+import android.media.Image
 import com.google.gson.annotations.SerializedName
 
 class Event {
@@ -16,12 +17,12 @@ class Event {
     var siteUrl:String?=null
 
     @SerializedName("images")
-    var images:List<Image>?=null
+    var images:ArrayList<Image>?=null
 
     class Image{
         @SerializedName("image")
         var image:String?=null;
-
+        override fun toString(): String =image!!
     }
 
 }
