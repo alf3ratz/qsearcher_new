@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity(),EventListener {
     }
 
     override fun onEventClicked(event: Event) {
-        val intent: Intent = Intent(applicationContext, EventDetailFragment::class.java).apply{
+        val intent: Intent = Intent(applicationContext, EventDetailActivity::class.java).apply{
             putExtra("title", event.name)
             putExtra("shortTitle", event.shortTitle)
             putExtra("bodyText", event.bodyText)
