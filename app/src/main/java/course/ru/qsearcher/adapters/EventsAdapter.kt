@@ -40,6 +40,8 @@ class EventsAdapter(events_: List<Event>,eventsListener_: EventListener) : Recyc
             //Toast.makeText(layoutInflater?.context,"в ИвентАдаптере1",Toast.LENGTH_SHORT)
             if(itemLayoutBinding?.root!=null)
                 Log.i("adapter"," рут не равен налл")
+
+
             itemView.setOnClickListener {
                 eventsListener.onEventClicked(event)
                 Log.i("adapter"," в ивент адаптере2222")

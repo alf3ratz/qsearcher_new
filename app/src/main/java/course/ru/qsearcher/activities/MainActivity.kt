@@ -115,19 +115,20 @@ class MainActivity : AppCompatActivity(),EventListener {
             putExtra("siteUrl", event.siteUrl)
             putExtra("image", event.images?.get(0)?.image)
         }
-        Toast.makeText(applicationContext, "в МейнАктивити", Toast.LENGTH_SHORT)
-        val bundle = Bundle().apply {
-            putString("title", event.name)
-            putString("shortTitle", event.shortTitle)
-            putString("bodyText", event.bodyText)
-            putString("siteUrl", event.siteUrl)
-            putString("image", event.images?.get(0)?.image)
-        }
-        val frag = EventDetailFragment()
-        frag.setArguments(bundle)
-        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-        ft.add(R.id.mainLayout, frag)
-        ft.commit()//проблэмы
+        startActivity(intent);
+//        Toast.makeText(applicationContext, "в МейнАктивити", Toast.LENGTH_SHORT)
+//        val bundle = Bundle().apply {
+//            putString("title", event.name)
+//            putString("shortTitle", event.shortTitle)
+//            putString("bodyText", event.bodyText)
+//            putString("siteUrl", event.siteUrl)
+//            putString("image", event.images?.get(0)?.image)
+//        }
+//        val frag = EventDetailFragment()
+//        frag.setArguments(bundle)
+//        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+//        ft.add(R.id.mainLayout, frag)
+//        ft.commit()//проблэмы
 
 
         //this.navigateUpTo(intent)
