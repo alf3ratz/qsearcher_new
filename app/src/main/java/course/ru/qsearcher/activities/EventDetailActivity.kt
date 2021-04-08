@@ -34,36 +34,28 @@ class EventDetailActivity : AppCompatActivity() {
 
     private fun doInitialization(savedInstanceState: Bundle?) {
         eventViewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.java);
-
+        eventDetailActivityBinding?.imageBack?.setOnClickListener { onBackPressed() }
         getEvents(savedInstanceState)
     }
 
     private fun getEvents(savedInstanceState: Bundle?) {
         eventDetailActivityBinding?.isLoading = true;
-        var eventId: Int = intent.getIntExtra("id", -1);//getStringExtra("id");
+        var eventId: Int = intent.getIntExtra("id", 1);//getStringExtra("id");
         var title = intent.getStringExtra("title");
-        var images = intent.getStringArrayListExtra("images")
+        val images_temp = intent.getStringArrayListExtra("images")
+        var images :ArrayList<String> = ArrayList(  )
+        for (i in 1 until images_temp!!.size){
+            images.plusAssign(images_temp[i])
+        }
+        eventDetailActivityBinding?.eventImageURL = images_temp[0];
+        eventDetailActivityBinding?.imageEvent!!.visibility = View.VISIBLE
         eventViewModel?.getMostPopularEvents(34)
             ?.observe(this, Observer { eventResponse: EventResponse? ->
                 run {
                     eventDetailActivityBinding?.isLoading = false;
-                    loadImageSlider(images!!)
-                    // images?.let { loadImageSlider(it) }
-//                    if (eventResponse?.events?.get(0) != null) {
-//                        Log.i("", "первый ивент не равен налл")
-//                        if (eventResponse?.events?.get(0)?.images != null) {
-//                            Log.i("", "картинки первого ивента не равны налл")
-////                            var temp: Array<String> =
-////                                emptyArray<String>()//Array<String>(eventResponse?.events?.get(0)?.images!!.size)
-////                            for (elem in eventResponse?.events?.get(0)?.images!!) {
-////                                temp += elem.toString()
-////                            }
-//                            loadImageSlider(eventResponse?.events?.get(0)?.images!!)
-//                            //if(eventResponse.getEventDetails().getPictures!=null)
-//                        }
-//                    }else{
-//                        Log.i("", "первый ивент  равен налл")
-//                    }
+                    if(images.size==0)
+                        images = images_temp
+                    loadImageSlider(images)
                 }
             }
             );
