@@ -45,7 +45,7 @@ class EventDetailActivity : AppCompatActivity() {
         var images = intent.getStringArrayListExtra("images")
         eventViewModel?.getMostPopularEvents(34)
             ?.observe(this, Observer { eventResponse: EventResponse? ->
-                run{
+                run {
                     eventDetailActivityBinding?.isLoading = false;
                     loadImageSlider(images!!)
                     // images?.let { loadImageSlider(it) }
@@ -77,30 +77,30 @@ class EventDetailActivity : AppCompatActivity() {
         Log.i("картинка", "размер слайдер имеджс" + sliderImages.size)
         setupSliderIndicators(sliderImages.size)
         Log.i("картинка", "вышел из сетап слайдер индикаторс")
-//        eventDetailActivityBinding?.sliderViewPager?.registerOnPageChangeCallback(object :
-//            ViewPager2.OnPageChangeCallback() {
-//            override fun onPageSelected(position: Int) {
-//                Log.i("картинка", "колбек, позиция" + position)
-//                super.onPageSelected(position)
-//                setCurrentSliderIndicator(position)
-//            }
-//        })
+        eventDetailActivityBinding?.sliderViewPager?.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                Log.i("картинка", "колбек, позиция" + position)
+                super.onPageSelected(position)
+                setCurrentSliderIndicator(position)
+            }
+        })
     }
 
     private fun setupSliderIndicators(count: Int) {
-        Log.i("картинка", "вошел в сетап слайдер индикаторс, count= "+count.toString())
+        Log.i("картинка", "вошел в сетап слайдер индикаторс, count= " + count.toString())
         val indicators: MutableList<ImageView> = mutableListOf<ImageView>().toMutableList()
-        for(i in 0..count-1){
-            indicators+=ImageView(applicationContext)
+        for (i in 0..count - 1) {
+            indicators += ImageView(applicationContext)
         }
         var layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         )
         layoutParams.setMargins(8, 0, 8, 0)
-        Log.i("картинка", "размер списка индикаторов "+ indicators.size)
+        Log.i("картинка", "размер списка индикаторов " + indicators.size)
 
         for (i in 0..(count - 1)) {
-            Log.i("картинка","ставит индикатор")
+            Log.i("картинка", "ставит индикатор")
             indicators[i] = ImageView(applicationContext)
             indicators[i].setImageDrawable(
                 ContextCompat.getDrawable(
@@ -111,7 +111,7 @@ class EventDetailActivity : AppCompatActivity() {
             eventDetailActivityBinding?.layoutSliderIndicators?.addView(indicators[i]);
         }
         eventDetailActivityBinding?.layoutSliderIndicators?.visibility = View.VISIBLE;
-        //setCurrentSliderIndicator(0);
+        setCurrentSliderIndicator(0);
         //Log.i("картинка", "сет курент индикатор")
     }
 
