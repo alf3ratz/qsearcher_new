@@ -4,10 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.ImageSliderAdapter
 import course.ru.qsearcher.databinding.FragmentEventDetailBinding
@@ -40,9 +45,10 @@ class EventDetailActivity : AppCompatActivity() {
         var images = intent.getStringArrayListExtra("images")
         eventViewModel?.getMostPopularEvents(34)
             ?.observe(this, Observer { eventResponse: EventResponse? ->
-                run {
+                run{
                     eventDetailActivityBinding?.isLoading = false;
-                    images?.let { loadImageSlider(it) }
+                    loadImageSlider(images!!)
+                    // images?.let { loadImageSlider(it) }
 //                    if (eventResponse?.events?.get(0) != null) {
 //                        Log.i("", "первый ивент не равен налл")
 //                        if (eventResponse?.events?.get(0)?.images != null) {
@@ -68,5 +74,72 @@ class EventDetailActivity : AppCompatActivity() {
         eventDetailActivityBinding?.sliderViewPager?.adapter = ImageSliderAdapter(sliderImages)
         eventDetailActivityBinding?.sliderViewPager?.visibility = View.VISIBLE
         eventDetailActivityBinding?.viewFadingEdge?.visibility = View.VISIBLE
+        Log.i("картинка", "размер слайдер имеджс" + sliderImages.size)
+        setupSliderIndicators(sliderImages.size)
+        Log.i("картинка", "вышел из сетап слайдер индикаторс")
+//        eventDetailActivityBinding?.sliderViewPager?.registerOnPageChangeCallback(object :
+//            ViewPager2.OnPageChangeCallback() {
+//            override fun onPageSelected(position: Int) {
+//                Log.i("картинка", "колбек, позиция" + position)
+//                super.onPageSelected(position)
+//                setCurrentSliderIndicator(position)
+//            }
+//        })
+    }
+
+    private fun setupSliderIndicators(count: Int) {
+        Log.i("картинка", "вошел в сетап слайдер индикаторс, count= "+count.toString())
+        val indicators: MutableList<ImageView> = mutableListOf<ImageView>().toMutableList()
+        for(i in 0..count-1){
+            indicators+=ImageView(applicationContext)
+        }
+        var layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.setMargins(8, 0, 8, 0)
+        Log.i("картинка", "размер списка индикаторов "+ indicators.size)
+
+        for (i in 0..(count - 1)) {
+            Log.i("картинка","ставит индикатор")
+            indicators[i] = ImageView(applicationContext)
+            indicators[i].setImageDrawable(
+                ContextCompat.getDrawable(
+                    applicationContext, R.drawable.background_slider_indicator_inactive
+                )
+            )
+            indicators[i].layoutParams = layoutParams
+            eventDetailActivityBinding?.layoutSliderIndicators?.addView(indicators[i]);
+        }
+        eventDetailActivityBinding?.layoutSliderIndicators?.visibility = View.VISIBLE;
+        //setCurrentSliderIndicator(0);
+        //Log.i("картинка", "сет курент индикатор")
+    }
+
+    private fun setCurrentSliderIndicator(position: Int) {
+        val childCount: Int? = eventDetailActivityBinding?.layoutSliderIndicators?.childCount
+        //if (childCount == 0)
+        Log.i("картинка", "Кол-во детей: " + childCount.toString())
+        for (i in 0..childCount!! - 1) {
+            var imageView: ImageView =
+                eventDetailActivityBinding?.layoutSliderIndicators?.getChildAt(i) as ImageView
+            if (i == position) {
+                imageView.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        applicationContext,
+                        R.drawable.background_slider_indicator_active
+                    )
+                )
+                Log.i("картинка", "должен поменять1")
+            } else {
+                imageView.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        applicationContext,
+                        R.drawable.background_slider_indicator_inactive
+                    )
+                )
+                Log.i("картинка", "должен поменять1")
+            }
+
+        }
     }
 }
