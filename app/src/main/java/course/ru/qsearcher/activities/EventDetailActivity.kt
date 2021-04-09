@@ -62,7 +62,7 @@ class EventDetailActivity : AppCompatActivity() {
         eventDetailActivityBinding?.rating = intent.getStringExtra("rating")!!
         eventDetailActivityBinding?.textReadMore?.visibility = View.VISIBLE
         eventDetailActivityBinding?.textReadMore?.setOnClickListener {
-            if (eventDetailActivityBinding?.textReadMore?.text.toString() == "Read More") {
+            if (eventDetailActivityBinding?.textReadMore?.text == getString(R.string.read_more)) {
                 eventDetailActivityBinding?.textDescription?.maxLines = Integer.MAX_VALUE
                 eventDetailActivityBinding?.textDescription?.ellipsize = null
                 eventDetailActivityBinding?.textReadMore?.text = getString(R.string.read_less)

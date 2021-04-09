@@ -76,9 +76,12 @@ class MainActivity : AppCompatActivity(), EventListener {
                 if (t.events != null) {
                     val oldCount: Int = events.size
                     Log.i("response", "если список событий не налл")
+                    for(elem in t.events!!){
+                        elem.name = elem.name!![0].toUpperCase()+elem.name!!.substring(1,elem.name!!.length)
+                    }
                     events.addAll(t.events!!)
                     eventsAdapter.notifyDataSetChanged()
-                    //eventsAdapter.notifyItemRangeChanged(oldCount, events.size / 1000)//проблема с выводом - показывает после выхода из экрана
+                    eventsAdapter.notifyItemRangeChanged(oldCount, events.size / 1000)//проблема с выводом - показывает после выхода из экрана
                 } else {
                     Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT)
                     Log.i("response", "список событий  налл")

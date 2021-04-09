@@ -3,7 +3,7 @@
     <string name="tv_shows_most_popular">Most popular events</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="read_more">Read More</string>
-    <string name="read_less">ReadLess</string>
+    <string name="read_more">Узнать больше</string>
+    <string name="read_less">Скрыть</string>
     <string name="website">Перейти на сайт</string>
 </resources>

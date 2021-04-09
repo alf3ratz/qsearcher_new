@@ -1,15 +1,26 @@
 package course.ru.qsearcher.model
 
 import android.media.Image
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
-class Event {
+@Entity(tableName = "events")
+class Event : Serializable {
+    @PrimaryKey
+    @SerializedName("id")
+    var id:Int = -1
+
     @SerializedName("favorites_count")
-    var rating:String?=null
+    var rating: String? = null
+
     @SerializedName("description")
-    var description:String?=null
+    var description: String? = null
+
     @SerializedName("title")
     var name: String? = null
+
     @SerializedName("short_title")
     var shortTitle: String? = null
 
@@ -24,9 +35,6 @@ class Event {
 
     @SerializedName("lon")
     var lon: Double = 0.0
-
-
-
 
 
     @SerializedName("images")
