@@ -24,6 +24,9 @@ import course.ru.qsearcher.databinding.ActivityEventDetailBinding
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -99,6 +102,28 @@ class EventDetailActivity : AppCompatActivity() {
             intentInner.data = Uri.parse(event.siteUrl/*intent.getStringExtra("siteUrl")*/)
             startActivity(intentInner)
         }
+        eventDetailActivityBinding?.imageFavorites?.setOnClickListener(object :
+            View.OnClickListener {
+            override fun onClick(p0: View?) {
+                eventViewModel?.addToFavorites(event)
+                    ?.subscribeOn(Schedulers.io())
+                    ?.observeOn(AndroidSchedulers.mainThread())
+                    ?.subscribe {
+                        eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
+                        Toast.makeText(
+                            applicationContext,
+                            "Добавлено в список озбранного",
+                            Toast.LENGTH_SHORT
+                        )
+                    }?.let {
+                        CompositeDisposable().add(
+                            it
+                        )
+                    }
+            }
+
+        })
+        eventDetailActivityBinding?.imageFavorites?.visibility = View.VISIBLE
         loadBasicEventDetails()
     }
 
@@ -178,7 +203,8 @@ class EventDetailActivity : AppCompatActivity() {
 
     private fun loadBasicEventDetails() {
         eventDetailActivityBinding?.eventName = event.name//intent.getStringExtra("title")
-        eventDetailActivityBinding?.eventShortName = event.shortTitle//intent.getStringExtra("shortTitle")
+        eventDetailActivityBinding?.eventShortName =
+            event.shortTitle//intent.getStringExtra("shortTitle")
         eventDetailActivityBinding?.textName?.visibility = View.VISIBLE
         eventDetailActivityBinding?.textShortName?.visibility = View.VISIBLE
     }

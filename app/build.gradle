@@ -36,13 +36,14 @@ android {
 }
 
 dependencies {
+    def room_version = "2.2.6"
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //MultiDex
@@ -67,9 +68,18 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     //Room & RxJava support
-    implementation 'androidx.room:room-runtime:2.2.6'
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
     annotationProcessor 'androidx.room:room-compiler:2.2.6'
     implementation 'androidx.room:room-rxjava2:2.2.6'
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    //kapt "android.arch.persistence.room:compiler:1.1.1"
+    // Anko Commons
+    implementation "org.jetbrains.anko:anko-commons:0.10.8"
+
+    // Volley network library
+    implementation 'com.android.volley:volley:1.2.0'
 
     //RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'

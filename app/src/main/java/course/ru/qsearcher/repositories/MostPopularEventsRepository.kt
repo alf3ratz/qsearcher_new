@@ -24,7 +24,6 @@ class MostPopularEventsRepository() {
             override fun onFailure(@NonNull call: Call<EventResponse>, t: Throwable) {
                 data.setValue(null)
             }
-
             override fun onResponse(
                 @NonNull call: Call<EventResponse>,
                 @NonNull response: Response<EventResponse>

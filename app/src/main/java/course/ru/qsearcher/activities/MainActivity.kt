@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), EventListener {
 
     private fun doInitialization() {
         activityMainBinding?.eventsRecyclerView?.setHasFixedSize(true)
-        viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.javaObjectType)
         var activity: MostPopularEventsViewModel
 
         eventsAdapter = EventsAdapter(events, this)

@@ -227,17 +227,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_8sdp"
-                    android:gravity="center"
                     android:backgroundTint="@color/colorAccent"
                     android:fontFamily="@font/ubuntu_medium"
+                    android:gravity="center"
                     android:includeFontPadding="false"
                     android:text="@string/website"
                     android:textSize="@dimen/_12ssp"
                     android:visibility="gone"
                     app:cornerRadius="@dimen/_6sdp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/viewDriver2" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -252,6 +252,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageFavorites"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:background="@drawable/background_fab"
+            android:contentDescription="@string/app_name"
+            android:padding="@dimen/_8sdp"
+            android:src="@drawable/ic_watch"
+            app:tint="@color/colorTextIcons"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
