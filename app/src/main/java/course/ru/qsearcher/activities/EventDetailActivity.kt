@@ -21,6 +21,7 @@ import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.ImageSliderAdapter
 import course.ru.qsearcher.databinding.FragmentEventDetailBinding
 import course.ru.qsearcher.databinding.ActivityEventDetailBinding
+import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
 import java.util.*
@@ -28,9 +29,9 @@ import kotlin.collections.ArrayList
 
 class EventDetailActivity : AppCompatActivity() {
     private var eventViewModel: MostPopularEventsViewModel? = null;
-
-    // private var eventDetailFragmentBinding: FragmentEventDetailBinding? = null
     private var eventDetailActivityBinding: ActivityEventDetailBinding? = null
+    private lateinit var event: Event
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         eventDetailActivityBinding =
@@ -41,13 +42,17 @@ class EventDetailActivity : AppCompatActivity() {
     private fun doInitialization(savedInstanceState: Bundle?) {
         eventViewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.java);
         eventDetailActivityBinding?.imageBack?.setOnClickListener { onBackPressed() }
+        event = intent.getSerializableExtra("event") as Event;
         getEvents(savedInstanceState)
     }
 
     private fun getEvents(savedInstanceState: Bundle?) {
         eventDetailActivityBinding?.isLoading = true;
-        var eventId: Int = intent.getIntExtra("id", 1);//getStringExtra("id");
-        val images_temp = intent.getStringArrayListExtra("images")
+//        var eventId: Int = intent.getIntExtra("id", 1);
+//        val images_temp = intent.getStringArrayListExtra("images")
+
+        var eventId: Int = event.id
+        val images_temp: ArrayList<String>? = event.imagesAsString
         var images: ArrayList<String> = ArrayList()
 
         for (i in 1 until images_temp!!.size) {
@@ -56,10 +61,10 @@ class EventDetailActivity : AppCompatActivity() {
         eventDetailActivityBinding?.eventImageURL = images_temp[0];
         eventDetailActivityBinding?.imageEvent!!.visibility = View.VISIBLE
         eventDetailActivityBinding?.eventDescription = HtmlCompat.fromHtml(
-            intent.getStringExtra("bodyText")
-                .toString(), HtmlCompat.FROM_HTML_MODE_LEGACY
+            /*intent.getStringExtra("bodyText")*/
+            event.bodyText.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY
         ).toString()
-        eventDetailActivityBinding?.rating = intent.getStringExtra("rating")!!
+        eventDetailActivityBinding?.rating = event.rating//intent.getStringExtra("rating")!!
         eventDetailActivityBinding?.textReadMore?.visibility = View.VISIBLE
         eventDetailActivityBinding?.textReadMore?.setOnClickListener {
             if (eventDetailActivityBinding?.textReadMore?.text == getString(R.string.read_more)) {
@@ -91,7 +96,7 @@ class EventDetailActivity : AppCompatActivity() {
         eventDetailActivityBinding?.buttonWebsite?.visibility = View.VISIBLE
         eventDetailActivityBinding?.buttonWebsite?.setOnClickListener {
             val intentInner: Intent = Intent(Intent.ACTION_VIEW)
-            intentInner.data = Uri.parse(intent.getStringExtra("siteUrl"))
+            intentInner.data = Uri.parse(event.siteUrl/*intent.getStringExtra("siteUrl")*/)
             startActivity(intentInner)
         }
         loadBasicEventDetails()
@@ -172,8 +177,8 @@ class EventDetailActivity : AppCompatActivity() {
     }
 
     private fun loadBasicEventDetails() {
-        eventDetailActivityBinding?.eventName = intent.getStringExtra("title")
-        eventDetailActivityBinding?.eventShortName = intent.getStringExtra("shortTitle")
+        eventDetailActivityBinding?.eventName = event.name//intent.getStringExtra("title")
+        eventDetailActivityBinding?.eventShortName = event.shortTitle//intent.getStringExtra("shortTitle")
         eventDetailActivityBinding?.textName?.visibility = View.VISIBLE
         eventDetailActivityBinding?.textShortName?.visibility = View.VISIBLE
     }

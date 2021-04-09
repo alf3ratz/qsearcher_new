@@ -76,12 +76,18 @@ class MainActivity : AppCompatActivity(), EventListener {
                 if (t.events != null) {
                     val oldCount: Int = events.size
                     Log.i("response", "если список событий не налл")
-                    for(elem in t.events!!){
-                        elem.name = elem.name!![0].toUpperCase()+elem.name!!.substring(1,elem.name!!.length)
+                    for (elem in t.events!!) {
+                        elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
+                            1,
+                            elem.name!!.length
+                        )
                     }
                     events.addAll(t.events!!)
                     eventsAdapter.notifyDataSetChanged()
-                    eventsAdapter.notifyItemRangeChanged(oldCount, events.size / 1000)//проблема с выводом - показывает после выхода из экрана
+                    eventsAdapter.notifyItemRangeChanged(
+                        oldCount,
+                        events.size / 1000
+                    )//проблема с выводом - показывает после выхода из экрана
                 } else {
                     Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT)
                     Log.i("response", "список событий  налл")
@@ -111,41 +117,26 @@ class MainActivity : AppCompatActivity(), EventListener {
     }
 
     override fun onEventClicked(event: Event) {
-        var images: ArrayList<String> = arrayListOf<String>()
+        val images: ArrayList<String> = arrayListOf<String>()
         for (elem in event.images!!) {
             images.plusAssign(elem.toString())
         }
+        event.imagesAsString = images
         val intent: Intent = Intent(applicationContext, EventDetailActivity::class.java).apply {
-            putExtra("title", event.name)
-            putExtra("shortTitle", event.shortTitle)
-            putExtra("bodyText", event.bodyText)
-            putExtra("siteUrl", event.siteUrl)
-            putExtra("description",event.description)
-            putExtra("rating",event.rating)
-            putExtra("lat",event.lat)
-            putExtra("lon",event.lon)
-            putStringArrayListExtra("images", images);
-            //putExtra("image", event.images)
+//            putExtra("title", event.name)
+//            putExtra("shortTitle", event.shortTitle)
+//            putExtra("bodyText", event.bodyText)
+//            putExtra("siteUrl", event.siteUrl)
+//            putExtra("description",event.description)
+//            putExtra("rating",event.rating)
+//            putExtra("lat",event.lat)
+//            putExtra("lon",event.lon)
+//            putStringArrayListExtra("images", images);
+
+            putExtra("event", event)
         }
         startActivity(intent);
-//        Toast.makeText(applicationContext, "в МейнАктивити", Toast.LENGTH_SHORT)
-//        val bundle = Bundle().apply {
-//            putString("title", event.name)
-//            putString("shortTitle", event.shortTitle)
-//            putString("bodyText", event.bodyText)
-//            putString("siteUrl", event.siteUrl)
-//            putString("image", event.images?.get(0)?.image)
-//        }
-//        val frag = EventDetailFragment()
-//        frag.setArguments(bundle)
-//        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-//        ft.add(R.id.mainLayout, frag)
-//        ft.commit()//проблэмы
-
-
-        //this.navigateUpTo(intent)
-        //this.startActivity(intent)
-
     }
+
 }
 

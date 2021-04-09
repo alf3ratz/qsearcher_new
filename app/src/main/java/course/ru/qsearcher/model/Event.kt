@@ -40,10 +40,12 @@ class Event : Serializable {
     @SerializedName("images")
     var images: ArrayList<Image>? = null
 
-    class Image {
+    class Image:Serializable {
         @SerializedName("image")
         var image: String? = null;
         override fun toString(): String = image!!
     }
+
+    var imagesAsString:ArrayList<String>?=null
 
 }
