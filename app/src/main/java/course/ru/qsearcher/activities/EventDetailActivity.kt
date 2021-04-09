@@ -2,6 +2,7 @@ package course.ru.qsearcher.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -41,24 +43,43 @@ class EventDetailActivity : AppCompatActivity() {
     private fun getEvents(savedInstanceState: Bundle?) {
         eventDetailActivityBinding?.isLoading = true;
         var eventId: Int = intent.getIntExtra("id", 1);//getStringExtra("id");
-        var title = intent.getStringExtra("title");
         val images_temp = intent.getStringArrayListExtra("images")
-        var images :ArrayList<String> = ArrayList(  )
-        for (i in 1 until images_temp!!.size){
+        var images: ArrayList<String> = ArrayList()
+
+        for (i in 1 until images_temp!!.size) {
             images.plusAssign(images_temp[i])
         }
         eventDetailActivityBinding?.eventImageURL = images_temp[0];
         eventDetailActivityBinding?.imageEvent!!.visibility = View.VISIBLE
+        eventDetailActivityBinding?.eventDescription = HtmlCompat.fromHtml(
+            intent.getStringExtra("bodyText")
+                .toString(), HtmlCompat.FROM_HTML_MODE_LEGACY
+        ).toString()
+        eventDetailActivityBinding?.textDescription?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.textReadMore?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.textReadMore?.setOnClickListener {
+            if (eventDetailActivityBinding?.textReadMore?.text.toString().equals("Read More")) {
+                eventDetailActivityBinding?.textDescription?.maxLines = Integer.MAX_VALUE
+                eventDetailActivityBinding?.textDescription?.ellipsize = null
+                eventDetailActivityBinding?.textReadMore?.text = getString(R.string.read_less)
+            } else {
+                eventDetailActivityBinding?.textDescription?.maxLines = 4
+                eventDetailActivityBinding?.textDescription?.ellipsize =
+                    TextUtils.TruncateAt.END
+                eventDetailActivityBinding?.textReadMore?.text = R.string.read_more.toString()
+            }
+        }
         eventViewModel?.getMostPopularEvents(34)
             ?.observe(this, Observer { eventResponse: EventResponse? ->
                 run {
                     eventDetailActivityBinding?.isLoading = false;
-                    if(images.size==0)
+                    if (images.size == 0)
                         images = images_temp
                     loadImageSlider(images)
                 }
             }
-            );
+            )
+        loadBasicEventDetails()
     }
 
     private fun loadImageSlider(sliderImages: ArrayList<String>) {
@@ -133,5 +154,12 @@ class EventDetailActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    private fun loadBasicEventDetails() {
+        eventDetailActivityBinding?.eventName = intent.getStringExtra("title")
+        eventDetailActivityBinding?.eventShortName = intent.getStringExtra("shortTitle")
+        eventDetailActivityBinding?.textName?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.textShortName?.visibility = View.VISIBLE
     }
 }

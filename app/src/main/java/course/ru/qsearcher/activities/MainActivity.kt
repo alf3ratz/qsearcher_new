@@ -20,16 +20,15 @@ import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
 
 
-class MainActivity : AppCompatActivity(),EventListener {
+class MainActivity : AppCompatActivity(), EventListener {
     private lateinit var viewModel: MostPopularEventsViewModel
     private lateinit var activityMainBinding: ActivityMainBinding
-            //ActivityMainBinding
+    //ActivityMainBinding
 
     private var events: ArrayList<Event> = ArrayList()
     private lateinit var eventsAdapter: EventsAdapter
     private var currentPage: Int = 1;
     private var totalAvailablePages: Int = 1
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -109,11 +108,11 @@ class MainActivity : AppCompatActivity(),EventListener {
     }
 
     override fun onEventClicked(event: Event) {
-        var images:ArrayList<String> =  arrayListOf<String>()
-        for (elem in event.images!!){
+        var images: ArrayList<String> = arrayListOf<String>()
+        for (elem in event.images!!) {
             images.plusAssign(elem.toString())
         }
-        val intent: Intent = Intent(applicationContext, EventDetailActivity::class.java).apply{
+        val intent: Intent = Intent(applicationContext, EventDetailActivity::class.java).apply {
             putExtra("title", event.name)
             putExtra("shortTitle", event.shortTitle)
             putExtra("bodyText", event.bodyText)
@@ -139,7 +138,7 @@ class MainActivity : AppCompatActivity(),EventListener {
 
 
         //this.navigateUpTo(intent)
-             //this.startActivity(intent)
+        //this.startActivity(intent)
 
     }
 }

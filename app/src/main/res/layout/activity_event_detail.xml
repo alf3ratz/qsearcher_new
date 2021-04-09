@@ -13,6 +13,18 @@
             name="eventImageURL"
             type="String" />
 
+        <variable
+            name="eventName"
+            type="String" />
+
+        <variable
+            name="eventShortName"
+            type="String" />
+
+        <variable
+            name="eventDescription"
+            type="String" />
+
         <import type="android.view.View" />
     </data>
 
@@ -49,7 +61,7 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/viewFadingEdge"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imageEvent"/>
+            app:layout_constraintStart_toEndOf="@id/imageEvent" />
 
         <ImageView
             android:id="@+id/imageBack"
@@ -77,6 +89,74 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sliderViewPager"
             app:riv_corner_radius="@dimen/_6sdp" />
+
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:ellipsize="end"
+            android:fontFamily="@font/ubuntu_bold"
+            android:includeFontPadding="false"
+            android:maxLines="3"
+            android:text="@{eventName}"
+            android:textColor="@color/colorTextIcons"
+            android:textSize="@dimen/_14ssp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageEvent"
+            app:layout_constraintTop_toBottomOf="@id/sliderViewPager" />
+
+        <TextView
+            android:id="@+id/textShortName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:ellipsize="end"
+            android:fontFamily="@font/ubuntu_regular"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{eventShortName}"
+            android:textColor="@color/colorTextOther"
+            android:textSize="@dimen/_12ssp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/textName"
+            app:layout_constraintStart_toStartOf="@id/textName"
+            app:layout_constraintTop_toBottomOf="@id/textName" />
+
+        <TextView
+            android:id="@+id/textDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:ellipsize="end"
+            android:fontFamily="@font/ubuntu_regular"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="@dimen/_2sdp"
+            android:maxLines="4"
+            android:text="@{eventDescription}"
+            android:textColor="@color/colorTextIcons"
+            android:textSize="@dimen/_11ssp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/imageEvent" />
+
+        <TextView
+            android:id="@+id/textReadMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:fontFamily="@font/ubuntu_medium"
+            android:includeFontPadding="false"
+            android:text="@string/read_more"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/_12sdp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/textDescription"
+            app:layout_constraintTop_toBottomOf="@id/textDescription" />
+
 
         <ProgressBar
             android:layout_width="@dimen/_25sdp"

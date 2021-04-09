@@ -6,13 +6,13 @@ import course.ru.qsearcher.model.Event
 class EventResponse {
 
     @SerializedName("count")
-    var page:Int?=null
+    var page: Int? = null
 
     @SerializedName("next")
-    var totalPages:String?=null
+    var totalPages: String? = null
 
     @SerializedName("results")
-    var events:ArrayList<Event>?=null
+    var events: ArrayList<Event>? = null
 
 
     //fun getEvents():List<Event> =events
