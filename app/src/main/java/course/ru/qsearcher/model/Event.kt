@@ -4,9 +4,12 @@ import android.media.Image
 import com.google.gson.annotations.SerializedName
 
 class Event {
+    @SerializedName("favorites_count")
+    var rating:String?=null
+    @SerializedName("description")
+    var description:String?=null
     @SerializedName("title")
     var name: String? = null
-
     @SerializedName("short_title")
     var shortTitle: String? = null
 
@@ -15,6 +18,16 @@ class Event {
 
     @SerializedName("site_url")
     var siteUrl: String? = null
+
+    @SerializedName("lat")
+    var lat: Double = 0.0
+
+    @SerializedName("lon")
+    var lon: Double = 0.0
+
+
+
+
 
     @SerializedName("images")
     var images: ArrayList<Image>? = null

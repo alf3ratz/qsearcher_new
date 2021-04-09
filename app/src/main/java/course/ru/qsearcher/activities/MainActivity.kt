@@ -117,7 +117,10 @@ class MainActivity : AppCompatActivity(), EventListener {
             putExtra("shortTitle", event.shortTitle)
             putExtra("bodyText", event.bodyText)
             putExtra("siteUrl", event.siteUrl)
-
+            putExtra("description",event.description)
+            putExtra("rating",event.rating)
+            putExtra("lat",event.lat)
+            putExtra("lon",event.lon)
             putStringArrayListExtra("images", images);
             //putExtra("image", event.images)
         }

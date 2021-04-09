@@ -1,5 +1,7 @@
 package course.ru.qsearcher.activities
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -21,6 +23,8 @@ import course.ru.qsearcher.databinding.FragmentEventDetailBinding
 import course.ru.qsearcher.databinding.ActivityEventDetailBinding
 import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 class EventDetailActivity : AppCompatActivity() {
     private var eventViewModel: MostPopularEventsViewModel? = null;
@@ -55,10 +59,10 @@ class EventDetailActivity : AppCompatActivity() {
             intent.getStringExtra("bodyText")
                 .toString(), HtmlCompat.FROM_HTML_MODE_LEGACY
         ).toString()
-        eventDetailActivityBinding?.textDescription?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.rating = intent.getStringExtra("rating")!!
         eventDetailActivityBinding?.textReadMore?.visibility = View.VISIBLE
         eventDetailActivityBinding?.textReadMore?.setOnClickListener {
-            if (eventDetailActivityBinding?.textReadMore?.text.toString().equals("Read More")) {
+            if (eventDetailActivityBinding?.textReadMore?.text.toString() == "Read More") {
                 eventDetailActivityBinding?.textDescription?.maxLines = Integer.MAX_VALUE
                 eventDetailActivityBinding?.textDescription?.ellipsize = null
                 eventDetailActivityBinding?.textReadMore?.text = getString(R.string.read_less)
@@ -66,7 +70,7 @@ class EventDetailActivity : AppCompatActivity() {
                 eventDetailActivityBinding?.textDescription?.maxLines = 4
                 eventDetailActivityBinding?.textDescription?.ellipsize =
                     TextUtils.TruncateAt.END
-                eventDetailActivityBinding?.textReadMore?.text = R.string.read_more.toString()
+                eventDetailActivityBinding?.textReadMore?.setText(R.string.read_more)//text = R.string.read_more.toString()
             }
         }
         eventViewModel?.getMostPopularEvents(34)
@@ -79,6 +83,17 @@ class EventDetailActivity : AppCompatActivity() {
                 }
             }
             )
+        eventDetailActivityBinding?.viewDriver1?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.layoutMisc?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.viewDriver2?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.textRating?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.textDescription?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.buttonWebsite?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.buttonWebsite?.setOnClickListener {
+            val intentInner: Intent = Intent(Intent.ACTION_VIEW)
+            intentInner.data = Uri.parse(intent.getStringExtra("siteUrl"))
+            startActivity(intentInner)
+        }
         loadBasicEventDetails()
     }
 
