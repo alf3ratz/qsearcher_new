@@ -36,6 +36,8 @@ class EventDetailActivity : AppCompatActivity() {
     private var eventDetailActivityBinding: ActivityEventDetailBinding? = null
     private lateinit var event: Event
 
+    private var isEventAvailableInFavorites: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         eventDetailActivityBinding =
@@ -47,7 +49,20 @@ class EventDetailActivity : AppCompatActivity() {
         eventViewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.java);
         eventDetailActivityBinding?.imageBack?.setOnClickListener { onBackPressed() }
         event = intent.getSerializableExtra("event") as Event;
+        checkEventInFavorites()
         getEvents(savedInstanceState)
+    }
+
+    private fun checkEventInFavorites() {
+        var compositeDisposable: CompositeDisposable = CompositeDisposable()
+        eventViewModel?.getEventFromFavorites(event.id.toString())
+            ?.subscribeOn(Schedulers.computation())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.subscribe {
+                isEventAvailableInFavorites = true
+                eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
+                compositeDisposable.dispose()
+            }?.let { compositeDisposable.add(it) }
     }
 
     private fun getEvents(savedInstanceState: Bundle?) {
@@ -104,21 +119,52 @@ class EventDetailActivity : AppCompatActivity() {
             startActivity(intentInner)
         }
         eventDetailActivityBinding?.imageFavorites?.setOnClickListener {
-            eventViewModel?.addToFavorites(event)
-                ?.subscribeOn(Schedulers.io())
-                ?.observeOn(AndroidSchedulers.mainThread())
-                ?.subscribe {
-                    eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
-                    Toast.makeText(
-                        applicationContext,
-                        "Добавлено в список озбранного",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }?.let {
-                    CompositeDisposable().add(
-                        it
-                    )
-                }
+            var compositeDisposable:CompositeDisposable = CompositeDisposable()
+            if (isEventAvailableInFavorites) {
+                eventViewModel?.removeEventFromFavorites(event)
+                    ?.subscribeOn(Schedulers.computation())
+                    ?.observeOn(AndroidSchedulers.mainThread())
+                    ?.subscribe{
+                        isEventAvailableInFavorites = false
+                        eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_watch)
+                        Toast.makeText(applicationContext,"Удалено из списка избранного",Toast.LENGTH_SHORT).show()
+                        compositeDisposable.dispose()
+                    }?.let { it1 -> compositeDisposable.add(it1) }
+            } else {
+                eventViewModel?.addToFavorites(event)
+                    ?.subscribeOn(Schedulers.io())
+                    ?.observeOn(AndroidSchedulers.mainThread())
+                    ?.subscribe {
+                        eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
+                        Toast.makeText(
+                            applicationContext,
+                            "Добавлено в список озбранного",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        compositeDisposable.dispose()
+                    }?.let { it1 -> compositeDisposable.add(it1) }
+
+
+
+
+//                eventViewModel?.addToFavorites(event)
+////                    ?.subscribeOn(Schedulers.io())
+////                    ?.observeOn(AndroidSchedulers.mainThread())
+////                    ?.subscribe {
+////                        eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
+////                        Toast.makeText(
+////                            applicationContext,
+////                            "Добавлено в список озбранного",
+////                            Toast.LENGTH_SHORT
+////                        ).show()
+////
+////                    }?.let {
+////                        CompositeDisposable().add(
+////                            it
+////                        )
+////                        it.dispose()
+////                    }
+            }
         }
         eventDetailActivityBinding?.imageFavorites?.visibility = View.VISIBLE
         loadBasicEventDetails()

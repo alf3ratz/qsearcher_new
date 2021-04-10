@@ -87,4 +87,5 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
                 compositeDisposableForDelete.dispose()
             }?.let { compositeDisposableForDelete.add(it) }
     }
+
 }

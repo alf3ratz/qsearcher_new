@@ -10,6 +10,7 @@ import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.repositories.MostPopularEventsRepository
 import course.ru.qsearcher.responses.EventResponse
 import io.reactivex.Completable
+import io.reactivex.Flowable
 
 class MostPopularEventsViewModel(@NonNull application: Application):AndroidViewModel(application) {
 
@@ -27,4 +28,11 @@ class MostPopularEventsViewModel(@NonNull application: Application):AndroidViewM
         return eventsDatabase?.eventsDao()?.addToFavorites(event)!!
     }
 
+    fun getEventFromFavorites(eventId:String): Flowable<Event>{
+        return eventsDatabase?.eventsDao()?.getEventFromFavorites(eventId)!!
+    }
+
+    fun removeEventFromFavorites(event:Event):Completable{
+        return eventsDatabase?.eventsDao()?.removeFromFavourites(event)!!
+    }
 }

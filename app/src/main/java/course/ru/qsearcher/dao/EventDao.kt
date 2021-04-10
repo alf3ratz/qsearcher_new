@@ -15,4 +15,7 @@ interface EventDao {
 
     @Delete
     fun removeFromFavourites(event: Event):Completable
+
+    @Query("SELECT * FROM events WHERE id = :eventId")
+    fun getEventFromFavorites(eventId: String): Flowable<Event>
 }
