@@ -24,6 +24,7 @@ import course.ru.qsearcher.databinding.FragmentEventDetailBinding
 import course.ru.qsearcher.databinding.ActivityEventDetailBinding
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.responses.EventResponse
+import course.ru.qsearcher.utilities.TempDataHolder
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -119,15 +120,20 @@ class EventDetailActivity : AppCompatActivity() {
             startActivity(intentInner)
         }
         eventDetailActivityBinding?.imageFavorites?.setOnClickListener {
-            var compositeDisposable:CompositeDisposable = CompositeDisposable()
+            var compositeDisposable: CompositeDisposable = CompositeDisposable()
             if (isEventAvailableInFavorites) {
                 eventViewModel?.removeEventFromFavorites(event)
                     ?.subscribeOn(Schedulers.computation())
                     ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.subscribe{
+                    ?.subscribe {
                         isEventAvailableInFavorites = false
+                        TempDataHolder.IS_FAVORITES_UPDATED = true
                         eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_watch)
-                        Toast.makeText(applicationContext,"Удалено из списка избранного",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            applicationContext,
+                            "Удалено из списка избранного",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         compositeDisposable.dispose()
                     }?.let { it1 -> compositeDisposable.add(it1) }
             } else {
@@ -135,6 +141,7 @@ class EventDetailActivity : AppCompatActivity() {
                     ?.subscribeOn(Schedulers.io())
                     ?.observeOn(AndroidSchedulers.mainThread())
                     ?.subscribe {
+                        TempDataHolder.IS_FAVORITES_UPDATED = true
                         eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
                         Toast.makeText(
                             applicationContext,
@@ -143,8 +150,6 @@ class EventDetailActivity : AppCompatActivity() {
                         ).show()
                         compositeDisposable.dispose()
                     }?.let { it1 -> compositeDisposable.add(it1) }
-
-
 
 
 //                eventViewModel?.addToFavorites(event)

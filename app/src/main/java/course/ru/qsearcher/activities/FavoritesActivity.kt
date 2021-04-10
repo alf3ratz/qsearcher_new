@@ -12,6 +12,7 @@ import course.ru.qsearcher.adapters.FavoritesAdapter
 import course.ru.qsearcher.databinding.ActivityFavoritesBinding
 import course.ru.qsearcher.listeners.FavoritesListener
 import course.ru.qsearcher.model.Event
+import course.ru.qsearcher.utilities.TempDataHolder
 import course.ru.qsearcher.viewmodels.FavoritesViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -33,6 +34,7 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
         favoritesViewModel = ViewModelProvider(this).get(FavoritesViewModel::class.java)
         activityFavoritesBinding?.imageBack?.setOnClickListener { onBackPressed() }
         favoritesList = mutableListOf()
+        loadFavorites()
     }
 
     private fun loadFavorites() {
@@ -61,7 +63,11 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
 
     override protected fun onResume() {
         super.onResume()
-        loadFavorites()
+        if(TempDataHolder.IS_FAVORITES_UPDATED){
+            loadFavorites()
+            TempDataHolder.IS_FAVORITES_UPDATED=false
+        }
+
     }
 
     override fun onEventClicked(event: Event) {
