@@ -50,7 +50,6 @@ class EventDetailActivity : AppCompatActivity() {
         getEvents(savedInstanceState)
     }
 
-    @SuppressLint("ShowToast")
     private fun getEvents(savedInstanceState: Bundle?) {
         eventDetailActivityBinding?.isLoading = true;
 //        var eventId: Int = intent.getIntExtra("id", 1);
@@ -114,7 +113,7 @@ class EventDetailActivity : AppCompatActivity() {
                         applicationContext,
                         "Добавлено в список озбранного",
                         Toast.LENGTH_SHORT
-                    )
+                    ).show()
                 }?.let {
                     CompositeDisposable().add(
                         it

@@ -1,4 +1,20 @@
 package course.ru.qsearcher.viewmodels
 
-class FavoritesViewModel {
+import android.app.Application
+import androidx.annotation.NonNull
+import androidx.lifecycle.AndroidViewModel
+import course.ru.qsearcher.database.EventsDatabase
+import course.ru.qsearcher.model.Event
+import io.reactivex.Flowable
+
+class FavoritesViewModel(@NonNull application: Application) : AndroidViewModel(application) {
+    private var eventsDatabase: EventsDatabase? = null
+
+    init {
+        eventsDatabase = EventsDatabase.getEventsDatabase(application)
+    }
+
+    fun loadFavorites():Flowable<List<Event>>{
+        return eventsDatabase?.eventsDao()?.getFavorites()!!
+    }
 }

@@ -60,6 +60,14 @@ class MainActivity : AppCompatActivity(), EventListener {
                 }
             }
         })
+        activityMainBinding?.imageSearch?.setOnClickListener {
+            startActivity(
+                Intent(
+                    applicationContext,
+                    FavoritesActivity::class.java
+                )
+            )
+        }
         getMostPopularEvents()
     }
 
