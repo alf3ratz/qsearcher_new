@@ -14,5 +14,5 @@ interface EventDao {
     fun addToFavorites(event: Event):Completable;
 
     @Delete
-    fun removeFromFavourites(event: Event);
+    fun removeFromFavourites(event: Event):Completable
 }

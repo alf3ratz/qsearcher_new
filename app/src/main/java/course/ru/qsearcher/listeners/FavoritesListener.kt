@@ -1,4 +1,9 @@
 package course.ru.qsearcher.listeners
 
-class FavoritesListener {
+import course.ru.qsearcher.model.Event
+
+interface FavoritesListener {
+    fun onEventClicked(event: Event);
+
+    fun removeEventFromFavorites(event: Event, position: Int);
 }
