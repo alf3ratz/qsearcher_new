@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".activities.FavouritesActivity"></activity>
+        <activity android:name=".activities.FavoritesActivity"></activity>
         <activity android:name=".activities.EventDetailActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
