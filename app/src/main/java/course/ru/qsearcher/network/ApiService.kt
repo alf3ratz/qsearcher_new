@@ -10,5 +10,7 @@ interface ApiService {
     @GET("events/?fields=images,title,short_title,body_text,site_url,favorites_count,description,id")
     fun getMostPopularEvents(@Query("page") page: Int): Call<EventResponse>
 
+    @GET("search")
+    fun searchEvent(@Query("q") query: String, @Query("page") page: Int): Call<EventResponse>
 
 }
