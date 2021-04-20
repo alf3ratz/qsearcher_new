@@ -8,4 +8,5 @@
     <string name="website">Перейти на сайт</string>
     <string name="favorites">Избранное</string>
     <string name="search_event">Поиск события</string>
+    <string name="chat">Сообщения</string>
 </resources>

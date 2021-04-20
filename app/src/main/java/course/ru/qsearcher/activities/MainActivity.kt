@@ -7,10 +7,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.*
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.EventsAdapter
 import course.ru.qsearcher.databinding.ActivityMainBinding
@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(), EventListener {
     private lateinit var activityMainBinding: ActivityMainBinding
     //ActivityMainBinding
 
+
     private var events: ArrayList<Event> = ArrayList()
     private lateinit var eventsAdapter: EventsAdapter
     private var currentPage: Int = 1;
@@ -34,6 +35,26 @@ class MainActivity : AppCompatActivity(), EventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+//        database = Firebase.database.reference
+//        database.setValue("Hello world")
+//        database.child("msg").child("msg1").setValue("Hello world")
+//        var database = FirebaseDatabase.getInstance()
+//        var messagesRef = database!!.getReference().child("message")
+//        messagesRef!!.setValue("Hello, жопа!")
+//        messagesRef.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                // This method is called once with the initial value and again
+//                // whenever data at this location is updated.
+//                val value = dataSnapshot.getValue(String::class.java)
+//                Log.d("db", "Value is: $value")
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                // Failed to read value
+//                Log.w("db", "Failed to read value.", error.toException())
+//            }
+//        })
         doInitialization()
     }
 

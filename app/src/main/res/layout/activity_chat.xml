@@ -1,50 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:padding="@dimen/_8sdp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.ChatActivity"
-    android:orientation="vertical">
-    <ListView
-        android:id="@+id/messageListView"
-        android:layout_weight="1"
-        android:layout_above="@id/sendMessageLayout"
-        android:divider="@android:color/transparent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        tools:listitem="@layout/message_item"
-        android:transcriptMode="alwaysScroll"/>
-    <LinearLayout
-        android:layout_alignParentBottom="true"
-        android:id="@+id/sendMessageLayout"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ImageButton
-            android:background="@drawable/ic_send_photo"
-            android:id="@+id/sendPhotoButton"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_40sdp"/>
-        <EditText
-            android:id="@+id/messageEdit"
-            android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/_8sdp"
+        tools:context=".activities.ChatActivity">
+
+        <LinearLayout
+            android:id="@+id/layoutHeader"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/_8sdp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageBack"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_back"
+                app:tint="@color/colorTextIcons" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:ellipsize="end"
+                android:fontFamily="@font/ubuntu_bold"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="@string/chat"
+                android:textColor="@color/colorTextIcons"
+                android:textSize="@dimen/_14ssp" />
+        </LinearLayout>
+
+
+        <ListView
+            android:id="@+id/messageListView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_above="@id/sendMessageLayout"
             android:layout_weight="1"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/sendMessageButton"
-            android:enabled="false"
-            android:text="Отправить"
+            android:divider="@android:color/transparent"
+            android:transcriptMode="alwaysScroll"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutHeader"
+            tools:listitem="@layout/message_item" />
+
+        <LinearLayout
+            android:id="@+id/sendMessageLayout"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageButton
+                android:id="@+id/sendPhotoButton"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:background="@drawable/ic_send_photo"
+                android:contentDescription="@string/app_name" />
+
+            <EditText
+                android:id="@+id/messageEdit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/sendMessageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="Отправить" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-</RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

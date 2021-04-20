@@ -61,7 +61,7 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
             }
     }
 
-    override protected fun onResume() {
+    override fun onResume() {
         super.onResume()
         if(TempDataHolder.IS_FAVORITES_UPDATED){
             loadFavorites()
