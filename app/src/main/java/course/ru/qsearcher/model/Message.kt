@@ -1,4 +1,6 @@
 package course.ru.qsearcher.model
 
-class Message {
+class Message(var text: String, var name: String, var imageURL:String) {
+    //var imageURL:String = image
+
 }
