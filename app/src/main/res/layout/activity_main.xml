@@ -57,6 +57,24 @@
                 android:padding="@dimen/_2sdp"
                 android:src="@drawable/ic_search"
                 app:tint="@color/colorTextIcons" />
+            <ImageView
+                android:id="@+id/imageFavourites"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_bookmark"
+                app:tint="@color/colorTextIcons" />
+            <ImageView
+                android:id="@+id/imageChat"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_message"
+                app:tint="@color/colorTextIcons" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), EventListener {
                 }
             }
         })
-        activityMainBinding?.imageSearch?.setOnClickListener {
+        activityMainBinding?.imageFavourites?.setOnClickListener {
             startActivity(
                 Intent(
                     applicationContext,
@@ -71,6 +71,10 @@ class MainActivity : AppCompatActivity(), EventListener {
         activityMainBinding?.imageSearch?.setOnClickListener {
             startActivity(Intent(applicationContext, SearchActivity::class.java))
         }
+        activityMainBinding?.imageChat?.setOnClickListener {
+            startActivity(Intent(applicationContext, ChatActivity::class.java))
+        }
+
         getMostPopularEvents()
     }
 
