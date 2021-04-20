@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "387258946149",
+    "project_id": "coursework-3de91",
+    "storage_bucket": "coursework-3de91.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387258946149:android:302796248e5acf3c18ac8c",
+        "android_client_info": {
+          "package_name": "course.ru.qsearcher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "387258946149-kqb360iufsf9rgtts0uch96lpiqsctef.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "course.ru.qsearcher",
+            "certificate_hash": "94be8a5c9a98bb0e1d1410d19d6dfa0438996ee8"
+          }
+        },
+        {
+          "client_id": "387258946149-pttnt7gue8eptpka7mmanpl6ld51c2gm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkyWq2lDypm1Duv982f3hi8dkC5xPPP_4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "387258946149-pttnt7gue8eptpka7mmanpl6ld51c2gm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
