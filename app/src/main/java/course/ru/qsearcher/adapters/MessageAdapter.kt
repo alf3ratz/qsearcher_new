@@ -34,11 +34,11 @@ class MessageAdapter(context: Context, resource: Int, messages: List<Message>) :
         var textTextView: TextView = view.findViewById(R.id.textTextView)!!
         var nameTextView: TextView = view.findViewById(R.id.nameTextView)!!
         var message: Message = getItem(position)!!
-        var isText: Boolean = message.imageURL == null
+        var isText: Boolean = message.imageURL == ""
         if (isText) {
             textTextView.visibility = View.VISIBLE
             photoImageView.visibility = View.GONE
-            textTextView.text = message.text.toString()
+            textTextView.text = message.text
         }else{
             textTextView.visibility = View.GONE
             photoImageView.visibility = View.VISIBLE

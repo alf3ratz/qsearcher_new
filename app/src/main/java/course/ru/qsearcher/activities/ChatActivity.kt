@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import course.ru.qsearcher.R
@@ -24,10 +24,12 @@ class ChatActivity : AppCompatActivity() {
 
     private var messageAdapter: MessageAdapter? = null
     private var database: FirebaseDatabase? = null
-    private var messagesRef: DatabaseReference?=null
-    private var usersRef: DatabaseReference?=null
+    private var messagesRef: DatabaseReference? = null
+    private var usersRef: DatabaseReference? = null
     private var userName: String? = null
     private var activityChatBinding: ActivityChatBinding? = null
+
+    private var messagesChildEventListener: ChildEventListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +46,7 @@ class ChatActivity : AppCompatActivity() {
         progressBar?.visibility = ProgressBar.INVISIBLE;
         messageEdit?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("Not yet implemented")
+
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -55,23 +57,49 @@ class ChatActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                TODO("Not yet implemented")
+
             }
 
         })
+        Log.i("db", "дошел")
         messageEdit?.filters = arrayOf(InputFilter.LengthFilter(500))
-        sendPhotoButton?.setOnClickListener { View.OnClickListener { messageEdit?.setText("") } }
+        sendPhotoButton?.setOnClickListener { messageEdit?.setText("") }
         imageBack.setOnClickListener { onBackPressed() }
-        sendMessageButton.setOnClickListener{
-            View.OnClickListener {
-                var msg: Message = Message()
-                msg.text = messageEdit.text.toString()
-                msg.name = userName as String
-                msg.imageURL= null.toString()
-                messagesRef!!.push().setValue(msg)
-                messageEdit?.setText("")
+        sendMessageButton.setOnClickListener {
+
+            var msg: Message = Message(messageEdit.getText().toString(), userName!!, "")
+//                msg.text = messageEdit.text.toString()
+//                msg.name = userName as String
+//                msg.imageURL = null.toString()
+            messagesRef!!.push().setValue(msg)
+            messageEdit?.setText(" ")
+            Log.i("db", "должен был отправить")
+
+        }
+        messagesChildEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val msg: Message = snapshot.getValue(Message::class.java)!!
+                messageAdapter?.add(msg)
+                Log.i("db", msg.text)
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
             }
         }
+        messagesRef?.addChildEventListener(messagesChildEventListener as ChildEventListener)
 
     }
 }
