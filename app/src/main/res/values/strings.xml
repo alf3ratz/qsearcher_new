@@ -9,4 +9,7 @@
     <string name="favorites">Избранное</string>
     <string name="search_event">Поиск события</string>
     <string name="chat">Сообщения</string>
+    <string name="your_email">Ваша почта</string>
+    <string name="registration">Регистрация</string>
+    <string name="tap_to_log_in">Нажмите, чтобы войти</string>
 </resources>

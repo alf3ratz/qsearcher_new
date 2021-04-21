@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:387258946149:android:302796248e5acf3c18ac8c",
         "android_client_info": {
-          "package_name": "course.ru.qsearcher"
+          "package_name": "course.ru.qsearcher2"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "387258946149-kqb360iufsf9rgtts0uch96lpiqsctef.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "course.ru.qsearcher",
+            "package_name": "course.ru.qsearcher2",
             "certificate_hash": "94be8a5c9a98bb0e1d1410d19d6dfa0438996ee8"
           }
         },
