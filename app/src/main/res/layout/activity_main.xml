@@ -47,7 +47,15 @@
                 android:text="@string/tv_shows_most_popular"
                 android:textColor="@color/colorTextIcons"
                 android:textSize="@dimen/_14ssp" />
-
+            <ImageView
+                android:id="@+id/imageSign"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_watch"
+                app:tint="@color/colorTextIcons" />
             <ImageView
                 android:id="@+id/imageSearch"
                 android:layout_width="@dimen/_24sdp"

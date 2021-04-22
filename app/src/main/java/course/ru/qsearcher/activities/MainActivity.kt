@@ -92,6 +92,10 @@ class MainActivity : AppCompatActivity(), EventListener {
         activityMainBinding?.imageSearch?.setOnClickListener {
             startActivity(Intent(applicationContext, SearchActivity::class.java))
         }
+        activityMainBinding?.imageSign?.setOnClickListener {
+            startActivity(Intent(applicationContext, SignInActivity::class.java))
+        }
+
         activityMainBinding?.imageChat?.setOnClickListener {
             startActivity(Intent(applicationContext, ChatActivity::class.java))
         }

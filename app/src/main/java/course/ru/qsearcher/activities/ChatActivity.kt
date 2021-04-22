@@ -1,5 +1,6 @@
 package course.ru.qsearcher.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -100,6 +102,9 @@ class ChatActivity : AppCompatActivity() {
             }
         }
         messagesRef?.addChildEventListener(messagesChildEventListener as ChildEventListener)
-
+        imageSignOut?.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(applicationContext,SignInActivity::class.java))
+        }
     }
 }

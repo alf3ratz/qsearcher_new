@@ -33,7 +33,7 @@
                 app:tint="@color/colorTextIcons" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
@@ -44,6 +44,15 @@
                 android:text="@string/chat"
                 android:textColor="@color/colorTextIcons"
                 android:textSize="@dimen/_14ssp" />
+            <ImageView
+                android:id="@+id/imageSignOut"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_sign_out"
+                app:tint="@color/colorTextIcons" />
         </LinearLayout>
 
 

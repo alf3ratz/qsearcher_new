@@ -67,6 +67,7 @@
             android:textSize="@dimen/_16sdp"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="toggleLoginMode"
             app:layout_constraintTop_toBottomOf="@id/loginSignUpButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
