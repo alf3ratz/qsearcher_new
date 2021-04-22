@@ -34,7 +34,7 @@
             app:layout_constraintTop_toBottomOf="@id/appImage"/>
         <EditText
             android:id="@+id/passwordEditText"
-            android:hint="@string/your_email"
+            android:hint="Ваш пароль"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -42,14 +42,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/emailEditText"/>
         <EditText
-            android:id="@+id/nameEditText"
-            android:hint="@string/your_email"
+            android:id="@+id/confirmPasswordEditText"
+            android:hint="@string/repeat_your_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:layout_marginTop="@dimen/_8sdp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/passwordEditText"/>
+            app:layout_constraintTop_toBottomOf="@id/passwordEditText"
+            tools:ignore="TextFields" />
+        <EditText
+            android:id="@+id/nameEditText"
+            android:hint="Ваше имя"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="@dimen/_8sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/confirmPasswordEditText"/>
         <Button
             android:layout_marginTop="@dimen/_8sdp"
             android:id="@+id/loginSignUpButton"

@@ -18,16 +18,16 @@ class SearchEventRepository {
     }
 
     fun searchEvent(query: String, page: Int): LiveData<EventResponse> {
-        var data: MutableLiveData<EventResponse> = MutableLiveData()
+        val data: MutableLiveData<EventResponse> = MutableLiveData()
         apiService?.searchEvent(query,page)?.enqueue(object:Callback <EventResponse> {
             override fun onFailure(@NonNull call: Call<EventResponse>, t: Throwable) {
-                data.setValue(null)
+                data.value = null
             }
             override fun onResponse(
                 @NonNull call: Call<EventResponse>,
                 @NonNull response: Response<EventResponse>
             ) {
-                data.setValue(response.body())
+                data.value = response.body()
             }
         })
         return data
