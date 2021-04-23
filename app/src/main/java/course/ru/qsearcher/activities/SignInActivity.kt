@@ -156,7 +156,7 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun createUser(user: FirebaseUser?) {
-        val newUser: User = User(nameEditText.text.toString().trim(), user!!.email, user!!.uid)
+        val newUser: User = User(nameEditText.text.toString().trim(), user!!.email, user!!.uid,R.drawable.ic_person)
         userName = newUser.name
         usersDbRef?.push()?.setValue(newUser)
 

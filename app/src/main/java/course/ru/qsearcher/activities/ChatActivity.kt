@@ -26,6 +26,7 @@ import course.ru.qsearcher.databinding.ActivityFavoritesBinding
 import course.ru.qsearcher.model.Message
 import course.ru.qsearcher.model.User
 import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 class ChatActivity : AppCompatActivity() {
     private val RC_IMAGE: Int = 1
@@ -131,26 +132,18 @@ class ChatActivity : AppCompatActivity() {
                 Log.i("db", msg.text)
             }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
         }
         messagesRef?.addChildEventListener(messagesChildEventListener as ChildEventListener)
         imageSignOut?.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(applicationContext, SignInActivity::class.java))
+        }
+        activityChatBinding?.imageUsers?.setOnClickListener {
+            startActivity(Intent(applicationContext, UsersActivity::class.java))
         }
     }
 
@@ -159,7 +152,7 @@ class ChatActivity : AppCompatActivity() {
         if (requestCode == RC_IMAGE && resultCode == RESULT_OK) {
             var selectedImage: Uri = data?.data!!
             var imgRef: StorageReference = storageRef?.child(selectedImage.lastPathSegment!!)!!
-                //selectedImage.lastPathSegment?.let { storageRef?.child(it) }!!
+            //selectedImage.lastPathSegment?.let { storageRef?.child(it) }!!
             var uploadTask: UploadTask = imgRef.putFile(selectedImage)
             uploadTask = imgRef.putFile(selectedImage)
             val urlTask = uploadTask.continueWithTask { task ->

@@ -13,4 +13,5 @@
     <string name="registration">Регистрация</string>
     <string name="tap_to_log_in">Нажмите, чтобы войти</string>
     <string name="repeat_your_password">Повторите ваш пароль</string>
+    <string name="users">Пользователи</string>
 </resources>

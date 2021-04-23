@@ -53,6 +53,15 @@
                 android:padding="@dimen/_2sdp"
                 android:src="@drawable/ic_sign_out"
                 app:tint="@color/colorTextIcons" />
+            <ImageView
+                android:id="@+id/imageUsers"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_users"
+                app:tint="@color/colorTextIcons" />
         </LinearLayout>
 
 
