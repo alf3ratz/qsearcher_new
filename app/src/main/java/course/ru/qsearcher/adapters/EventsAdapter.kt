@@ -33,7 +33,7 @@ class EventsAdapter(events_: List<Event>,eventsListener_: EventListener) : Recyc
             this.itemLayoutBinding = itemLayoutBinding
         }
 
-        public fun bindEvent(event: Event) {
+         fun bindEvent(event: Event) {
             itemLayoutBinding?.event = event
             itemLayoutBinding?.executePendingBindings()
             Log.i("adapter"," в ивент адаптере1")
