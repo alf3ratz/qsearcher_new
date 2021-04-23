@@ -48,6 +48,8 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityChatBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat)
         database = Firebase.database
+        storage = FirebaseStorage.getInstance()
+        storageRef = storage?.reference?.child("chat_images")
         messagesRef = database!!.reference.child("message")
         usersRef = database!!.reference.child("users")
         usersChildEventListener = object : ChildEventListener {
@@ -156,15 +158,30 @@ class ChatActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_IMAGE && resultCode == RESULT_OK) {
             var selectedImage: Uri = data?.data!!
-            var imgRef: StorageReference =
-                selectedImage.lastPathSegment?.let { storageRef?.child(it) }!!
-            var uploadTask:UploadTask = imgRef.putFile(selectedImage)
-            uploadTask.addOnFailureListener {
-                // Handle unsuccessful uploads
-            }.addOnSuccessListener { taskSnapshot ->
-                // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                // ...
+            var imgRef: StorageReference = storageRef?.child(selectedImage.lastPathSegment!!)!!
+                //selectedImage.lastPathSegment?.let { storageRef?.child(it) }!!
+            var uploadTask: UploadTask = imgRef.putFile(selectedImage)
+            uploadTask = imgRef.putFile(selectedImage)
+            val urlTask = uploadTask.continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                imgRef.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result
+                    val msg: Message = Message()
+                    msg.imageURL = downloadUri.toString()
+                    msg.name = userName!!
+                    messagesRef?.push()?.setValue(msg)
+                } else {
+                    // Handle failures
+                    // ...
+                }
             }
         }
+
     }
 }

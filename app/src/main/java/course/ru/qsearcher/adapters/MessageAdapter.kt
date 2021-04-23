@@ -40,12 +40,12 @@ class MessageAdapter(context: Context, resource: Int, messages: List<Message>) :
             photoImageView.visibility = View.GONE
             textTextView.text = message.text
         }else{
-            textTextView.visibility = View.GONE
+            textTextView.visibility = View.VISIBLE//View.GONE
             photoImageView.visibility = View.VISIBLE
             try {
                 Picasso.get().load(message.imageURL).noFade().into(photoImageView, object : Callback {
                     override fun onSuccess() {
-                        photoImageView.animate().setDuration(300).alpha(1f).start()
+                       // photoImageView.animate().setDuration(300).alpha(1f).start()
                     }
 
                     override fun onError(e: Exception) {
