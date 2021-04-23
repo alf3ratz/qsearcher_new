@@ -20,6 +20,7 @@ import course.ru.qsearcher.adapters.MessageAdapter
 import course.ru.qsearcher.databinding.ActivityChatBinding
 import course.ru.qsearcher.databinding.ActivityFavoritesBinding
 import course.ru.qsearcher.model.Message
+import course.ru.qsearcher.model.User
 import kotlinx.android.synthetic.main.activity_chat.*
 
 class ChatActivity : AppCompatActivity() {
@@ -28,7 +29,9 @@ class ChatActivity : AppCompatActivity() {
     private var database: FirebaseDatabase? = null
     private var messagesRef: DatabaseReference? = null
     private var usersRef: DatabaseReference? = null
+    private var usersChildEventListener:ChildEventListener?=null
     private var userName: String? = null
+
     private var activityChatBinding: ActivityChatBinding? = null
 
     private var messagesChildEventListener: ChildEventListener? = null
@@ -38,9 +41,37 @@ class ChatActivity : AppCompatActivity() {
         activityChatBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat)
         database = Firebase.database
         messagesRef = database!!.reference.child("message")
-        messagesRef!!.setValue("Hello, World!")
+        usersRef = database!!.reference.child("users")
+        usersChildEventListener = object:ChildEventListener{
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                var user:User = snapshot.getValue(User::class.java)!!
+                if(user.id == FirebaseAuth.getInstance().currentUser.uid){
+                    userName = user.name
+                }
 
-        userName = "Default User"
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                //TODO("Not yet implemented")
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                //TODO("Not yet implemented")
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                //TODO("Not yet implemented")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //TODO("Not yet implemented")
+            }
+
+        }
+        usersRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
+//        messagesRef!!.setValue("Hello, World!")
+
+        userName = SignInActivity.userName
 
         var lst: List<Message> = mutableListOf()
         messageAdapter = MessageAdapter(this, R.layout.message_item, lst)
@@ -69,7 +100,7 @@ class ChatActivity : AppCompatActivity() {
         imageBack.setOnClickListener { onBackPressed() }
         sendMessageButton.setOnClickListener {
 
-            var msg: Message = Message(messageEdit.getText().toString(), userName!!, "")
+            var msg: Message = Message(messageEdit.text.toString(), userName!!, "")
 //                msg.text = messageEdit.text.toString()
 //                msg.name = userName as String
 //                msg.imageURL = null.toString()
@@ -104,7 +135,7 @@ class ChatActivity : AppCompatActivity() {
         messagesRef?.addChildEventListener(messagesChildEventListener as ChildEventListener)
         imageSignOut?.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
-            startActivity(Intent(applicationContext,SignInActivity::class.java))
+            startActivity(Intent(applicationContext, SignInActivity::class.java))
         }
     }
 }

@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), EventListener {
     private var totalAvailablePages: Int = 1
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
