@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.UsersAdapter
@@ -19,11 +20,13 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
     private lateinit var activityUsersBinding: ActivityUsersBinding
     private lateinit var users: MutableList<User>
     private lateinit var userAdapter: UsersAdapter
+    private lateinit var auth: FirebaseAuth
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityUsersBinding = DataBindingUtil.setContentView(this, R.layout.activity_users)
+        auth = FirebaseAuth.getInstance()
         users = mutableListOf()
         doInitialization()
     }
@@ -35,10 +38,12 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
         if (usersChildEventListener == null) {
             usersChildEventListener = object : ChildEventListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    var user: User = snapshot.getValue(User::class.java)!!
-                    user.avatarMock = R.drawable.ic_person
-                    users.add(user)
-                    userAdapter.notifyDataSetChanged()
+                    val user: User = snapshot.getValue(User::class.java)!!
+                    if (user.id != auth.currentUser.uid) {
+                        user.avatarMock = R.drawable.ic_person
+                        users.add(user)
+                        userAdapter.notifyDataSetChanged()
+                    }
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
