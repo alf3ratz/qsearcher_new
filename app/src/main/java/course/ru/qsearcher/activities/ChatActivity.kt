@@ -44,65 +44,64 @@ class ChatActivity : AppCompatActivity() {
     private var storage: FirebaseStorage? = null
     private var storageRef: StorageReference? = null
 
+    private lateinit var auth: FirebaseAuth
+
+    // Айди юзера-полчателя, то есть того, с кем мы ведем диалог. Нужен чтобы достать из базы все данные о пользователе.
+    private lateinit var receiverUserId: String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityChatBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat)
+        auth = FirebaseAuth.getInstance()
+        val intent: Intent = intent
+        if (intent != null) {
+            userName = intent.getStringExtra("userName")
+            receiverUserId = intent.getStringExtra("receiverId")!!
+        } else {
+            userName = "Default_User"
+            receiverUserId = intent.getStringExtra("receiverId")!!
+        }
+
+
         database = Firebase.database
         storage = FirebaseStorage.getInstance()
         storageRef = storage?.reference?.child("chat_images")
         messagesRef = database!!.reference.child("message")
         usersRef = database!!.reference.child("users")
+
         usersChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                var user: User = snapshot.getValue(User::class.java)!!
+                val user: User = snapshot.getValue(User::class.java)!!
                 if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
                     userName = user.name
                 }
-
             }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                //TODO("Not yet implemented")
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                //TODO("Not yet implemented")
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                //TODO("Not yet implemented")
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                //TODO("Not yet implemented")
-            }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
 
         }
         usersRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
 //        messagesRef!!.setValue("Hello, World!")
-
-        userName = SignInActivity.userName
+        //userName = SignInActivity.userName
 
         var lst: List<Message> = mutableListOf()
         messageAdapter = MessageAdapter(this, R.layout.message_item, lst)
         messageListView?.adapter = messageAdapter
         progressBar?.visibility = ProgressBar.INVISIBLE;
         messageEdit?.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 sendMessageButton.isEnabled = false;
                 if (p0.toString().trim().isNotEmpty())
                     sendMessageButton.isEnabled = true
-
             }
 
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
+            override fun afterTextChanged(p0: Editable?) {}
 
         })
         Log.i("db", "дошел")
@@ -116,7 +115,14 @@ class ChatActivity : AppCompatActivity() {
         imageBack.setOnClickListener { onBackPressed() }
         sendMessageButton.setOnClickListener {
 
-            var msg: Message = Message(messageEdit.text.toString(), userName!!, "")
+            var msg: Message = Message(
+                messageEdit.text.toString(),
+                userName!!,
+                "",
+                auth.currentUser.uid,
+                receiverUserId
+            )
+
 //                msg.text = messageEdit.text.toString()
 //                msg.name = userName as String
 //                msg.imageURL = null.toString()
@@ -128,8 +134,11 @@ class ChatActivity : AppCompatActivity() {
         messagesChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val msg: Message = snapshot.getValue(Message::class.java)!!
-                messageAdapter?.add(msg)
-                Log.i("db", msg.text)
+                if (msg.sender == auth.currentUser.uid && msg.receiver == receiverUserId ||
+                    msg.receiver == auth.currentUser.uid && msg.sender == receiverUserId) {
+                    messageAdapter?.add(msg)
+                    Log.i("db", msg.text)
+                }
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}

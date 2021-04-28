@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity(), EventListener {
             startActivity(Intent(applicationContext, SearchActivity::class.java))
         }
         activityMainBinding?.imageSign?.setOnClickListener {
-            startActivity(Intent(applicationContext, SignInActivity::class.java))
+            startActivity(Intent(applicationContext, UsersActivity::class.java))
         }
 
         activityMainBinding?.imageChat?.setOnClickListener {
@@ -173,7 +173,6 @@ class MainActivity : AppCompatActivity(), EventListener {
 //            putExtra("lat",event.lat)
 //            putExtra("lon",event.lon)
 //            putStringArrayListExtra("images", images);
-
             putExtra("event", event)
         }
         startActivity(intent);

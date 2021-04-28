@@ -18,6 +18,7 @@ class UsersAdapter(users:MutableList<User>,listener: OnUserClickListener) : Recy
     private var layoutInflater: LayoutInflater? = null
 
 
+
 //    fun setOnCLickListener(listener: OnUserClickListener) {
 //        this.listener = listener
 //    }
