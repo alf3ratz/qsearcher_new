@@ -1,5 +1,6 @@
 package course.ru.qsearcher.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
@@ -58,6 +59,16 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
             activityUsersBinding.usersRecyclerView.adapter = userAdapter
             invalidateAll()
         }
+
         activityUsersBinding.imageBack.setOnClickListener { onBackPressed() }
+    }
+
+    override fun onUserCLick(user: User) {
+        super.onUserCLick(user)
+        goToChat()
+    }
+
+    private fun goToChat() {
+        startActivity(Intent(applicationContext,ChatActivity::class.java))
     }
 }
