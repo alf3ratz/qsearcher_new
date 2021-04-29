@@ -14,16 +14,18 @@ import course.ru.qsearcher.R
 import course.ru.qsearcher.databinding.ActivityMapBinding
 import kotlinx.android.synthetic.main.activity_map.*
 
-private lateinit var activityMapBinding: ActivityMapBinding
-private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-private lateinit var settingsClient : SettingsClient // Доступ к настройкам
-private lateinit var  locationRequest:LocationRequest // Сохранение данных запроса
-private lateinit var locationSettingsRequest: LocationSettingsRequest // Определние настроек девайса пользователя
-private lateinit var locationCallback: LocationCallback // События определения местоположения
-private lateinit var location:Location // Широта и долгота пользователя
+
+class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
-class MapActivity : AppCompatActivity(),OnMapReadyCallback {
+    private lateinit var activityMapBinding: ActivityMapBinding
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var settingsClient: SettingsClient // Доступ к настройкам
+    private lateinit var locationRequest: LocationRequest // Сохранение данных запроса
+    private lateinit var locationSettingsRequest: LocationSettingsRequest // Определние настроек девайса пользователя
+    private lateinit var locationCallback: LocationCallback // События определения местоположения
+    private lateinit var location: Location // Широта и долгота пользователя
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMapBinding = DataBindingUtil.setContentView(this, R.layout.activity_map)
@@ -43,15 +45,16 @@ class MapActivity : AppCompatActivity(),OnMapReadyCallback {
     }
 
     private fun makeLocationCallback() {
-        locationCallback = object:LocationCallback(){
+        locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 location = p0.lastLocation
             }
         }
     }
+
     private fun makeLocationSettings() {
-        val settingsBuilder:LocationSettingsRequest.Builder =LocationSettingsRequest.Builder()
+        val settingsBuilder: LocationSettingsRequest.Builder = LocationSettingsRequest.Builder()
         settingsBuilder.addLocationRequest(locationRequest)
         locationSettingsRequest = settingsBuilder.build()
     }
@@ -67,7 +70,6 @@ class MapActivity : AppCompatActivity(),OnMapReadyCallback {
                     startActivity(Intent(applicationContext, MainActivity::class.java))
                     overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
-                    //return@OnNavigationItemSelectedListener true
                 }
                 R.id.favorites -> {
                     startActivity(
@@ -76,13 +78,19 @@ class MapActivity : AppCompatActivity(),OnMapReadyCallback {
                             FavoritesActivity::class.java
                         )
                     )
+                    overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }
                 R.id.chat -> {
                     startActivity(Intent(applicationContext, UsersActivity::class.java))
+                    overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }
-                //R.id.settings -> startActivity(Intent(applicationContext,FavoritesActivity::class.java))
+                R.id.settings -> {
+                    startActivity(Intent(applicationContext, SettingsActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
                 // R.id.map -> startActivity(Intent(applicationContext, MapActivity::class.java))
             }
             false

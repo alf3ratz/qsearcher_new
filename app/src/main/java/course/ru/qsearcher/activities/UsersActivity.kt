@@ -2,6 +2,7 @@ package course.ru.qsearcher.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -34,19 +35,34 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
         users = mutableListOf()
         userName = SignInActivity.userName
         activityUsersBinding.bottomNavigation.selectedItemId = R.id.chat
-        bottomNavigation.setOnNavigationItemReselectedListener { item ->
+        bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.home -> startActivity(Intent(applicationContext, MainActivity::class.java))
-                R.id.favorites -> startActivity(
-                    Intent(
-                        applicationContext,
-                        FavoritesActivity::class.java
+                R.id.home -> {
+                    startActivity(Intent(applicationContext, MainActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.favorites -> {
+                    startActivity(
+                        Intent(
+                            applicationContext,
+                            FavoritesActivity::class.java
+                        )
                     )
-                )
-                //R.id.chat -> startActivity(Intent(applicationContext, UsersActivity::class.java))
-                //R.id.settings -> startActivity(Intent(applicationContext,FavoritesActivity::class.java))
-                R.id.map -> startActivity(Intent(applicationContext, MapActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.settings -> {startActivity(Intent(applicationContext,SettingsActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.map -> {
+                    startActivity(Intent(applicationContext, MapActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
             }
+            false
         }
         doInitialization()
     }
@@ -85,7 +101,12 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
 
     override fun onUserCLick(user: User) {
         super.onUserCLick(user)
-        goToChat(user)
+        if(user!=null){
+            Log.i("user",user.name)
+            goToChat(user)
+        }else{
+            Log.i("user","jopa")
+        }
     }
 
     private fun goToChat(user: User) {

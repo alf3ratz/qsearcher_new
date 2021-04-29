@@ -33,6 +33,7 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
             when (item.itemId) {
                 R.id.home -> {
                     startActivity(Intent(applicationContext, MainActivity::class.java))
+                    overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }
 //                R.id.favorites -> startActivity(
@@ -43,11 +44,17 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
 //                )
                 R.id.chat -> {
                     startActivity(Intent(applicationContext, UsersActivity::class.java))
+                    overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }
-                //R.id.settings -> startActivity(Intent(applicationContext,FavoritesActivity::class.java))
+                R.id.settings -> {
+                    startActivity(Intent(applicationContext, SettingsActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
                 R.id.map -> {
                     startActivity(Intent(applicationContext, MapActivity::class.java))
+                    overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }
             }

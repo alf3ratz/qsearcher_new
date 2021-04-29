@@ -60,7 +60,7 @@ class ChatActivity : AppCompatActivity() {
         if (intent != null) {
             userName = intent.getStringExtra("userName")
             receiverUserId = intent.getStringExtra("receiverId")!!
-            receiverUserName = intent.getStringExtra("receiverUserName")!!
+            receiverUserName = intent.getStringExtra("receiverName")!!
         } else {
             userName = "Default_User"
             receiverUserId = intent.getStringExtra("receiverId")!!
