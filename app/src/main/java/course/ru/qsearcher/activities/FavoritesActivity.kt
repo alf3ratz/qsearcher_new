@@ -17,9 +17,10 @@ import course.ru.qsearcher.viewmodels.FavoritesViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_map.*
 
 class FavoritesActivity : AppCompatActivity(), FavoritesListener {
-    private var activityFavoritesBinding: ActivityFavoritesBinding? = null
+    private lateinit var activityFavoritesBinding: ActivityFavoritesBinding
     private var favoritesViewModel: FavoritesViewModel? = null
     private var favoritesAdapter: FavoritesAdapter? = null
     private var favoritesList: MutableList<Event>? = null
@@ -27,6 +28,31 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityFavoritesBinding = DataBindingUtil.setContentView(this, R.layout.activity_favorites)
+        activityFavoritesBinding.bottomNavigation.selectedItemId = R.id.favorites
+        bottomNavigation.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.home -> {
+                    startActivity(Intent(applicationContext, MainActivity::class.java))
+                    return@setOnNavigationItemSelectedListener true
+                }
+//                R.id.favorites -> startActivity(
+//                    Intent(
+//                        applicationContext,
+//                        FavoritesActivity::class.java
+//                    )
+//                )
+                R.id.chat -> {
+                    startActivity(Intent(applicationContext, UsersActivity::class.java))
+                    return@setOnNavigationItemSelectedListener true
+                }
+                //R.id.settings -> startActivity(Intent(applicationContext,FavoritesActivity::class.java))
+                R.id.map -> {
+                    startActivity(Intent(applicationContext, MapActivity::class.java))
+                    return@setOnNavigationItemSelectedListener true
+                }
+            }
+            false
+        }
         doInitialization()
     }
 
@@ -63,9 +89,9 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
 
     override fun onResume() {
         super.onResume()
-        if(TempDataHolder.IS_FAVORITES_UPDATED){
+        if (TempDataHolder.IS_FAVORITES_UPDATED) {
             loadFavorites()
-            TempDataHolder.IS_FAVORITES_UPDATED=false
+            TempDataHolder.IS_FAVORITES_UPDATED = false
         }
 
     }

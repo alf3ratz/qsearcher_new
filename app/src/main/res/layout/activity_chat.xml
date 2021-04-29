@@ -53,6 +53,7 @@
                 android:padding="@dimen/_2sdp"
                 android:src="@drawable/ic_sign_out"
                 app:tint="@color/colorTextIcons" />
+
             <ImageView
                 android:id="@+id/imageUsers"
                 android:layout_width="@dimen/_24sdp"
@@ -77,9 +78,9 @@
             android:layout_weight="1"
             android:divider="@android:color/transparent"
             android:transcriptMode="alwaysScroll"
+            app:layout_constraintBottom_toBottomOf="@id/sendMessageLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutHeader"
-            app:layout_constraintBottom_toBottomOf="@id/sendMessageLayout"
             tools:listitem="@layout/message_item" />
 
         <LinearLayout
@@ -124,6 +125,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

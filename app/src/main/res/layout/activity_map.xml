@@ -49,7 +49,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layoutHeader" />
-
+            app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"/>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemBackground="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:itemTextColor="@drawable/selector"
+            app:itemIconTint="@drawable/selector"
+            app:menu="@menu/bottom_navigation"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

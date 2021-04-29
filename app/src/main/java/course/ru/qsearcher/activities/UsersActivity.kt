@@ -14,6 +14,7 @@ import course.ru.qsearcher.adapters.UsersAdapter
 import course.ru.qsearcher.databinding.ActivityUsersBinding
 import course.ru.qsearcher.listeners.OnUserClickListener
 import course.ru.qsearcher.model.User
+import kotlinx.android.synthetic.main.activity_map.*
 
 
 class UsersActivity : AppCompatActivity(), OnUserClickListener {
@@ -32,6 +33,21 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
         auth = FirebaseAuth.getInstance()
         users = mutableListOf()
         userName = SignInActivity.userName
+        activityUsersBinding.bottomNavigation.selectedItemId = R.id.chat
+        bottomNavigation.setOnNavigationItemReselectedListener { item ->
+            when (item.itemId) {
+                R.id.home -> startActivity(Intent(applicationContext, MainActivity::class.java))
+                R.id.favorites -> startActivity(
+                    Intent(
+                        applicationContext,
+                        FavoritesActivity::class.java
+                    )
+                )
+                //R.id.chat -> startActivity(Intent(applicationContext, UsersActivity::class.java))
+                //R.id.settings -> startActivity(Intent(applicationContext,FavoritesActivity::class.java))
+                R.id.map -> startActivity(Intent(applicationContext, MapActivity::class.java))
+            }
+        }
         doInitialization()
     }
 

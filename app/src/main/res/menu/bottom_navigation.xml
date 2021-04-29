@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-<item
-    android:id="@+id/home"
-    android:title="Мероприятия"
-    android:icon="@drawable/ic_home"
-    />
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/ic_home"
+        android:title="Мероприятия" />
+    <item
+        android:id="@+id/favorites"
+        android:icon="@drawable/ic_bookmark"
+        android:title="Избранное" />
     <item
         android:id="@+id/chat"
-        android:title="Сообщения"
-        android:icon="@drawable/ic_message"/>
-    <item android:id="@+id/settings"
-        android:title="Настройки"
-        android:icon="@drawable/ic_settings"/>
+        android:icon="@drawable/ic_message"
+        android:title="Сообщения" />
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_settings"
+        android:title="Настройки" />
+    <item
+        android:id="@+id/map"
+        android:icon="@drawable/ic_map"
+        android:title="Карта" />
 
 </menu>

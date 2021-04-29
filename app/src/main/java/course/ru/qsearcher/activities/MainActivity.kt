@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.EventsAdapter
@@ -18,6 +20,7 @@ import course.ru.qsearcher.listeners.EventListener
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
+import kotlinx.android.synthetic.main.activity_map.*
 
 
 class MainActivity : AppCompatActivity(), EventListener {
@@ -30,7 +33,6 @@ class MainActivity : AppCompatActivity(), EventListener {
     private lateinit var eventsAdapter: EventsAdapter
     private var currentPage: Int = 1;
     private var totalAvailablePages: Int = 1
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,11 +66,41 @@ class MainActivity : AppCompatActivity(), EventListener {
         viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.javaObjectType)
         var activity: MostPopularEventsViewModel
 
+        activityMainBinding.bottomNavigation.selectedItemId = R.id.home
+        bottomNavigation.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                // R.id.home -> startActivity(Intent(applicationContext, MainActivity::class.java))
+                R.id.favorites -> {
+                    startActivity(
+                        Intent(
+                            applicationContext,
+                            FavoritesActivity::class.java
+                        )
+                    )
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.chat -> {
+                    startActivity(Intent(applicationContext, UsersActivity::class.java))
+                    return@setOnNavigationItemSelectedListener true
+                }
+                //R.id.settings -> startActivity(Intent(applicationContext,FavoritesActivity::class.java))
+                R.id.map -> {
+                    startActivity(Intent(applicationContext, MapActivity::class.java))
+                    return@setOnNavigationItemSelectedListener true
+                }
+            }
+            false
+        }
+
+
+
+
         eventsAdapter = EventsAdapter(events, this)
         activityMainBinding.apply {
             activityMainBinding.eventsRecyclerView.adapter = eventsAdapter
             invalidateAll()
         }
+
 
         activityMainBinding.eventsRecyclerView.addOnScrollListener(object :
             RecyclerView.OnScrollListener() {

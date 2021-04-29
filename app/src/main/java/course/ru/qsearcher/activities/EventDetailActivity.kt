@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.ImageSliderAdapter
-import course.ru.qsearcher.databinding.FragmentEventDetailBinding
 import course.ru.qsearcher.databinding.ActivityEventDetailBinding
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.responses.EventResponse
