@@ -177,6 +177,8 @@ class ChatActivity : AppCompatActivity() {
                     val msg: Message = Message()
                     msg.imageURL = downloadUri.toString()
                     msg.name = userName!!
+                    msg.sender = auth.currentUser.uid
+                    msg.receiver= receiverUserId
                     messagesRef?.push()?.setValue(msg)
                 } else {
                     // Handle failures

@@ -1,10 +1,12 @@
 package course.ru.qsearcher.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
@@ -35,6 +37,8 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
 
     private fun doInitialization() {
         activityUsersBinding.usersRecyclerView.setHasFixedSize(true)
+        val dividerItemDecoration = DividerItemDecoration(this, RecyclerView.VERTICAL)
+        activityUsersBinding.usersRecyclerView.addItemDecoration(dividerItemDecoration)
         activityUsersBinding.usersRecyclerView.layoutManager = LinearLayoutManager(this)
         usersRef = FirebaseDatabase.getInstance().reference.child("users")
         if (usersChildEventListener == null) {
@@ -60,7 +64,6 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
             activityUsersBinding.usersRecyclerView.adapter = userAdapter
             invalidateAll()
         }
-
         activityUsersBinding.imageBack.setOnClickListener { onBackPressed() }
     }
 
@@ -69,12 +72,12 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
         goToChat(user)
     }
 
-    private fun goToChat(user:User) {
-        var intent:Intent = Intent(applicationContext,ChatActivity::class.java).apply {
+    private fun goToChat(user: User) {
+        var intent:Intent = Intent(applicationContext, ChatActivity::class.java).apply {
 //            putExtra("name",user.name)
 //            putExtra("email",user.email)
-            putExtra("receiverId",user.id)
-            putExtra("userName",userName)
+            putExtra("receiverId", user.id)
+            putExtra("userName", userName)
 //            putExtra("avatar",user.avatarMock)
         }
         startActivity(intent)

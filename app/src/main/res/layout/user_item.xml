@@ -26,7 +26,8 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_person"
                 app:riv_border_color="@color/colorPrimaryDark"
-                app:riv_corner_radius="@dimen/_20sdp" />
+                app:riv_border_width="@dimen/_2sdp"
+                app:riv_corner_radius="@dimen/_15sdp" />
 
             <TextView
                 android:id="@+id/userName"
