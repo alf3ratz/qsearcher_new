@@ -5,5 +5,12 @@
     android:title="Мероприятия"
     android:icon="@drawable/ic_home"
     />
+    <item
+        android:id="@+id/chat"
+        android:title="Сообщения"
+        android:icon="@drawable/ic_message"/>
+    <item android:id="@+id/settings"
+        android:title="Настройки"
+        android:icon="@drawable/ic_settings"/>
 
 </menu>
