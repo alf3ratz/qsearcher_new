@@ -79,6 +79,7 @@
             android:transcriptMode="alwaysScroll"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutHeader"
+            app:layout_constraintBottom_toBottomOf="@id/sendMessageLayout"
             tools:listitem="@layout/message_item" />
 
         <LinearLayout

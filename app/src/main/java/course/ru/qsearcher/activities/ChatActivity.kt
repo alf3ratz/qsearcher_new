@@ -88,7 +88,7 @@ class ChatActivity : AppCompatActivity() {
 //        messagesRef!!.setValue("Hello, World!")
         //userName = SignInActivity.userName
 
-        var lst: List<Message> = mutableListOf()
+        var lst: MutableList<Message> = mutableListOf()
         messageAdapter = MessageAdapter(this, R.layout.message_item, lst)
         messageListView?.adapter = messageAdapter
         progressBar?.visibility = ProgressBar.INVISIBLE;
@@ -115,12 +115,13 @@ class ChatActivity : AppCompatActivity() {
         imageBack.setOnClickListener { onBackPressed() }
         sendMessageButton.setOnClickListener {
 
-            var msg: Message = Message(
+            val msg: Message = Message(
                 messageEdit.text.toString(),
                 userName!!,
                 "",
                 auth.currentUser.uid,
-                receiverUserId
+                receiverUserId,
+                true
             )
 
 //                msg.text = messageEdit.text.toString()
