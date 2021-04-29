@@ -129,6 +129,8 @@
             app:itemBackground="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:itemTextColor="@drawable/selector"/>
+            app:itemTextColor="@drawable/selector"
+            app:itemIconTint="@drawable/selector"
+            app:menu="@menu/bottom_navigation"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
