@@ -47,6 +47,7 @@
                 android:text="@string/tv_shows_most_popular"
                 android:textColor="@color/colorTextIcons"
                 android:textSize="@dimen/_14ssp" />
+
             <ImageView
                 android:id="@+id/imageSign"
                 android:layout_width="@dimen/_24sdp"
@@ -56,6 +57,7 @@
                 android:padding="@dimen/_2sdp"
                 android:src="@drawable/ic_watch"
                 app:tint="@color/colorTextIcons" />
+
             <ImageView
                 android:id="@+id/imageSearch"
                 android:layout_width="@dimen/_24sdp"
@@ -65,6 +67,7 @@
                 android:padding="@dimen/_2sdp"
                 android:src="@drawable/ic_search"
                 app:tint="@color/colorTextIcons" />
+
             <ImageView
                 android:id="@+id/imageFavourites"
                 android:layout_width="@dimen/_24sdp"
@@ -74,6 +77,7 @@
                 android:padding="@dimen/_2sdp"
                 android:src="@drawable/ic_bookmark"
                 app:tint="@color/colorTextIcons" />
+
             <ImageView
                 android:id="@+id/imageChat"
                 android:layout_width="@dimen/_24sdp"
@@ -118,5 +122,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemBackground="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:itemTextColor="@drawable/selector"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
