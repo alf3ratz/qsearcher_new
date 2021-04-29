@@ -48,6 +48,8 @@ class ChatActivity : AppCompatActivity() {
 
     // Айди юзера-полчателя, то есть того, с кем мы ведем диалог. Нужен чтобы достать из базы все данные о пользователе.
     private lateinit var receiverUserId: String
+    // Имя пользователя, с которым ведется диалог. Отображается вверху экрана.
+    private lateinit var receiverUserName:String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,10 +60,13 @@ class ChatActivity : AppCompatActivity() {
         if (intent != null) {
             userName = intent.getStringExtra("userName")
             receiverUserId = intent.getStringExtra("receiverId")!!
+            receiverUserName = intent.getStringExtra("receiverUserName")!!
         } else {
             userName = "Default_User"
             receiverUserId = intent.getStringExtra("receiverId")!!
         }
+        // Задаем значение надписи вверху страницы.
+        title = receiverUserId
 
 
         database = Firebase.database

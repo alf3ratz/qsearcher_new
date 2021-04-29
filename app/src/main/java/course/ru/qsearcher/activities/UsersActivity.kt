@@ -77,6 +77,7 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
 //            putExtra("name",user.name)
 //            putExtra("email",user.email)
             putExtra("receiverId", user.id)
+            putExtra("receiverName",user.name)
             putExtra("userName", userName)
 //            putExtra("avatar",user.avatarMock)
         }
