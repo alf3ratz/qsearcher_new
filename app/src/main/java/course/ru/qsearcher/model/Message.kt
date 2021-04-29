@@ -5,8 +5,9 @@ class Message(
     var name: String,
     var imageURL: String,
     var sender: String,
-    var receiver: String
+    var receiver: String,
+    var isMine:Boolean
 ) {
     //var imageURL:String = image
-    constructor() : this("", "", "", "", "") {}
+    constructor() : this("", "", "", "", "",true) {}
 }

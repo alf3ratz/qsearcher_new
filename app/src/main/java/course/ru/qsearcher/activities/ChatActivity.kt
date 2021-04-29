@@ -134,11 +134,16 @@ class ChatActivity : AppCompatActivity() {
         messagesChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val msg: Message = snapshot.getValue(Message::class.java)!!
-                if (msg.sender == auth.currentUser.uid && msg.receiver == receiverUserId ||
-                    msg.receiver == auth.currentUser.uid && msg.sender == receiverUserId) {
+                if (msg.sender == auth.currentUser.uid && msg.receiver == receiverUserId) {
+                    msg.isMine = true
+                    messageAdapter?.add(msg)
+                    Log.i("db", msg.text)
+                } else if (msg.receiver == auth.currentUser.uid && msg.sender == receiverUserId) {
+                    msg.isMine = false
                     messageAdapter?.add(msg)
                     Log.i("db", msg.text)
                 }
+
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
@@ -178,7 +183,7 @@ class ChatActivity : AppCompatActivity() {
                     msg.imageURL = downloadUri.toString()
                     msg.name = userName!!
                     msg.sender = auth.currentUser.uid
-                    msg.receiver= receiverUserId
+                    msg.receiver = receiverUserId
                     messagesRef?.push()?.setValue(msg)
                 } else {
                     // Handle failures
