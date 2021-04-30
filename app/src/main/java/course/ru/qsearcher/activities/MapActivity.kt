@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.*
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
@@ -26,9 +27,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var locationCallback: LocationCallback // События определения местоположения
     private lateinit var location: Location // Широта и долгота пользователя
 
+    private lateinit var map:GoogleMap // Карта
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMapBinding = DataBindingUtil.setContentView(this, R.layout.activity_map)
+
         setNavigation()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         settingsClient = LocationServices.getSettingsClient(this)
@@ -98,13 +102,15 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
-        googleMap?.apply {
+        map = googleMap!!
+        map.apply {
             val position = LatLng(location.latitude, location.longitude)
             addMarker(
                 MarkerOptions()
                     .position(position)
                     .title("Выше местоположение")
             )
+            map.moveCamera(CameraUpdateFactory.newLatLng(position))
         }
     }
 }

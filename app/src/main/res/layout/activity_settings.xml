@@ -31,9 +31,9 @@
                 android:src="@drawable/ic_person"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:riv_corner_radius="@dimen/_4sdp"
+                app:riv_border_color="@color/colorTextPrimary"
                 app:riv_border_width="@dimen/_2sdp"
-                app:riv_border_color="@color/colorTextPrimary"/>
+                app:riv_corner_radius="@dimen/_4sdp" />
 
             <TextView
                 android:id="@+id/userName"
@@ -66,55 +66,74 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewSupporter">
 
-            <TextView
-                android:id="@+id/textSettings1"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/firstRow"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:fontFamily="@font/ubuntu_regular"
-                android:text="Уведомления"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="@dimen/_18ssp"
+                android:paddingTop="@dimen/_8sdp"
+                app:layout_constraintBottom_toTopOf="@id/secondRow"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchSettings1"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:fontFamily="@font/ubuntu_regular"
+                    android:text="Уведомления"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="@dimen/_18ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:outlineAmbientShadowColor="@color/colorAccent"
+                    android:outlineSpotShadowColor="@color/colorAccent"
+                    android:shadowColor="@color/colorAccent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/secondRow"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:outlineAmbientShadowColor="@color/colorAccent"
-                android:outlineSpotShadowColor="@color/colorAccent"
-                android:shadowColor="@color/colorAccent"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textSettings2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:fontFamily="@font/ubuntu_regular"
-                android:text="Что-то еще"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="@dimen/_18ssp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textSettings1" />
+                app:layout_constraintTop_toBottomOf="@id/firstRow">
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:outlineAmbientShadowColor="@color/colorAccent"
-                android:outlineSpotShadowColor="@color/colorAccent"
-                android:shadowColor="@color/colorAccent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/switchSettings1" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:fontFamily="@font/ubuntu_regular"
+                    android:text="Что-то еще"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="@dimen/_18ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:outlineAmbientShadowColor="@color/colorAccent"
+                    android:outlineSpotShadowColor="@color/colorAccent"
+                    android:shadowColor="@color/colorAccent" />
+            </LinearLayout>
 
             <View
                 android:id="@+id/settingsViewBottom"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_200sdp"
                 app:layout_constraintBottom_toBottomOf="@+id/settingsLayout"
-                app:layout_constraintTop_toBottomOf="@id/textSettings2" />
+                app:layout_constraintTop_toBottomOf="@id/secondRow" />
 
             <TextView
                 android:id="@+id/textSignOut"
