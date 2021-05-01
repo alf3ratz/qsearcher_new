@@ -12,8 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 import course.ru.qsearcher.R
 import course.ru.qsearcher.databinding.ActivitySignInBinding
@@ -27,6 +26,7 @@ class SignInActivity : AppCompatActivity() {
     private var database: FirebaseDatabase? = null
     private var usersDbRef: DatabaseReference? = null
     private var loginMode: Boolean = false;
+    private var usersChildEventListener: ChildEventListener? = null
 
     companion object {
         var userName: String = ""
@@ -38,8 +38,27 @@ class SignInActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
         auth = Firebase.auth
         if (auth?.currentUser != null){
-//            database = FirebaseDatabase.getInstance()
-////            usersDbRef = database?.reference?.child("users")
+            database = FirebaseDatabase.getInstance()
+            usersDbRef = database?.reference?.child("users")
+            usersChildEventListener = object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    val user: User = snapshot.getValue(User::class.java)!!
+                    if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
+                            userName = user.name
+                    }
+                }
+
+                override fun onChildChanged(
+                    snapshot: DataSnapshot,
+                    previousChildName: String?
+                ) {
+                }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {}
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                override fun onCancelled(error: DatabaseError) {}
+            }
+            usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
 
             //userName = auth?.currentUser!!.uid
             startActivity(Intent(applicationContext, MainActivity::class.java))

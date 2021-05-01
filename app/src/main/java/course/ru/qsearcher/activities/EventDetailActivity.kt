@@ -161,14 +161,6 @@ class EventDetailActivity : AppCompatActivity() {
                 usersDbRef = database?.reference?.child("users")
                 usersChildEventListener = object : ChildEventListener {
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                        //val user: User = snapshot.child(SignInActivity.userName).getValue(User::class.java)!!
-//                        val users = snapshot.getValue()
-//                        if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
-//                            user.favList.add(event.id)
-//                            usersDbRef?.child(SignInActivity.userName)
-//                                ?.child("favList")?.setValue(user.favList)
-//                            // usersDbRef!!.updateChildren()
-//                        }
                         for(temp in snapshot.children){
                             Log.i("favList",temp.value.toString())
                         }
@@ -177,8 +169,6 @@ class EventDetailActivity : AppCompatActivity() {
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
                             user.favList.add(event.id)
                             usersDbRef?.child(user.name)?.child("favList")?.setValue(user.favList)
-                           // snapshot.child("favList")
-                            // usersDbRef!!.updateChildren()
                         }
                     }
 
