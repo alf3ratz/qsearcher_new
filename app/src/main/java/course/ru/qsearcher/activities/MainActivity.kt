@@ -38,26 +38,6 @@ class MainActivity : AppCompatActivity(), EventListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
-//        database = Firebase.database.reference
-//        database.setValue("Hello world")
-//        database.child("msg").child("msg1").setValue("Hello world")
-//        var database = FirebaseDatabase.getInstance()
-//        var messagesRef = database!!.getReference().child("message")
-//        messagesRef!!.setValue("Hello, жопа!")
-//        messagesRef.addValueEventListener(object : ValueEventListener {
-//            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                // This method is called once with the initial value and again
-//                // whenever data at this location is updated.
-//                val value = dataSnapshot.getValue(String::class.java)
-//                Log.d("db", "Value is: $value")
-//            }
-//
-//            override fun onCancelled(error: DatabaseError) {
-//                // Failed to read value
-//                Log.w("db", "Failed to read value.", error.toException())
-//            }
-//        })
         doInitialization()
     }
 
@@ -65,42 +45,7 @@ class MainActivity : AppCompatActivity(), EventListener {
         activityMainBinding?.eventsRecyclerView?.setHasFixedSize(true)
         viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.javaObjectType)
         var activity: MostPopularEventsViewModel
-
-        activityMainBinding.bottomNavigation.selectedItemId = R.id.home
-        activityMainBinding?.bottomNavigation.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                // R.id.home -> startActivity(Intent(applicationContext, MainActivity::class.java))
-                R.id.favorites -> {
-                    startActivity(
-                        Intent(
-                            applicationContext,
-                            FavoritesActivity::class.java
-                        )
-                    )
-                    overridePendingTransition(0, 0)
-                    return@setOnNavigationItemSelectedListener true
-                }
-                R.id.chat -> {
-                    startActivity(Intent(applicationContext, UsersActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    return@setOnNavigationItemSelectedListener true
-                }
-                R.id.settings -> {startActivity(Intent(applicationContext,SettingsActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    return@setOnNavigationItemSelectedListener true
-                }
-
-                R.id.map -> {
-                    startActivity(Intent(applicationContext, MapActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    return@setOnNavigationItemSelectedListener true
-                }
-            }
-            false
-        }
-
-
-
+        setBottomNavigation()
 
         eventsAdapter = EventsAdapter(events, this)
         activityMainBinding.apply {
@@ -143,7 +88,43 @@ class MainActivity : AppCompatActivity(), EventListener {
         getMostPopularEvents()
     }
 
-    @SuppressLint("ShowToast")
+    private fun setBottomNavigation() {
+        activityMainBinding.bottomNavigation.selectedItemId = R.id.home
+        activityMainBinding?.bottomNavigation.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                // R.id.home -> startActivity(Intent(applicationContext, MainActivity::class.java))
+                R.id.favorites -> {
+                    startActivity(
+                        Intent(
+                            applicationContext,
+                            FavoritesActivity::class.java
+                        )
+                    )
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.chat -> {
+                    startActivity(Intent(applicationContext, UsersActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.settings -> {
+                    startActivity(Intent(applicationContext, SettingsActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.map -> {
+                    startActivity(Intent(applicationContext, MapActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+            }
+            false
+        }
+    }
+
+
     private fun getMostPopularEvents() {
         toggleLoading()
         //var temp: ArrayList<Event> = ArrayList()
@@ -169,7 +150,7 @@ class MainActivity : AppCompatActivity(), EventListener {
                         events.size / 1000
                     )//проблема с выводом - показывает после выхода из экрана
                 } else {
-                    Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT)
+                    Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
                     Log.i("response", "список событий  налл")
                 }
             }

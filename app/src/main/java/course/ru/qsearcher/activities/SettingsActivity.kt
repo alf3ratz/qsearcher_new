@@ -5,22 +5,36 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
+import course.ru.qsearcher.adapters.EventsAdapter
 import course.ru.qsearcher.databinding.ActivitySettingsBinding
+import course.ru.qsearcher.listeners.EventListener
+import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.model.User
+import course.ru.qsearcher.responses.EventResponse
+import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_settings.*
 
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity(), EventListener {
     private lateinit var activitySettingsBinding: ActivitySettingsBinding
+    private lateinit var viewModel: MostPopularEventsViewModel
+    private lateinit var eventsAdapter: EventsAdapter
     private var database: FirebaseDatabase? = null
     private var usersDbRef: DatabaseReference? = null
     private var usersChildEventListener: ChildEventListener? = null
     private var newName: String = ""
+    private var currentPage: Int = 1;
+    private var totalAvailablePages: Int = 1
+    private var events: ArrayList<Event> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +44,45 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun doInitialization() {
+        activitySettingsBinding?.favEventsRecycler?.setHasFixedSize(true)
         activitySettingsBinding.userName.text = SignInActivity.userName
+        viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.javaObjectType)
+        eventsAdapter = EventsAdapter(events, this)
+        activitySettingsBinding.apply {
+            activitySettingsBinding.favEventsRecycler.adapter = eventsAdapter
+            invalidateAll()
+        }
+
+
+        activitySettingsBinding.favEventsRecycler.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!activitySettingsBinding.favEventsRecycler.canScrollVertically(1)) {
+                    database = FirebaseDatabase.getInstance()
+                    usersDbRef = database?.reference?.child("users")
+                    usersChildEventListener = object : ChildEventListener {
+                        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                            val user: User = snapshot.getValue(User::class.java)!!
+                            if (user.id == FirebaseAuth.getInstance().currentUser.uid && user.name != newName) {
+                                getEvents(user.favList[3])
+                            }
+                        }
+                        override fun onChildChanged(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                        }
+
+                        override fun onChildRemoved(snapshot: DataSnapshot) {}
+                        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                        override fun onCancelled(error: DatabaseError) {}
+                    }
+                    usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
+
+                }
+            }
+        })
         activitySettingsBinding.exitButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(applicationContext, SignInActivity::class.java))
@@ -70,6 +122,7 @@ class SettingsActivity : AppCompatActivity() {
                 activitySettingsBinding.userName.visibility = View.VISIBLE
             }
         }
+        getEvents(179108)
         //activitySettingsBinding.userImage =
     }
 
@@ -106,5 +159,51 @@ class SettingsActivity : AppCompatActivity() {
             }
             false
         }
+    }
+    private fun getEvents(id:Int) {
+        //toggleLoading()
+        //var temp: ArrayList<Event> = ArrayList()
+        viewModel.getEventsById(id).observe(this, Observer { t: EventResponse? ->
+            //toggleLoading()
+            Log.i("response_", "вошел в лямбду")
+            if (t != null) {
+                Log.i("response_", "если респонс не налл")
+                    //                totalAvailablePages = t.page!!
+                if (t.events != null) {
+                    val oldCount: Int = events.size
+                    Log.i("response_", "если список событий не налл")
+                    for (elem in t.events!!) {
+                        elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
+                            1,
+                            elem.name!!.length
+                        )
+                    }
+                    events.addAll(t.events!!)
+                    eventsAdapter.notifyDataSetChanged()
+                    eventsAdapter.notifyItemRangeChanged(
+                        oldCount,
+                        events.size / 1000
+                    )//проблема с выводом - показывает после выхода из экрана
+                } else {
+                    Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
+                    Log.i("response_", "список событий  налл")
+                }
+            }else{
+                Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
+                Log.i("response_", "респонс  налл")
+            }
+        })
+    }
+
+    override fun onEventClicked(event: Event) {
+        val images: ArrayList<String> = arrayListOf<String>()
+        for (elem in event.images!!) {
+            images.plusAssign(elem.toString())
+        }
+        event.imagesAsString = images
+        val intent: Intent = Intent(applicationContext, EventDetailActivity::class.java).apply {
+            putExtra("event", event)
+        }
+        startActivity(intent);
     }
 }
