@@ -1,9 +1,7 @@
 package course.ru.qsearcher.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -12,16 +10,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.ImageSliderAdapter
 import course.ru.qsearcher.databinding.ActivityEventDetailBinding
 import course.ru.qsearcher.model.Event
+import course.ru.qsearcher.model.User
 import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.utilities.TempDataHolder
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
@@ -31,9 +33,14 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 class EventDetailActivity : AppCompatActivity() {
     private var eventViewModel: MostPopularEventsViewModel? = null;
     private var eventDetailActivityBinding: ActivityEventDetailBinding? = null
+    private var auth: FirebaseAuth? = null
+    private var database: FirebaseDatabase? = null
+    private var usersDbRef: DatabaseReference? = null
+    private var usersChildEventListener: ChildEventListener? = null
     private lateinit var event: Event
 
     private var isEventAvailableInFavorites: Boolean = false
@@ -150,7 +157,44 @@ class EventDetailActivity : AppCompatActivity() {
                         compositeDisposable.dispose()
                     }?.let { it1 -> compositeDisposable.add(it1) }
 
+                database = FirebaseDatabase.getInstance()
+                usersDbRef = database?.reference?.child("users")
+                usersChildEventListener = object : ChildEventListener {
+                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                        //val user: User = snapshot.child(SignInActivity.userName).getValue(User::class.java)!!
+//                        val users = snapshot.getValue()
+//                        if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
+//                            user.favList.add(event.id)
+//                            usersDbRef?.child(SignInActivity.userName)
+//                                ?.child("favList")?.setValue(user.favList)
+//                            // usersDbRef!!.updateChildren()
+//                        }
+                        for(temp in snapshot.children){
+                            Log.i("favList",temp.value.toString())
+                        }
+                        Log.i("favList",snapshot.value.toString())
+                        val user: User = snapshot.getValue(User::class.java)!!
+                        if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
+                            user.favList.add(event.id)
+                            usersDbRef?.child(user.name)?.child("favList")?.setValue(user.favList)
+                           // snapshot.child("favList")
+                            // usersDbRef!!.updateChildren()
+                        }
+                    }
 
+                    override fun onChildChanged(
+                        snapshot: DataSnapshot,
+                        previousChildName: String?
+                    ) {
+
+                        //usersDbRef!!.push().setValue(user)
+                    }
+
+                    override fun onChildRemoved(snapshot: DataSnapshot) {}
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                    override fun onCancelled(error: DatabaseError) {}
+                }
+                usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
 //                eventViewModel?.addToFavorites(event)
 ////                    ?.subscribeOn(Schedulers.io())
 ////                    ?.observeOn(AndroidSchedulers.mainThread())

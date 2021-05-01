@@ -74,6 +74,7 @@ class ChatActivity : AppCompatActivity() {
         storageRef = storage?.reference?.child("chat_images")
         messagesRef = database!!.reference.child("message")
         usersRef = database!!.reference.child("users")
+        //usersRef!!.removeValue()
 
         usersChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {

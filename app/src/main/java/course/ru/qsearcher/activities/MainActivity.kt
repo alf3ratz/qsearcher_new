@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), EventListener {
         var activity: MostPopularEventsViewModel
 
         activityMainBinding.bottomNavigation.selectedItemId = R.id.home
-        bottomNavigation.setOnNavigationItemSelectedListener { item ->
+        activityMainBinding?.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 // R.id.home -> startActivity(Intent(applicationContext, MainActivity::class.java))
                 R.id.favorites -> {

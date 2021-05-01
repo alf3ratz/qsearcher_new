@@ -38,7 +38,10 @@ class SignInActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
         auth = Firebase.auth
         if (auth?.currentUser != null){
-            //userName = auth?.currentUser!!.displayName
+//            database = FirebaseDatabase.getInstance()
+////            usersDbRef = database?.reference?.child("users")
+
+            //userName = auth?.currentUser!!.uid
             startActivity(Intent(applicationContext, MainActivity::class.java))
         }
 
@@ -156,9 +159,11 @@ class SignInActivity : AppCompatActivity() {
     }
 
     private fun createUser(user: FirebaseUser?) {
-        val newUser: User = User(nameEditText.text.toString().trim(), user!!.email, user!!.uid,R.drawable.ic_person)
+        val newUser: User = User(nameEditText.text.toString().trim(), user!!.email, user!!.uid,R.drawable.ic_person,
+            mutableListOf
+       (1,2,3))
         userName = newUser.name
-        usersDbRef?.push()?.setValue(newUser)
+        usersDbRef?.child(newUser.name)?.setValue(newUser)
 
     }
 

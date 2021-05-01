@@ -35,7 +35,7 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
         users = mutableListOf()
         userName = SignInActivity.userName
         activityUsersBinding.bottomNavigation.selectedItemId = R.id.chat
-        bottomNavigation.setOnNavigationItemSelectedListener { item ->
+        activityUsersBinding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
                     startActivity(Intent(applicationContext, MainActivity::class.java))

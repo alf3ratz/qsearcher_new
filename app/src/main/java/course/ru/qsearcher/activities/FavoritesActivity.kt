@@ -29,7 +29,7 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
         super.onCreate(savedInstanceState)
         activityFavoritesBinding = DataBindingUtil.setContentView(this, R.layout.activity_favorites)
         activityFavoritesBinding.bottomNavigation.selectedItemId = R.id.favorites
-        bottomNavigation.setOnNavigationItemSelectedListener { item ->
+        activityFavoritesBinding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
                     startActivity(Intent(applicationContext, MainActivity::class.java))
