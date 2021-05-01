@@ -98,7 +98,7 @@ class SearchActivity : AppCompatActivity(), EventListener {
             if (it != null) {
                 totalAvailablePages = it.totalPages!!.toInt()
                 if (it.events != null) {
-                    var oldCount: Int = events.size
+                    val oldCount: Int = events.size
                     events.addAll(it.events!!)
                     eventsAdapter?.notifyItemRangeChanged(oldCount, events.size)
                 }

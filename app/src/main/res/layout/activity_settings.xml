@@ -48,6 +48,37 @@
                 android:textSize="@dimen/_18ssp"
                 app:layout_constraintStart_toEndOf="@id/userImage"
                 app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/editUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/ubuntu_medium"
+                android:includeFontPadding="false"
+                android:paddingTop="@dimen/_8sdp"
+                android:hint="Введите новое имя пользователя"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/_18ssp"
+                app:layout_constraintStart_toEndOf="@id/userImage"
+                app:layout_constraintTop_toTopOf="parent"
+                android:visibility="gone" />
+            <ImageView
+                android:id="@+id/confirmButton"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/editButton"
+                android:background="@drawable/ic_settings_added"
+                android:layout_margin="@dimen/_8sdp"/>
+                <ImageView
+                    android:id="@+id/editButton"
+                    android:layout_width="@dimen/_24sdp"
+                    android:layout_height="@dimen/_24sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/ic_edit"
+                    android:layout_margin="@dimen/_8sdp"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
