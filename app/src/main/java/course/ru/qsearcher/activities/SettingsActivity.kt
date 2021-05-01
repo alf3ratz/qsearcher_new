@@ -31,7 +31,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun doInitialization() {
         activitySettingsBinding.userName.text = SignInActivity.userName
-        activitySettingsBinding.imageSignOut.setOnClickListener {
+        activitySettingsBinding.exitButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(applicationContext, SignInActivity::class.java))
         }

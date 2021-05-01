@@ -60,6 +60,7 @@
                 android:padding="@dimen/_2sdp"
                 android:src="@drawable/ic_search"
                 app:tint="@color/colorTextIcons" />
+
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/eventsRecyclerView"

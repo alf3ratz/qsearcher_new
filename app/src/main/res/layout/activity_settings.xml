@@ -32,8 +32,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:riv_border_color="@color/colorTextPrimary"
-                app:riv_border_width="@dimen/_2sdp"
-                app:riv_corner_radius="@dimen/_4sdp" />
+                app:riv_border_width="@dimen/_1sdp"
+                app:riv_corner_radius="@dimen/_3sdp" />
 
             <TextView
                 android:id="@+id/userName"
@@ -48,37 +48,40 @@
                 android:textSize="@dimen/_18ssp"
                 app:layout_constraintStart_toEndOf="@id/userImage"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <EditText
                 android:id="@+id/editUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/ubuntu_medium"
+                android:hint="Введите новое имя пользователя"
                 android:includeFontPadding="false"
                 android:paddingTop="@dimen/_8sdp"
-                android:hint="Введите новое имя пользователя"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="@dimen/_18ssp"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/userImage"
-                app:layout_constraintTop_toTopOf="parent"
-                android:visibility="gone" />
+                app:layout_constraintTop_toTopOf="parent" />
+
             <ImageView
                 android:id="@+id/confirmButton"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
+                android:layout_margin="@dimen/_8sdp"
+                android:background="@drawable/ic_baseline_done_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/editButton"
-                android:background="@drawable/ic_baseline_done_24"
-                android:layout_margin="@dimen/_8sdp"/>
-                <ImageView
-                    android:id="@+id/editButton"
-                    android:layout_width="@dimen/_24sdp"
-                    android:layout_height="@dimen/_24sdp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:background="@drawable/ic_edit"
-                    android:layout_margin="@dimen/_8sdp"/>
+                app:layout_constraintEnd_toStartOf="@+id/editButton" />
+
+            <ImageView
+                android:id="@+id/editButton"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_margin="@dimen/_8sdp"
+                android:background="@drawable/ic_edit"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -163,28 +166,22 @@
                 android:id="@+id/settingsViewBottom"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_200sdp"
-                app:layout_constraintBottom_toBottomOf="@+id/settingsLayout"
+                app:layout_constraintBottom_toTopOf="@+id/exitButton"
                 app:layout_constraintTop_toBottomOf="@id/secondRow" />
 
-            <TextView
-                android:id="@+id/textSignOut"
+            <Button
+                android:id="@+id/exitButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Выйти из аккаунта"
+                android:layout_margin="@dimen/_4sdp"
+                android:background="@drawable/exit_button_shape"
+                android:drawableRight="@drawable/ic_exit"
+                android:text="Выход"
                 android:textColor="@color/colorThemeExtra"
-                android:textSize="@dimen/_13ssp"
+                android:textSize="@dimen/_10ssp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/settingsViewBottom" />
-
-            <ImageView
-                android:id="@+id/imageSignOut"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:src="@drawable/ic_sign_out"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/textSignOut"
-                app:layout_constraintTop_toBottomOf="@id/settingsViewBottom" />
+                app:layout_constraintStart_toStartOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
