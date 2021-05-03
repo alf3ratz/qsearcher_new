@@ -98,7 +98,7 @@ class SearchActivity : AppCompatActivity(), EventListener {
         toggleLoading()
         viewModel?.searchEvent(query)?.observe(this, Observer {
             if (it != null) {
-                //totalAvailablePages = it.totalPages!!.toInt()
+                totalAvailablePages = it.totalPages!!.toInt()
                 if (it.events != null) {
                     val oldCount: Int = events.size
                     events.addAll(it.events!!)

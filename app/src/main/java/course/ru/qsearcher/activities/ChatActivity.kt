@@ -57,10 +57,12 @@ class ChatActivity : AppCompatActivity() {
         activityChatBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat)
         auth = FirebaseAuth.getInstance()
         val intent: Intent = intent
+        val user:User = intent.getSerializableExtra("user") as User
         if (intent != null) {
-            userName = intent.getStringExtra("userName")
-            receiverUserId = intent.getStringExtra("receiverId")!!
-            receiverUserName = intent.getStringExtra("receiverName")!!
+
+            userName = SignInActivity.userName//intent.getStringExtra("userName")
+            receiverUserId = user.id //intent.getStringExtra("receiverId")!!
+            receiverUserName = user.name//intent.getStringExtra("receiverName")!!
         } else {
             userName = "Default_User"
             receiverUserId = intent.getStringExtra("receiverId")!!

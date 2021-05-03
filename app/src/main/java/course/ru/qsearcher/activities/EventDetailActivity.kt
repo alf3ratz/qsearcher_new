@@ -53,9 +53,9 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
 
     private var isEventAvailableInFavorites: Boolean = false
 
-    private lateinit var usersWithCurrentEvent:MutableList<User>
+    private lateinit var usersWithCurrentEvent: MutableList<User>
     private lateinit var userAdapter: UsersAdapter
-    private lateinit var usersEmails:MutableList<String>
+    private lateinit var usersEmails: MutableList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,8 +77,20 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         getEvents(savedInstanceState)
         usersWithCurrentEvent = ArrayList<User>()
         usersEmails = ArrayList<String>()
-        usersWithCurrentEvent.add(User("Чел","salfmasmdsa@mail.ru","sdjfbdsbfhdsjf",123213123,
-            mutableListOf(1,2,3)))
+        eventDetailActivityBinding?.usersWithEventRecycler?.layoutManager =
+            LinearLayoutManager(this)
+        userAdapter = UsersAdapter(usersWithCurrentEvent, this)
+        eventDetailActivityBinding?.apply {
+            eventDetailActivityBinding?.usersWithEventRecycler?.adapter = userAdapter
+            invalidateAll()
+        }
+//        usersWithCurrentEvent.add(
+//            User(
+////                "Чел", "salfmasmdsa@mail.ru", "sdjfbdsbfhdsjf", 123213123,
+////                mutableListOf(1, 2, 3)
+//            )
+//
+//        )
         getUsersWithCurrentFavEvent()
         eventDetailActivityBinding?.usersWithEventRecycler?.visibility = View.VISIBLE
         eventDetailActivityBinding?.usersWithEventRecycler?.addOnScrollListener(object :
@@ -86,7 +98,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (!eventDetailActivityBinding?.usersWithEventRecycler?.canScrollVertically(1)!!) {
-                    Log.i("bottom_sht","зашел в онСкролл")
+                    Log.i("bottom_sht", "зашел в онСкролл")
                     getUsersWithCurrentFavEvent()
                 }
             }
@@ -96,21 +108,24 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     }
 
     private fun displayUsersWithCurrentEvent() {
-        if(usersWithCurrentEvent.size>0){
+        if (usersWithCurrentEvent.size > 0) {
             eventDetailActivityBinding?.usersWithEventRecycler?.visibility = View.VISIBLE
             eventDetailActivityBinding?.emptyListImage?.visibility = View.GONE
             eventDetailActivityBinding?.usersWithEventRecycler?.setHasFixedSize(true)
             val dividerItemDecoration = DividerItemDecoration(this, RecyclerView.VERTICAL)
-            eventDetailActivityBinding?.usersWithEventRecycler?.addItemDecoration(dividerItemDecoration)
-            eventDetailActivityBinding?.usersWithEventRecycler?.layoutManager = LinearLayoutManager(this)
-            userAdapter = UsersAdapter(usersWithCurrentEvent, this)
-            eventDetailActivityBinding?.apply {
-                eventDetailActivityBinding?.usersWithEventRecycler?.adapter = userAdapter
-                invalidateAll()
-            }
-        }else{
-            Log.i("bottom_sht",usersWithCurrentEvent.size.toString())
-            Toast.makeText(applicationContext,"Что-то не то",Toast.LENGTH_LONG).show()
+            eventDetailActivityBinding?.usersWithEventRecycler?.addItemDecoration(
+                dividerItemDecoration
+            )
+//            eventDetailActivityBinding?.usersWithEventRecycler?.layoutManager =
+//                LinearLayoutManager(this)
+//            userAdapter = UsersAdapter(usersWithCurrentEvent, this)
+//            eventDetailActivityBinding?.apply {
+//                eventDetailActivityBinding?.usersWithEventRecycler?.adapter = userAdapter
+//                invalidateAll()
+//            }
+        } else {
+            Log.i("bottom_sht", usersWithCurrentEvent.size.toString())
+            Toast.makeText(applicationContext, "Что-то не то", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -120,19 +135,24 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         usersChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val user: User = snapshot.getValue(User::class.java)!!
-                Log.i("bottom_sht","зашел last_id = "+user.favList[user.favList.size-1] + " event_id = "+ event.id.toString())
+                Log.i(
+                    "bottom_sht",
+                    "зашел last_id = " + user.favList[user.favList.size - 1] + " event_id = " + event.id.toString()
+                )
                 if (user.favList.contains(event.id) && !usersEmails.contains(user.email)) {
-                    Log.i("bottom_sht","добавил "+user.name+"'a")
+                    Log.i("bottom_sht", "добавил " + user.name + "'a")
                     usersWithCurrentEvent.add(user)
                     usersEmails.add(user.email)
                     userAdapter.notifyDataSetChanged()
                 }
             }
+
             override fun onChildChanged(
                 snapshot: DataSnapshot,
                 previousChildName: String?
             ) {
             }
+
             override fun onChildRemoved(snapshot: DataSnapshot) {}
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onCancelled(error: DatabaseError) {}
@@ -241,10 +261,10 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                 usersDbRef = database?.reference?.child("users")
                 usersChildEventListener = object : ChildEventListener {
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                        for(temp in snapshot.children){
-                            Log.i("favList",temp.value.toString())
+                        for (temp in snapshot.children) {
+                            Log.i("favList", temp.value.toString())
                         }
-                        Log.i("favList",snapshot.value.toString())
+                        Log.i("favList", snapshot.value.toString())
                         val user: User = snapshot.getValue(User::class.java)!!
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
                             user.favList.add(event.id)
@@ -368,5 +388,22 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
             event.shortTitle//intent.getStringExtra("shortTitle")
         eventDetailActivityBinding?.textName?.visibility = View.VISIBLE
         eventDetailActivityBinding?.textShortName?.visibility = View.VISIBLE
+    }
+
+    override fun onUserCLick(user: User) {
+        super.onUserCLick(user)
+        if (user != null) {
+            Log.i("user", user.name)
+            goToChat(user)
+        } else {
+            Log.i("user", "jopa")
+        }
+    }
+
+    private fun goToChat(user: User) {
+        val intent: Intent = Intent(applicationContext, ChatActivity::class.java).apply {
+            putExtra("user", user)
+        }
+        startActivity(intent)
     }
 }

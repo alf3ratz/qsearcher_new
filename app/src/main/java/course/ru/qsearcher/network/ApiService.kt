@@ -16,7 +16,7 @@ interface ApiService {
     @GET("events/{id}/?fields=images,title,short_title,body_text,site_url,favorites_count,description,id")
     fun getEventById(@Path("id") id:Int):Call<SingleEventResponse>
 
-    @GET("search/?ctype=event&")
+    @GET("search/?ctype=event&fields=images,title,short_title,body_text,site_url,favorites_count,description,id")
     fun searchEvent(@Query("q")query: String): Call<EventResponse>
 
 }
