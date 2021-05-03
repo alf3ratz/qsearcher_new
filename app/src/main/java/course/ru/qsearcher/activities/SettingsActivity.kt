@@ -42,6 +42,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
         activitySettingsBinding = DataBindingUtil.setContentView(this, R.layout.activity_settings)
         setNavigation()
         doInitialization()
+
     }
 
     private fun doInitialization() {

@@ -262,28 +262,37 @@
             android:background="@drawable/background_fab"
             android:contentDescription="@string/app_name"
             android:padding="@dimen/_8sdp"
-            android:src="@drawable/ic_watch"
-            app:tint="@color/colorTextIcons"
+            android:src="@drawable/ic_bookmark"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/colorTextIcons" />
+
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_450sdp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent">
+
             <FrameLayout
+                android:id="@+id/bottomSheet"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-                android:background="@drawable/bottom_sheet">
+                android:layout_height="@dimen/_450sdp"
+                android:background="@drawable/bottom_sheet"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
                 <ImageView
                     android:layout_width="@dimen/_70sdp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_rect"/>
+                    android:layout_gravity="center|top"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_rect" />
+                <ImageView
+                    android:id="@+id/emptyListImage"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:src="@drawable/ic_empty"
+                    android:layout_gravity="center"/>
             </FrameLayout>
-                
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

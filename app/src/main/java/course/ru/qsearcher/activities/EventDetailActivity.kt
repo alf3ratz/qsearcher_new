@@ -17,6 +17,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
@@ -30,6 +31,8 @@ import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_event_detail.*
+import kotlinx.android.synthetic.main.bottom_sheet.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -50,6 +53,11 @@ class EventDetailActivity : AppCompatActivity() {
         eventDetailActivityBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_event_detail);
         doInitialization(savedInstanceState)
+        BottomSheetBehavior.from(bottomSheet).apply {
+            peekHeight = 55
+            state = BottomSheetBehavior.STATE_HIDDEN
+            isHideable = false
+        }
     }
 
     private fun doInitialization(savedInstanceState: Bundle?) {
