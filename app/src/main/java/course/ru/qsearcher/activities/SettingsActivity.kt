@@ -37,6 +37,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
     private var totalAvailablePages: Int = 1
     private var events: ArrayList<Event> = ArrayList()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activitySettingsBinding = DataBindingUtil.setContentView(this, R.layout.activity_settings)
@@ -67,7 +68,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                             val user: User = snapshot.getValue(User::class.java)!!
                             if (user.id == FirebaseAuth.getInstance().currentUser.uid && user.name != newName) {
-                                getEvents(user.favList[1])
+                                //getEvents(user.favList[1])
                             }
                         }
                         override fun onChildChanged(

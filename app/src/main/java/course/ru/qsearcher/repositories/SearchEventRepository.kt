@@ -17,9 +17,9 @@ class SearchEventRepository {
         apiService = ApiClient.getRetrofit().create(ApiService::class.java)
     }
 
-    fun searchEvent(query: String, page: Int): LiveData<EventResponse> {
+    fun searchEvent(query: String): LiveData<EventResponse> {
         val data: MutableLiveData<EventResponse> = MutableLiveData()
-        apiService?.searchEvent(query,page)?.enqueue(object:Callback <EventResponse> {
+        apiService?.searchEvent(query)?.enqueue(object:Callback <EventResponse> {
             override fun onFailure(@NonNull call: Call<EventResponse>, t: Throwable) {
                 data.value = null
             }

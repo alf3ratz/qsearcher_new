@@ -46,7 +46,7 @@ class SearchActivity : AppCompatActivity(), EventListener {
         activitySearchBinding?.eventsRecyclerView?.adapter = eventsAdapter
         activitySearchBinding?.inputSearch?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("Not yet implemented")
+                //TODO("Not yet implemented")
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -62,7 +62,9 @@ class SearchActivity : AppCompatActivity(), EventListener {
                             Handler(Looper.getMainLooper()).post {
                                 currentPage = 1;
                                 totalAvailablePages = 1
-                                searchEvent(p0.toString())
+                                var str = p0.toString()
+                                str = str.replace(" ","%20")
+                                searchEvent(str)
                             }
                         }
 
@@ -81,7 +83,7 @@ class SearchActivity : AppCompatActivity(), EventListener {
                         if(activitySearchBinding?.inputSearch?.text.toString().isEmpty()){
                             if(currentPage<totalAvailablePages){
                                 currentPage+=1
-                                searchEvent(activitySearchBinding?.inputSearch?.text.toString())
+                                searchEvent(activitySearchBinding?.inputSearch?.text.toString().replace(" ","%20"))
                             }
                         }
                 }
@@ -94,9 +96,9 @@ class SearchActivity : AppCompatActivity(), EventListener {
 
     private fun searchEvent(query: String) {
         toggleLoading()
-        viewModel?.searchEvent(query, currentPage)?.observe(this, Observer {
+        viewModel?.searchEvent(query)?.observe(this, Observer {
             if (it != null) {
-                totalAvailablePages = it.totalPages!!.toInt()
+                //totalAvailablePages = it.totalPages!!.toInt()
                 if (it.events != null) {
                     val oldCount: Int = events.size
                     events.addAll(it.events!!)

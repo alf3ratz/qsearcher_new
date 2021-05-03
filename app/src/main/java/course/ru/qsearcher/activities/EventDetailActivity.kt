@@ -16,13 +16,18 @@ import androidx.core.text.HtmlCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.ImageSliderAdapter
+import course.ru.qsearcher.adapters.UsersAdapter
 import course.ru.qsearcher.databinding.ActivityEventDetailBinding
+import course.ru.qsearcher.listeners.OnUserClickListener
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.model.User
 import course.ru.qsearcher.responses.EventResponse
@@ -37,7 +42,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class EventDetailActivity : AppCompatActivity() {
+class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     private var eventViewModel: MostPopularEventsViewModel? = null;
     private var eventDetailActivityBinding: ActivityEventDetailBinding? = null
     private var auth: FirebaseAuth? = null
@@ -48,24 +53,91 @@ class EventDetailActivity : AppCompatActivity() {
 
     private var isEventAvailableInFavorites: Boolean = false
 
+    private lateinit var usersWithCurrentEvent:MutableList<User>
+    private lateinit var userAdapter: UsersAdapter
+    private lateinit var usersEmails:MutableList<String>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         eventDetailActivityBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_event_detail);
         doInitialization(savedInstanceState)
+    }
+
+    private fun doInitialization(savedInstanceState: Bundle?) {
+        eventViewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.java)
         BottomSheetBehavior.from(bottomSheet).apply {
             peekHeight = 55
             state = BottomSheetBehavior.STATE_HIDDEN
             isHideable = false
         }
-    }
-
-    private fun doInitialization(savedInstanceState: Bundle?) {
-        eventViewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.java);
         eventDetailActivityBinding?.imageBack?.setOnClickListener { onBackPressed() }
         event = intent.getSerializableExtra("event") as Event;
         checkEventInFavorites()
         getEvents(savedInstanceState)
+        usersWithCurrentEvent = ArrayList<User>()
+        usersEmails = ArrayList<String>()
+        usersWithCurrentEvent.add(User("Чел","salfmasmdsa@mail.ru","sdjfbdsbfhdsjf",123213123,
+            mutableListOf(1,2,3)))
+        getUsersWithCurrentFavEvent()
+        eventDetailActivityBinding?.usersWithEventRecycler?.visibility = View.VISIBLE
+        eventDetailActivityBinding?.usersWithEventRecycler?.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!eventDetailActivityBinding?.usersWithEventRecycler?.canScrollVertically(1)!!) {
+                    Log.i("bottom_sht","зашел в онСкролл")
+                    getUsersWithCurrentFavEvent()
+                }
+            }
+        })
+        getUsersWithCurrentFavEvent()
+        displayUsersWithCurrentEvent()
+    }
+
+    private fun displayUsersWithCurrentEvent() {
+        if(usersWithCurrentEvent.size>0){
+            eventDetailActivityBinding?.usersWithEventRecycler?.visibility = View.VISIBLE
+            eventDetailActivityBinding?.emptyListImage?.visibility = View.GONE
+            eventDetailActivityBinding?.usersWithEventRecycler?.setHasFixedSize(true)
+            val dividerItemDecoration = DividerItemDecoration(this, RecyclerView.VERTICAL)
+            eventDetailActivityBinding?.usersWithEventRecycler?.addItemDecoration(dividerItemDecoration)
+            eventDetailActivityBinding?.usersWithEventRecycler?.layoutManager = LinearLayoutManager(this)
+            userAdapter = UsersAdapter(usersWithCurrentEvent, this)
+            eventDetailActivityBinding?.apply {
+                eventDetailActivityBinding?.usersWithEventRecycler?.adapter = userAdapter
+                invalidateAll()
+            }
+        }else{
+            Log.i("bottom_sht",usersWithCurrentEvent.size.toString())
+            Toast.makeText(applicationContext,"Что-то не то",Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun getUsersWithCurrentFavEvent() {
+        database = FirebaseDatabase.getInstance()
+        usersDbRef = database?.reference?.child("users")
+        usersChildEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val user: User = snapshot.getValue(User::class.java)!!
+                Log.i("bottom_sht","зашел last_id = "+user.favList[user.favList.size-1] + " event_id = "+ event.id.toString())
+                if (user.favList.contains(event.id) && !usersEmails.contains(user.email)) {
+                    Log.i("bottom_sht","добавил "+user.name+"'a")
+                    usersWithCurrentEvent.add(user)
+                    usersEmails.add(user.email)
+                    userAdapter.notifyDataSetChanged()
+                }
+            }
+            override fun onChildChanged(
+                snapshot: DataSnapshot,
+                previousChildName: String?
+            ) {
+            }
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
+        }
+        usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
     }
 
     private fun checkEventInFavorites() {

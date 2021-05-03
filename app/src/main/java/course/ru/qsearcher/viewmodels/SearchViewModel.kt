@@ -13,8 +13,8 @@ class SearchViewModel() : ViewModel() {
         searchEventRepository = SearchEventRepository()
     }
 
-    fun searchEvent(query: String, page: Int): LiveData<EventResponse> {
-        return searchEventRepository?.searchEvent(query, page)!!
+    fun searchEvent(query: String): LiveData<EventResponse> {
+        return searchEventRepository?.searchEvent(query)!!
     }
 
 }
