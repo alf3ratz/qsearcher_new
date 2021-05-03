@@ -9,6 +9,7 @@ import course.ru.qsearcher.database.EventsDatabase
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.repositories.MostPopularEventsRepository
 import course.ru.qsearcher.responses.EventResponse
+import course.ru.qsearcher.responses.SingleEventResponse
 import io.reactivex.Completable
 import io.reactivex.Flowable
 
@@ -24,7 +25,7 @@ class MostPopularEventsViewModel(@NonNull application: Application):AndroidViewM
     fun getMostPopularEvents(page:Int):LiveData<EventResponse>{
         return mostPopularEventsRepository.getMostPopularEvents(page)
     }
-    fun getEventsById(id:Int):LiveData<EventResponse>{
+    fun getEventsById(id:Int):LiveData<SingleEventResponse>{
         return mostPopularEventsRepository.getEventsById(id)
     }
     fun addToFavorites(event:Event): Completable {

@@ -19,6 +19,7 @@ import course.ru.qsearcher.listeners.EventListener
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.model.User
 import course.ru.qsearcher.responses.EventResponse
+import course.ru.qsearcher.responses.SingleEventResponse
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -65,7 +66,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                         override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                             val user: User = snapshot.getValue(User::class.java)!!
                             if (user.id == FirebaseAuth.getInstance().currentUser.uid && user.name != newName) {
-                                getEvents(user.favList[3])
+                                getEvents(user.favList[1])
                             }
                         }
                         override fun onChildChanged(
@@ -73,7 +74,6 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                             previousChildName: String?
                         ) {
                         }
-
                         override fun onChildRemoved(snapshot: DataSnapshot) {}
                         override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
                         override fun onCancelled(error: DatabaseError) {}
@@ -163,22 +163,31 @@ class SettingsActivity : AppCompatActivity(), EventListener {
     private fun getEvents(id:Int) {
         //toggleLoading()
         //var temp: ArrayList<Event> = ArrayList()
-        viewModel.getEventsById(id).observe(this, Observer { t: EventResponse? ->
+        viewModel.getEventsById(id).observe(this, Observer { t: SingleEventResponse? ->
             //toggleLoading()
             Log.i("response_", "вошел в лямбду")
             if (t != null) {
                 Log.i("response_", "если респонс не налл")
                     //                totalAvailablePages = t.page!!
-                if (t.events != null) {
+                if (t.id   != null) {
                     val oldCount: Int = events.size
                     Log.i("response_", "если список событий не налл")
-                    for (elem in t.events!!) {
-                        elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
-                            1,
-                            elem.name!!.length
-                        )
-                    }
-                    events.addAll(t.events!!)
+                    t.name = t.name!![0].toUpperCase()+ t.name!!.substring(1, t.name!!.length)
+//                    for (elem in t.events!!) {
+//                        elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
+//                            1,
+//                            elem.name!!.length
+//                        )
+//                    }
+                    val event = Event()
+                    event.id = t.id!!
+                    event.name = t.name!!
+                    event.bodyText = t.bodyText!!
+                    event.shortTitle = t.shortTitle!!
+                    event.description = t.description
+                    event.rating = t.rating!!
+                    event.images = t.images!!
+                    events.add(event)
                     eventsAdapter.notifyDataSetChanged()
                     eventsAdapter.notifyItemRangeChanged(
                         oldCount,

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import course.ru.qsearcher.network.ApiClient
 import course.ru.qsearcher.network.ApiService
 import course.ru.qsearcher.responses.EventResponse
+import course.ru.qsearcher.responses.SingleEventResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,17 +34,17 @@ class MostPopularEventsRepository() {
         })
         return data
     }
-    fun getEventsById(id:Int): LiveData<EventResponse> {
-        val data: MutableLiveData<EventResponse> = MutableLiveData()
-        apiService.getEventById(id).enqueue(object : Callback<EventResponse> {
-            override fun onFailure(@NonNull call: Call<EventResponse>, t: Throwable) {
-                data.setValue(null)
+    fun getEventsById(id:Int): LiveData<SingleEventResponse> {
+        val data: MutableLiveData<SingleEventResponse> = MutableLiveData()
+        apiService.getEventById(id).enqueue(object : Callback<SingleEventResponse> {
+            override fun onFailure(@NonNull call: Call<SingleEventResponse>, t: Throwable) {
+                data.value = null
             }
             override fun onResponse(
-                @NonNull call: Call<EventResponse>,
-                @NonNull response: Response<EventResponse>
+                @NonNull call: Call<SingleEventResponse>,
+                @NonNull response: Response<SingleEventResponse>
             ) {
-                data.setValue(response.body())
+                data.value = response.body()
             }
         })
         return data
