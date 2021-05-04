@@ -401,9 +401,10 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     }
 
     private fun goToChat(user: User) {
-        val intent: Intent = Intent(applicationContext, ChatActivity::class.java).apply {
-            putExtra("user", user)
-        }
+//        val intent: Intent = Intent(applicationContext, ChatActivity::class.java).apply {
+//            putExtra("user", user)
+//        }
+        val intent = Intent(applicationContext,ProfileActivity::class.java)
         startActivity(intent)
     }
 }
