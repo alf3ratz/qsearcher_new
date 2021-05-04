@@ -15,4 +15,8 @@
     <string name="repeat_your_password">Повторите ваш пароль</string>
     <string name="users">Пользователи</string>
     <string name="message">Сообщение</string>
+    <string name="user_name">Имя пользователя</string>
+    <string name="programmer">Программист</string>
+    <string name="city">Москва</string>
+    <string name="user_email">aapetropavlovskiy@edu.hse.ru</string>
 </resources>

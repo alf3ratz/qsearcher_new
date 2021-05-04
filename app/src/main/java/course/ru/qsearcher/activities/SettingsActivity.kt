@@ -4,12 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
@@ -129,6 +131,19 @@ class SettingsActivity : AppCompatActivity(), EventListener {
     }
 
     private fun setNavigation() {
+        val menuView = activitySettingsBinding.bottomNavigation
+            .getChildAt(0) as BottomNavigationMenuView
+        for (i in 0 until menuView.childCount) {
+            val iconView =
+                menuView.getChildAt(i).findViewById<View>(R.id.icon)
+            val layoutParams = iconView.layoutParams
+            val displayMetrics = resources.displayMetrics
+            layoutParams.height =
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 26f, displayMetrics).toInt()
+            layoutParams.width =
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 26f, displayMetrics).toInt()
+            iconView.layoutParams = layoutParams
+        }
         activitySettingsBinding.bottomNavigation.selectedItemId = R.id.settings
         activitySettingsBinding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {

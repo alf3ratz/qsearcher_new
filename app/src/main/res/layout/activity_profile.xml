@@ -14,12 +14,32 @@
         tools:context=".activities.ProfileActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_200sdp"
             android:background="@color/colorPrimaryDark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
+            <View
+            android:id="@+id/viewFadingEdge"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:background="@drawable/background_fading_edge"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/topLayout" />
+            <ImageView
+                android:id="@+id/imageBack"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/background_back_button"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/_3sdp"
+                android:src="@drawable/ic_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/colorTextIcons" />
             <TextView
                 android:id="@+id/nameText"
                 android:layout_width="wrap_content"
@@ -28,23 +48,13 @@
                 android:layout_marginTop="@dimen/_60sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:fontFamily="@font/ubuntu_regular"
-                android:text="Имя пользователя"
+                android:text="@string/user_name"
+                android:textColor="@color/colorTextPrimary"
                 android:textAlignment="center"
                 android:textSize="@dimen/_25sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-            <Button
-                android:id="@+id/sendMessageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:layout_marginBottom="@dimen/_8sdp"
-                android:background="@drawable/send_button_shape"
-                android:text="@string/message"
-                android:padding="@dimen/_4sdp"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -62,7 +72,20 @@
             app:layout_constraintTop_toTopOf="parent"
             app:riv_border_color="@color/colorAccent"
             app:riv_border_width="@dimen/_1sdp"
-            app:riv_corner_radius="@dimen/_70sdp" />
+            app:riv_corner_radius="@dimen/_70sdp"
+            android:contentDescription="@string/app_name"/>
+        <Button
+            android:id="@+id/sendMessageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/topLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:background="@drawable/send_button_shape"
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/message"
+            android:padding="@dimen/_4sdp"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/underPicture"
@@ -79,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
-                android:text="Программист"
+                android:text="@string/programmer"
                 android:textSize="@dimen/_18ssp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -91,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
-                android:text="Москва"
+                android:text="@string/city"
                 android:textSize="@dimen/_18ssp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -116,14 +139,15 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ic_email"/>
+                android:src="@drawable/ic_email"
+                android:contentDescription="@string/app_name" />
 
             <TextView
                 android:id="@+id/emailText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="abozquet@biscainepark.org"
+                android:text="@string/user_email"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"

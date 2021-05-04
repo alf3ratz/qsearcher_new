@@ -3,11 +3,14 @@ package course.ru.qsearcher.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
@@ -26,7 +29,7 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
     private lateinit var users: MutableList<User>
     private lateinit var userAdapter: UsersAdapter
     private lateinit var auth: FirebaseAuth
-    private lateinit var userName:String
+    private lateinit var userName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,40 +37,11 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
         auth = FirebaseAuth.getInstance()
         users = mutableListOf()
         userName = SignInActivity.userName
-        activityUsersBinding.bottomNavigation.selectedItemId = R.id.chat
-        activityUsersBinding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.home -> {
-                    startActivity(Intent(applicationContext, MainActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    return@setOnNavigationItemSelectedListener true
-                }
-                R.id.favorites -> {
-                    startActivity(
-                        Intent(
-                            applicationContext,
-                            FavoritesActivity::class.java
-                        )
-                    )
-                    overridePendingTransition(0, 0)
-                    return@setOnNavigationItemSelectedListener true
-                }
-                R.id.settings -> {startActivity(Intent(applicationContext,SettingsActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    return@setOnNavigationItemSelectedListener true
-                }
-                R.id.map -> {
-                    startActivity(Intent(applicationContext, MapActivity::class.java))
-                    overridePendingTransition(0, 0)
-                    return@setOnNavigationItemSelectedListener true
-                }
-            }
-            false
-        }
         doInitialization()
     }
 
     private fun doInitialization() {
+        setBottomNavigation()
         activityUsersBinding.usersRecyclerView.setHasFixedSize(true)
         val dividerItemDecoration = DividerItemDecoration(this, RecyclerView.VERTICAL)
         activityUsersBinding.usersRecyclerView.addItemDecoration(dividerItemDecoration)
@@ -99,22 +73,69 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
         activityUsersBinding.imageBack.setOnClickListener { onBackPressed() }
     }
 
+    private fun setBottomNavigation() {
+        val menuView = activityUsersBinding.bottomNavigation
+            .getChildAt(0) as BottomNavigationMenuView
+        for (i in 0 until menuView.childCount) {
+            val iconView =
+                menuView.getChildAt(i).findViewById<View>(R.id.icon)
+            val layoutParams = iconView.layoutParams
+            val displayMetrics = resources.displayMetrics
+            layoutParams.height =
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 26f, displayMetrics).toInt()
+            layoutParams.width =
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 26f, displayMetrics).toInt()
+            iconView.layoutParams = layoutParams
+        }
+        activityUsersBinding.bottomNavigation.selectedItemId = R.id.chat
+        activityUsersBinding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.home -> {
+                    startActivity(Intent(applicationContext, MainActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.favorites -> {
+                    startActivity(
+                        Intent(
+                            applicationContext,
+                            FavoritesActivity::class.java
+                        )
+                    )
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.settings -> {
+                    startActivity(Intent(applicationContext, SettingsActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+                R.id.map -> {
+                    startActivity(Intent(applicationContext, MapActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    return@setOnNavigationItemSelectedListener true
+                }
+            }
+            false
+        }
+    }
+
     override fun onUserCLick(user: User) {
         super.onUserCLick(user)
-        if(user!=null){
-            Log.i("user",user.name)
+        if (user != null) {
+            Log.i("user", user.name)
             goToChat(user)
-        }else{
-            Log.i("user","jopa")
+        } else {
+            Log.i("user", "jopa")
         }
     }
 
     private fun goToChat(user: User) {
-        var intent:Intent = Intent(applicationContext, ChatActivity::class.java).apply {
+        var intent: Intent = Intent(applicationContext, ChatActivity::class.java).apply {
 //            putExtra("name",user.name)
 //            putExtra("email",user.email)
             putExtra("receiverId", user.id)
-            putExtra("receiverName",user.name)
+            putExtra("receiverName", user.name)
             putExtra("userName", userName)
 //            putExtra("avatar",user.avatarMock)
         }

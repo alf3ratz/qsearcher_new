@@ -13,6 +13,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.snackbar.Snackbar
 import course.ru.qsearcher.BuildConfig
 import course.ru.qsearcher.R
@@ -205,6 +207,19 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
      * Метод, который иннициализирует нижнюю навигацию и выделяет нужную иконку на ней.
      */
     private fun setNavigation() {
+        val menuView = activityMapBinding.bottomNavigation
+            .getChildAt(0) as BottomNavigationMenuView
+        for (i in 0 until menuView.childCount) {
+            val iconView =
+                menuView.getChildAt(i).findViewById<View>(R.id.icon)
+            val layoutParams = iconView.layoutParams
+            val displayMetrics = resources.displayMetrics
+            layoutParams.height =
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 26f, displayMetrics).toInt()
+            layoutParams.width =
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 26f, displayMetrics).toInt()
+            iconView.layoutParams = layoutParams
+        }
         activityMapBinding.bottomNavigation.selectedItemId = R.id.map
         activityMapBinding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -233,7 +248,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     overridePendingTransition(0, 0)
                     return@setOnNavigationItemSelectedListener true
                 }
-                // R.id.map -> startActivity(Intent(applicationContext, MapActivity::class.java))
             }
             false
         }

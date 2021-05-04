@@ -46,23 +46,25 @@
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:ellipsize="end"
                 android:fontFamily="@font/ubuntu_bold"
-                android:gravity="center"
                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:text="Карта событий"
                 android:textColor="@color/colorTextIcons"
-                android:textSize="@dimen/_8ssp" />
+                android:textSize="@dimen/_14ssp" />
         </LinearLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:itemBackground="@color/colorPrimaryDark"
-            app:itemIconTint="@drawable/selector"
-            app:itemTextColor="@drawable/selector"
+            android:layout_height="@dimen/_37sdp"
+            app:labelVisibilityMode="unlabeled"
+            app:itemTextAppearanceActive="@style/BottomNavigationView.Active"
+            app:itemTextAppearanceInactive="@style/BottomNavigationView"
+            app:itemBackground="@color/colorPrimaryBottomNav"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:itemTextColor="@drawable/selector"
+            app:itemIconTint="@drawable/selector"
             app:menu="@menu/bottom_navigation" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

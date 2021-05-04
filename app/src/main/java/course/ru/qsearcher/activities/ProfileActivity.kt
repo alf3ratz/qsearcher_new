@@ -3,6 +3,7 @@ package course.ru.qsearcher.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import course.ru.qsearcher.R
 import course.ru.qsearcher.databinding.ActivityProfileBinding
@@ -20,12 +21,14 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun initialize() {
         user = intent.getSerializableExtra("user") as User
+        activityProfileBinding.viewFadingEdge.visibility = View.VISIBLE
         activityProfileBinding.sendMessageButton.setOnClickListener {
             val intent: Intent = Intent(applicationContext, ChatActivity::class.java).apply {
                 putExtra("user", user)
             }
             startActivity(intent)
         }
+        activityProfileBinding.imageBack.setOnClickListener { onBackPressed() }
         activityProfileBinding.nameText.text = user.name
         activityProfileBinding.emailText.text = user.email
     }

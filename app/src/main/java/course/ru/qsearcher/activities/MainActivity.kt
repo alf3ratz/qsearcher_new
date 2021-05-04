@@ -1,11 +1,9 @@
 package course.ru.qsearcher.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
-import android.view.MenuItem
+import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.EventsAdapter
@@ -91,10 +89,22 @@ class MainActivity : AppCompatActivity(), EventListener {
     }
 
     private fun setBottomNavigation() {
+        val menuView = activityMainBinding.bottomNavigation
+            .getChildAt(0) as BottomNavigationMenuView
+        for (i in 0 until menuView.childCount) {
+            val iconView =
+                menuView.getChildAt(i).findViewById<View>(R.id.icon)
+            val layoutParams = iconView.layoutParams
+            val displayMetrics = resources.displayMetrics
+            layoutParams.height =
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 26f, displayMetrics).toInt()
+            layoutParams.width =
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 26f, displayMetrics).toInt()
+            iconView.layoutParams = layoutParams
+        }
         activityMainBinding.bottomNavigation.selectedItemId = R.id.home
         activityMainBinding?.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                // R.id.home -> startActivity(Intent(applicationContext, MainActivity::class.java))
                 R.id.favorites -> {
                     startActivity(
                         Intent(
