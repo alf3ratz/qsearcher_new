@@ -49,8 +49,28 @@ class Event : Serializable {
         var image: String? = null;
         override fun toString(): String = image!!
     }
+
     @SerializedName("imagesAsString")
     @TypeConverters(CustomTypeConverter::class)
     var imagesAsString:ArrayList<String>?=null
 
+    @SerializedName("place")
+    @TypeConverters(CustomTypeConverter::class)
+    var place:Place?=null
+
+    class Place:Serializable{
+        @SerializedName("location")
+        var location:String?=null
+
+        @SerializedName("coords")
+        @TypeConverters(CustomTypeConverter::class)
+        var coords:Coords ?=null
+
+        class Coords:Serializable{
+            @SerializedName("lat")
+            var lat:Double?=null
+            @SerializedName("lon")
+            var lon:Double?=null
+        }
+    }
 }

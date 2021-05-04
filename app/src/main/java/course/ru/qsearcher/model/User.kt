@@ -6,15 +6,21 @@ import course.ru.qsearcher.R
 import kotlinx.android.synthetic.main.user_item.view.*
 import java.io.Serializable
 
-class User:Serializable{
+class User : Serializable {
     @SerializedName("name")
-    lateinit var name: String
+    var name: String? = null
+
     @SerializedName("email")
-    lateinit var email: String
+    var email: String? = null
+
     @SerializedName("id")
-    lateinit var id: String
-    @SerializedName("avatar") var avatarMock: Int = 0
+    var id: String? = null
+
+    @SerializedName("avatar")
+    var avatarMock: Int = 0
 
     @SerializedName("favList")
-    lateinit var favList: MutableList<Int>
+    var favList: MutableList<Int>? = null
+    @SerializedName("usersList")
+    var usersList:MutableList<String>?=null
 }

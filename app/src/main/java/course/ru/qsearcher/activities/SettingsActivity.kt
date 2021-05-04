@@ -106,7 +106,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                         val user: User = snapshot.getValue(User::class.java)!!
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid && user.name != newName) {
-                            usersDbRef?.child(user.name)?.child("name")?.setValue(newName)
+                            usersDbRef?.child(user.name!!)?.child("name")?.setValue(newName)
                         }
                     }
                     override fun onChildChanged(

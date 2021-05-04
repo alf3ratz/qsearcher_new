@@ -45,11 +45,13 @@ class ChatActivity : AppCompatActivity() {
     private var storageRef: StorageReference? = null
 
     private lateinit var auth: FirebaseAuth
+    private var checker: Boolean = false
 
     // Айди юзера-полчателя, то есть того, с кем мы ведем диалог. Нужен чтобы достать из базы все данные о пользователе.
     private lateinit var receiverUserId: String
+
     // Имя пользователя, с которым ведется диалог. Отображается вверху экрана.
-    private lateinit var receiverUserName:String
+    private lateinit var receiverUserName: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,12 +59,12 @@ class ChatActivity : AppCompatActivity() {
         activityChatBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat)
         auth = FirebaseAuth.getInstance()
         val intent: Intent = intent
-        val user:User = intent.getSerializableExtra("user") as User
+        val user: User = intent.getSerializableExtra("user") as User
         if (intent != null) {
 
             userName = SignInActivity.userName//intent.getStringExtra("userName")
-            receiverUserId = user.id //intent.getStringExtra("receiverId")!!
-            receiverUserName = user.name//intent.getStringExtra("receiverName")!!
+            receiverUserId = user.id!! //intent.getStringExtra("receiverId")!!
+            receiverUserName = user.name!!//intent.getStringExtra("receiverName")!!
         } else {
             userName = "Default_User"
             receiverUserId = intent.getStringExtra("receiverId")!!
@@ -131,14 +133,37 @@ class ChatActivity : AppCompatActivity() {
                 receiverUserId,
                 true
             )
-
-//                msg.text = messageEdit.text.toString()
-//                msg.name = userName as String
-//                msg.imageURL = null.toString()
             messagesRef!!.push().setValue(msg)
             messageEdit?.setText(" ")
             Log.i("db", "должен был отправить")
+            if (SignInActivity.currentUser.usersList == null)
+                SignInActivity.currentUser.usersList = ArrayList<String>()
+            if (!SignInActivity.currentUser.usersList?.contains(receiverUserId)!!) {
+                usersChildEventListener = object : ChildEventListener {
+                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                        val user: User = snapshot.getValue(User::class.java)!!
+                        if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
+                            Log.i("chatAct","postavil")
+                            user.usersList?.add(receiverUserId)
+                            SignInActivity.currentUser.usersList!!.add(receiverUserId)
+                            usersRef?.child(user.name!!)?.child("usersList")?.setValue(user.usersList)
+                        }
+                    }
 
+                    override fun onChildChanged(
+                        snapshot: DataSnapshot,
+                        previousChildName: String?
+                    ) {
+                    }
+
+                    override fun onChildRemoved(snapshot: DataSnapshot) {}
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                    override fun onCancelled(error: DatabaseError) {}
+
+                }
+                usersRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
+
+            }
         }
         messagesChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -161,13 +186,6 @@ class ChatActivity : AppCompatActivity() {
             override fun onCancelled(error: DatabaseError) {}
         }
         messagesRef?.addChildEventListener(messagesChildEventListener as ChildEventListener)
-        imageSignOut?.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            startActivity(Intent(applicationContext, SignInActivity::class.java))
-        }
-        activityChatBinding?.imageUsers?.setOnClickListener {
-            startActivity(Intent(applicationContext, UsersActivity::class.java))
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

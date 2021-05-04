@@ -27,16 +27,18 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.snackbar.Snackbar
 import course.ru.qsearcher.BuildConfig
 import course.ru.qsearcher.R
 import course.ru.qsearcher.databinding.ActivityMapBinding
+import course.ru.qsearcher.model.Event
 import kotlinx.android.synthetic.main.activity_map.*
 
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerClickListener {
     private val REQUEST_LOCATION_CODE: Int = 234
     private val SETTINGS_CODE: Int = 123
 
@@ -254,8 +256,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(googleMap: GoogleMap?) {
-        map = googleMap!!
         try {
+            map = googleMap!!
+            map.setOnMarkerClickListener(this)
             if (location == null) {
                 val locationResult = fusedLocationProviderClient.lastLocation
                 locationResult.addOnCompleteListener(this) { task ->
@@ -276,12 +279,23 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                                     position, 13.0F
                                 )
                             )
+                            for (point in MainActivity.staticEvents) {
+                                if (point.place?.coords?.lat != null) {
+
+                                    map.addMarker(
+                                        MarkerOptions().position(
+                                            LatLng(
+                                                point.place?.coords?.lat!!,
+                                                point.place?.coords?.lon!!
+                                            )
+                                        ).title(point.shortTitle).visible(true)
+                                    )
+                                }
+                            }
                         }
                     } else {
                         Log.d("map", "Current location is null. Using defaults.")
                         Log.e("map", "Exception: %s", task.exception)
-//                        map?.moveCamera(CameraUpdateFactory
-//                            .newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat()))
                         map?.uiSettings?.isMyLocationButtonEnabled = false
                     }
                 }
@@ -289,21 +303,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)
         }
-//        map.apply {
-//            if(location!=null){
-//                val position = LatLng(location?.latitude!!, location?.longitude!!)
-//                addMarker(
-//                    MarkerOptions()
-//                        .position(position)
-//                        .title("Выше местоположение")
-//                )
-//                Log.i("map","поставил")
-//                map.moveCamera(CameraUpdateFactory.newLatLng(position))
-//            }else{
-//                Toast.makeText(applicationContext,"Проблемы с получаением геопозиции",Toast.LENGTH_LONG).show()
-//                Log.i("map","оно какого-то хрена налл")
-//            }
-//        }
     }
 
     override fun onRequestPermissionsResult(
@@ -331,5 +330,21 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 }).show()
             }
         }
+    }
+
+    override fun onMarkerClick(marker: Marker?): Boolean {
+        if(marker!=null){
+            val event: Event = MainActivity.staticEvents.find{it.shortTitle == marker.title}!!
+            val images: ArrayList<String> = arrayListOf()
+            for (elem in event.images!!) {
+                images.plusAssign(elem.toString())
+            }
+            event.imagesAsString = images
+            startActivity(Intent(this,EventDetailActivity::class.java).putExtra("event",event))
+            return true
+        }
+        Log.i("marker","problem")
+        Toast.makeText(applicationContext,"Произошла ошибка при отображении события",Toast.LENGTH_LONG).show()
+        return false
     }
 }

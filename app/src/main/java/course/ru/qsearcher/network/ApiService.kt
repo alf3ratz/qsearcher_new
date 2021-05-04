@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface ApiService {
 
    // @GET("events/?fields=images,title,short_title,body_text,site_url,favorites_count,description,id")
-    @GET ("events/?fields=images,title,dates,short_title,body_text,site_url,favorites_count,description,id&expand=dates&order_by=-publication_date,-rank")
+    @GET ("events/?fields=images,title,dates,short_title,body_text,site_url,favorites_count,description,id,place&expand=dates,place&order_by=-publication_date,-rank")
    fun getMostPopularEvents(@Query("page") page: Int): Call<EventResponse>
 
     @GET("events/{id}/?fields=images,title,short_title,body_text,site_url,favorites_count,description,id")

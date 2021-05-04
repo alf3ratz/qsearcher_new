@@ -30,6 +30,7 @@ class SignInActivity : AppCompatActivity() {
 
     companion object {
         var userName: String = ""
+        var currentUser:User = User()
     }
 
 
@@ -44,7 +45,8 @@ class SignInActivity : AppCompatActivity() {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     val user: User = snapshot.getValue(User::class.java)!!
                     if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
-                            userName = user.name
+                            userName = user.name!!
+                            currentUser = user
                     }
                 }
 
@@ -184,12 +186,13 @@ class SignInActivity : AppCompatActivity() {
         newUser.id=user!!.uid
         newUser.avatarMock = R.drawable.ic_person
         newUser.favList= mutableListOf()
+        newUser.usersList = mutableListOf()
 //        val newUser: User = User(nameEditText.text.toString().trim(), user!!.email, user!!.uid,R.drawable.ic_person,
 //            mutableListOf
 //       (1,2,3))
-        userName = newUser.name
-        usersDbRef?.child(newUser.name)?.setValue(newUser)
-
+        userName = newUser.name!!
+        usersDbRef?.child(newUser.name!!)?.setValue(newUser)
+        currentUser = newUser
     }
 
     fun toggleLoginMode(view: View) {

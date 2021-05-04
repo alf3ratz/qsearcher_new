@@ -29,10 +29,13 @@ class MainActivity : AppCompatActivity(), EventListener {
     //ActivityMainBinding
 
 
-    private var events: ArrayList<Event> = ArrayList()
+    var events: ArrayList<Event> = ArrayList()
     private lateinit var eventsAdapter: EventsAdapter
     private var currentPage: Int = 1;
     private var totalAvailablePages: Int = 1
+    companion object{
+        lateinit var staticEvents:ArrayList<Event>
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +43,7 @@ class MainActivity : AppCompatActivity(), EventListener {
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         doInitialization()
     }
+
 
     private fun doInitialization() {
         activityMainBinding?.eventsRecyclerView?.setHasFixedSize(true)
@@ -166,16 +170,8 @@ class MainActivity : AppCompatActivity(), EventListener {
                     Log.i("response", "список событий  налл")
                 }
             }
-            //Toast.makeText(applicationContext, "page = ${t?.totalPages}", Toast.LENGTH_SHORT).show()
         })
-//        viewModel.getMostPopularEvents(0).observe(this, Observer { eventsResponse: EventResponse ->
-//            Toast.makeText(
-//                applicationContext,
-//                "Total pages: ${eventsResponse.totalPages}",
-//                Toast.LENGTH_SHORT
-//            )
-//                .show()
-//        })
+        staticEvents = events
     }
 
     private fun toggleLoading() {
@@ -196,15 +192,6 @@ class MainActivity : AppCompatActivity(), EventListener {
         }
         event.imagesAsString = images
         val intent: Intent = Intent(applicationContext, EventDetailActivity::class.java).apply {
-//            putExtra("title", event.name)
-//            putExtra("shortTitle", event.shortTitle)
-//            putExtra("bodyText", event.bodyText)
-//            putExtra("siteUrl", event.siteUrl)
-//            putExtra("description",event.description)
-//            putExtra("rating",event.rating)
-//            putExtra("lat",event.lat)
-//            putExtra("lon",event.lon)
-//            putStringArrayListExtra("images", images);
             putExtra("event", event)
         }
         startActivity(intent);

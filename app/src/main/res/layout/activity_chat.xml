@@ -43,26 +43,6 @@
                 android:text="@string/chat"
                 android:textColor="@color/colorTextIcons"
                 android:textSize="@dimen/_14ssp" />
-
-            <ImageView
-                android:id="@+id/imageSignOut"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:contentDescription="@string/app_name"
-                android:padding="@dimen/_2sdp"
-                android:src="@drawable/ic_sign_out"
-                app:tint="@color/colorTextIcons" />
-
-            <ImageView
-                android:id="@+id/imageUsers"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:contentDescription="@string/app_name"
-                android:padding="@dimen/_2sdp"
-                android:src="@drawable/ic_users"
-                app:tint="@color/colorTextIcons" />
         </LinearLayout>
 
 
@@ -87,7 +67,7 @@
             android:id="@+id/sendMessageLayout"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:background="@color/colorTextPrimary"
+            android:background="@color/colorPrimaryBottomNav"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -98,6 +78,7 @@
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginStart="@dimen/_8sdp"
                 android:background="@drawable/ic_send_photo"
+                android:backgroundTint="@color/colorAccent"
                 android:contentDescription="@string/app_name" />
 
             <EditText
@@ -114,7 +95,8 @@
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:enabled="false"
                 android:text="Отправить"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="@color/colorPrimaryDark"
+                android:backgroundTint="@color/colorAccent"/>
         </LinearLayout>
 
         <ProgressBar

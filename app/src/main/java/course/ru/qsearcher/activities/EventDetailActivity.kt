@@ -37,8 +37,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_event_detail.*
-import kotlinx.android.synthetic.main.bottom_sheet.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -77,13 +75,6 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         getEvents(savedInstanceState)
         usersWithCurrentEvent = ArrayList<User>()
         usersEmails = ArrayList<String>()
-        eventDetailActivityBinding?.usersWithEventRecycler?.layoutManager =
-            LinearLayoutManager(this)
-        userAdapter = UsersAdapter(usersWithCurrentEvent, this)
-        eventDetailActivityBinding?.apply {
-            eventDetailActivityBinding?.usersWithEventRecycler?.adapter = userAdapter
-            invalidateAll()
-        }
 //        usersWithCurrentEvent.add(
 //            User(
 ////                "Чел", "salfmasmdsa@mail.ru", "sdjfbdsbfhdsjf", 123213123,
@@ -93,17 +84,24 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
 //        )
         getUsersWithCurrentFavEvent()
         eventDetailActivityBinding?.usersWithEventRecycler?.visibility = View.VISIBLE
-        eventDetailActivityBinding?.usersWithEventRecycler?.addOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (!eventDetailActivityBinding?.usersWithEventRecycler?.canScrollVertically(1)!!) {
-                    Log.i("bottom_sht", "зашел в онСкролл")
-                    getUsersWithCurrentFavEvent()
-                }
-            }
-        })
+//        eventDetailActivityBinding?.usersWithEventRecycler?.addOnScrollListener(object :
+//            RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                if (!eventDetailActivityBinding?.usersWithEventRecycler?.canScrollVertically(1)!!) {
+//                    Log.i("bottom_sht", "зашел в онСкролл")
+//                    getUsersWithCurrentFavEvent()
+//                }
+//            }
+//        })
         getUsersWithCurrentFavEvent()
+        eventDetailActivityBinding?.usersWithEventRecycler?.layoutManager =
+            LinearLayoutManager(this)
+        userAdapter = UsersAdapter(usersWithCurrentEvent, this)
+        eventDetailActivityBinding?.apply {
+            eventDetailActivityBinding?.usersWithEventRecycler?.adapter = userAdapter
+            invalidateAll()
+        }
         displayUsersWithCurrentEvent()
     }
 
@@ -135,14 +133,14 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         usersChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val user: User = snapshot.getValue(User::class.java)!!
-                Log.i(
-                    "bottom_sht",
-                    "зашел last_id = " + user.favList[user.favList.size - 1] + " event_id = " + event.id.toString()
-                )
-                if (user.favList.contains(event.id) && !usersEmails.contains(user.email)) {
+//                Log.i(
+//                    "bottom_sht",
+//                    "зашел last_id = " + user.favList[user.favList.size - 1] + " event_id = " + event.id.toString()
+//                )
+                if (user.favList!=null && user.favList!!.contains(event.id) && !usersEmails.contains(user.email) && user.id !=FirebaseAuth.getInstance().currentUser.uid) {
                     Log.i("bottom_sht", "добавил " + user.name + "'a")
                     usersWithCurrentEvent.add(user)
-                    usersEmails.add(user.email)
+                    usersEmails.add(user.email!!)
                     userAdapter.notifyDataSetChanged()
                 }
             }
@@ -178,19 +176,19 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
 //        val images_temp = intent.getStringArrayListExtra("images")
 
         var eventId: Int = event.id
-        val images_temp: ArrayList<String>? = event.imagesAsString
+        val imagesTemp: ArrayList<String>? = event.imagesAsString
         var images: ArrayList<String> = ArrayList()
 
-        for (i in 1 until images_temp!!.size) {
-            images.plusAssign(images_temp[i])
+        for (i in 1 until imagesTemp!!.size) {
+            images.plusAssign(imagesTemp[i])
         }
-        eventDetailActivityBinding?.eventImageURL = images_temp[0];
+        eventDetailActivityBinding?.eventImageURL = imagesTemp[0];
         eventDetailActivityBinding?.imageEvent!!.visibility = View.VISIBLE
         eventDetailActivityBinding?.eventDescription = HtmlCompat.fromHtml(
             /*intent.getStringExtra("bodyText")*/
             event.bodyText.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY
         ).toString()
-        eventDetailActivityBinding?.rating = event.rating//intent.getStringExtra("rating")!!
+        eventDetailActivityBinding?.rating = event./*place?.coords!![0].toString()*/rating//intent.getStringExtra("rating")!!
         eventDetailActivityBinding?.textReadMore?.visibility = View.VISIBLE
         eventDetailActivityBinding?.textReadMore?.setOnClickListener {
             if (eventDetailActivityBinding?.textReadMore?.text == getString(R.string.read_more)) {
@@ -209,7 +207,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                 run {
                     eventDetailActivityBinding?.isLoading = false;
                     if (images.size == 0)
-                        images = images_temp
+                        images = imagesTemp
                     loadImageSlider(images)
                 }
             }
@@ -267,8 +265,8 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         Log.i("favList", snapshot.value.toString())
                         val user: User = snapshot.getValue(User::class.java)!!
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
-                            user.favList.add(event.id)
-                            usersDbRef?.child(user.name)?.child("favList")?.setValue(user.favList)
+                            user.favList?.add(event.id)
+                            usersDbRef?.child(user.name!!)?.child("favList")?.setValue(user.favList)
                         }
                     }
 
@@ -351,7 +349,6 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         }
         eventDetailActivityBinding?.layoutSliderIndicators?.visibility = View.VISIBLE;
         setCurrentSliderIndicator(0);
-        //Log.i("картинка", "сет курент индикатор")
     }
 
     private fun setCurrentSliderIndicator(position: Int) {
@@ -393,7 +390,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     override fun onUserCLick(user: User) {
         super.onUserCLick(user)
         if (user != null) {
-            Log.i("user", user.name)
+            Log.i("user", user.name!!)
             goToChat(user)
         } else {
             Log.i("user", "fail to send user in intent")

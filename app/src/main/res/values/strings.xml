@@ -19,4 +19,5 @@
     <string name="programmer">Программист</string>
     <string name="city">Москва</string>
     <string name="user_email">aapetropavlovskiy@edu.hse.ru</string>
+    <string name="new_events">Новые события</string>
 </resources>
