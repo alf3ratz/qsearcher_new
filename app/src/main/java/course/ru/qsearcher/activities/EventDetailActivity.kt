@@ -396,15 +396,14 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
             Log.i("user", user.name)
             goToChat(user)
         } else {
-            Log.i("user", "jopa")
+            Log.i("user", "fail to send user in intent")
         }
     }
 
     private fun goToChat(user: User) {
-//        val intent: Intent = Intent(applicationContext, ChatActivity::class.java).apply {
-//            putExtra("user", user)
-//        }
-        val intent = Intent(applicationContext,ProfileActivity::class.java)
+        val intent = Intent(applicationContext,ProfileActivity::class.java).apply {
+            putExtra("user",user)
+        }
         startActivity(intent)
     }
 }
