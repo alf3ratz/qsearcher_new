@@ -23,4 +23,18 @@ class User : Serializable {
     var favList: MutableList<Int>? = null
     @SerializedName("usersList")
     var usersList:MutableList<String>?=null
+    @SerializedName("occupation")
+    var occupation:String?=null
+    @SerializedName("isOccupationActivated")
+    var isOccupationActivated:Boolean = false
+    @SerializedName("city")
+    var city:String?=null
+    @SerializedName("isCityActivated")
+    var isCityActivated:Boolean = false
+    @SerializedName("socialNetwork")
+    var socialNetworkUrl:String?=null
+    @SerializedName("isNetworkActivated")
+    var isNetworkActivated:Boolean = false
+    @SerializedName("isNetworkActivated")
+    var isEmailActivated:Boolean = false
 }

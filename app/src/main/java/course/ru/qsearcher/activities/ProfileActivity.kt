@@ -30,14 +30,9 @@ class ProfileActivity : AppCompatActivity() {
         storageRef?.child(user.email + "avatar")?.downloadUrl?.addOnSuccessListener {
             Picasso.get().load(it).noFade().into(activityProfileBinding.userImage, object :
                 Callback {
-                override fun onSuccess() {
-                    //itemLayoutBinding?.avatar!!.animate().setDuration(300).alpha(1f).start()
-                }
-
-                override fun onError(e: Exception) {
-                }
+                override fun onSuccess() {}
+                override fun onError(e: Exception) {}
             })
-            //activitySettingsBinding.userImage.setImageURI(uri)
         }?.addOnFailureListener {
             Log.i(
                 "usersAdapter",
@@ -57,8 +52,29 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(intent)
         }
         activityProfileBinding.imageBack.setOnClickListener { onBackPressed() }
+        if(user.isEmailActivated){
+            activityProfileBinding.emailText.text = user.email
+        }else{
+            //activityProfileBinding.emailText.text = "Не указано"
+            activityProfileBinding.infoLayoutRow1.visibility = View.GONE
+        }
+        if(user.isNetworkActivated){
+            activityProfileBinding.vkText.text = user.socialNetworkUrl
+        }else{
+            activityProfileBinding.infoLayoutRow2.visibility = View.GONE
+        }
+        if(user.isCityActivated){
+            activityProfileBinding.city.text = "Город: "+user.city
+        }else{
+            activityProfileBinding.city.text = "Город: не указано"
+        }
+        if(user.isOccupationActivated){
+            activityProfileBinding.occupation.text = "Деятельность: "+user.occupation
+        }else{
+            activityProfileBinding.occupation.text = "Деятальность: не указано"
+        }
         activityProfileBinding.nameText.text = user.name
-        activityProfileBinding.emailText.text = user.email
+
         setAvatar()
     }
 }
