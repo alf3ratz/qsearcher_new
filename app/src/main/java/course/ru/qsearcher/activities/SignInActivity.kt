@@ -1,23 +1,34 @@
 package course.ru.qsearcher.activities
 
+import android.R
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
-import course.ru.qsearcher.R
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import course.ru.qsearcher.databinding.ActivitySignInBinding
+import course.ru.qsearcher.model.Message
 import course.ru.qsearcher.model.User
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.util.*
+import kotlin.random.Random
+
 
 @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class SignInActivity : AppCompatActivity() {
@@ -28,9 +39,12 @@ class SignInActivity : AppCompatActivity() {
     private var loginMode: Boolean = false;
     private var usersChildEventListener: ChildEventListener? = null
 
+    private var storage: FirebaseStorage? = null
+    private var storageRef: StorageReference? = null
+
     companion object {
         var userName: String = ""
-        var currentUser:User = User()
+        var currentUser: User = User()
     }
 
 
@@ -38,15 +52,15 @@ class SignInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
         auth = Firebase.auth
-        if (auth?.currentUser != null){
+        if (auth?.currentUser != null) {
             database = FirebaseDatabase.getInstance()
             usersDbRef = database?.reference?.child("users")
             usersChildEventListener = object : ChildEventListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     val user: User = snapshot.getValue(User::class.java)!!
                     if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
-                            userName = user.name!!
-                            currentUser = user
+                        userName = user.name!!
+                        currentUser = user
                     }
                 }
 
@@ -183,15 +197,53 @@ class SignInActivity : AppCompatActivity() {
         val newUser = User()
         newUser.name = nameEditText.text.toString().trim()
         newUser.email = user!!.email
-        newUser.id=user!!.uid
-        newUser.avatarMock = R.drawable.ic_person
-        newUser.favList= mutableListOf()
+        newUser.id = user!!.uid
+        when (Random(2000).nextInt(6)) {
+            0 -> newUser.avatarMock = R.drawable.avatar1
+            1 -> newUser.avatarMock = R.drawable.avatar2
+            2 -> newUser.avatarMock = R.drawable.avatar3
+            3 -> newUser.avatarMock = R.drawable.avatar4
+            4 -> newUser.avatarMock = R.drawable.avatar5
+            5 -> newUser.avatarMock = R.drawable.avatar6
+        }
+        newUser.favList = mutableListOf()
         newUser.usersList = mutableListOf()
 //        val newUser: User = User(nameEditText.text.toString().trim(), user!!.email, user!!.uid,R.drawable.ic_person,
 //            mutableListOf
 //       (1,2,3))
-        userName = newUser.name!!
+        storage = FirebaseStorage.getInstance()
+        storageRef = storage?.reference?.child("avatars")
+        var imgRef: StorageReference = storageRef?.child(newUser.email + "avatar")!!
+//        val bm = BitmapFactory.decodeResource(this.resources, newUser.avatarMock)
+//        val baos = ByteArrayOutputStream()
+//        bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
+//        val data = baos.toByteArray()
+        var file = Uri.fromFile(File("android.resource://" + this.packageName + newUser.avatarMock))
+        var uploadTask: UploadTask = imgRef.putFile(file)
+        val urlTask = uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    throw it
+                }
+            }
+            imgRef.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+//                val downloadUri = task.result
+//                val msg: Message = Message()
+//                msg.imageURL = downloadUri.toString()
+//                msg.name = userName!!
+//                msg.sender = auth.currentUser.uid
+//                msg.receiver = receiverUserId
+//                messagesRef?.push()?.setValue(msg)
+            } else {
+                // Handle failures
+                // ...
+            }
+        }
+
         usersDbRef?.child(newUser.name!!)?.setValue(newUser)
+        userName = newUser.name!!
         currentUser = newUser
     }
 

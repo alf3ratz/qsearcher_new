@@ -106,7 +106,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     }
 
     private fun displayUsersWithCurrentEvent() {
-        if (usersWithCurrentEvent.size > 0) {
+        if (usersWithCurrentEvent!=null) {
             eventDetailActivityBinding?.usersWithEventRecycler?.visibility = View.VISIBLE
             eventDetailActivityBinding?.emptyListImage?.visibility = View.GONE
             eventDetailActivityBinding?.usersWithEventRecycler?.setHasFixedSize(true)
@@ -122,8 +122,8 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
 //                invalidateAll()
 //            }
         } else {
-            Log.i("bottom_sht", usersWithCurrentEvent.size.toString())
-            Toast.makeText(applicationContext, "Что-то не то", Toast.LENGTH_LONG).show()
+            //Log.i("bottom_sht", usersWithCurrentEvent.size.toString())
+            Toast.makeText(applicationContext, "Произошла ошибка при обращении к списку пользователей", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -140,6 +140,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                 if (user.favList!=null && user.favList!!.contains(event.id) && !usersEmails.contains(user.email) && user.id !=FirebaseAuth.getInstance().currentUser.uid) {
                     Log.i("bottom_sht", "добавил " + user.name + "'a")
                     usersWithCurrentEvent.add(user)
+                    
                     usersEmails.add(user.email!!)
                     userAdapter.notifyDataSetChanged()
                 }
@@ -249,7 +250,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
                         Toast.makeText(
                             applicationContext,
-                            "Добавлено в список озбранного",
+                            "Добавлено в список избранного",
                             Toast.LENGTH_SHORT
                         ).show()
                         compositeDisposable.dispose()
@@ -264,6 +265,8 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         }
                         Log.i("favList", snapshot.value.toString())
                         val user: User = snapshot.getValue(User::class.java)!!
+                        if(user.favList == null)
+                            user.favList = ArrayList<Int>()
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
                             user.favList?.add(event.id)
                             usersDbRef?.child(user.name!!)?.child("favList")?.setValue(user.favList)

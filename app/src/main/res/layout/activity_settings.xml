@@ -189,10 +189,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_4sdp"
-                android:background="@drawable/exit_button_shape"
+                android:backgroundTint="@color/colorThemeExtra"
+
                 android:drawableRight="@drawable/ic_exit"
                 android:text="Выход"
-                android:textColor="@color/colorThemeExtra"
+                android:textColor="@color/colorTextPrimary"
                 android:textSize="@dimen/_10ssp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -8,9 +8,7 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
-import android.view.View
 import android.widget.*
-import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -22,11 +20,9 @@ import com.google.firebase.storage.UploadTask
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.MessageAdapter
 import course.ru.qsearcher.databinding.ActivityChatBinding
-import course.ru.qsearcher.databinding.ActivityFavoritesBinding
 import course.ru.qsearcher.model.Message
 import course.ru.qsearcher.model.User
 import kotlinx.android.synthetic.main.activity_chat.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 class ChatActivity : AppCompatActivity() {
     private val RC_IMAGE: Int = 1
@@ -117,10 +113,10 @@ class ChatActivity : AppCompatActivity() {
         Log.i("db", "дошел")
         messageEdit?.filters = arrayOf(InputFilter.LengthFilter(500))
         sendPhotoButton?.setOnClickListener {
-            var intent: Intent = Intent(Intent.ACTION_GET_CONTENT)
-            intent.type = "image/*"
-            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
-            startActivityForResult(Intent.createChooser(intent, "Выберите изображение"), RC_IMAGE)
+            val intentPicture: Intent = Intent(Intent.ACTION_GET_CONTENT)
+            intentPicture.type = "image/*"
+            intentPicture.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+            startActivityForResult(Intent.createChooser(intentPicture, "Выберите изображение"), RC_IMAGE)
         }
         imageBack.setOnClickListener { onBackPressed() }
         sendMessageButton.setOnClickListener {
@@ -143,7 +139,6 @@ class ChatActivity : AppCompatActivity() {
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                         val user: User = snapshot.getValue(User::class.java)!!
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
-                            Log.i("chatAct","postavil")
                             user.usersList?.add(receiverUserId)
                             SignInActivity.currentUser.usersList!!.add(receiverUserId)
                             usersRef?.child(user.name!!)?.child("usersList")?.setValue(user.usersList)

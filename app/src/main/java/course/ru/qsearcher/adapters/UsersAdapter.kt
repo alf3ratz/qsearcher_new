@@ -32,6 +32,7 @@ class UsersAdapter(users:MutableList<User>,listener: OnUserClickListener) : Recy
         }
         fun bindUser(user:User) {
             itemLayoutBinding?.user = user
+            itemLayoutBinding?.avatar?.setImageResource(user.avatarMock)
             itemLayoutBinding?.executePendingBindings()
             if(itemLayoutBinding?.root!=null)
                 Log.i("adapter"," рут не равен налл")

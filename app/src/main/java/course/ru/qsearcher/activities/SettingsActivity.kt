@@ -49,8 +49,10 @@ class SettingsActivity : AppCompatActivity(), EventListener {
     }
 
     private fun doInitialization() {
-        activitySettingsBinding?.favEventsRecycler?.setHasFixedSize(true)
+        activitySettingsBinding.confirmButton.visibility = View.GONE
+        activitySettingsBinding.favEventsRecycler?.setHasFixedSize(true)
         activitySettingsBinding.userName.text = SignInActivity.userName
+        activitySettingsBinding.userImage.setImageResource(SignInActivity.currentUser.avatarMock)
         viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.javaObjectType)
         eventsAdapter = EventsAdapter(events, this)
         activitySettingsBinding.apply {
