@@ -1,6 +1,7 @@
 package course.ru.qsearcher.activities
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -52,7 +53,8 @@ class SettingsActivity : AppCompatActivity(), EventListener {
         activitySettingsBinding.confirmButton.visibility = View.GONE
         activitySettingsBinding.favEventsRecycler?.setHasFixedSize(true)
         activitySettingsBinding.userName.text = SignInActivity.userName
-        activitySettingsBinding.userImage.setImageResource(SignInActivity.currentUser.avatarMock)
+        //activitySettingsBinding.userImage.setImageResource(SignInActivity.currentUser.avatarMock)
+        activitySettingsBinding.userImage.setImageURI(Uri.parse("https://disk.yandex.ru/i/uIJBwukIRkePHQ"))
         viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.javaObjectType)
         eventsAdapter = EventsAdapter(events, this)
         activitySettingsBinding.apply {

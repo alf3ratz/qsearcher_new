@@ -1,9 +1,7 @@
 package course.ru.qsearcher.activities
 
-import android.R
+import course.ru.qsearcher.R
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -30,7 +28,7 @@ import java.util.*
 import kotlin.random.Random
 
 
-@Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 class SignInActivity : AppCompatActivity() {
     private var activitySignInBinding: ActivitySignInBinding? = null
     private var auth: FirebaseAuth? = null
@@ -199,7 +197,7 @@ class SignInActivity : AppCompatActivity() {
         newUser.email = user!!.email
         newUser.id = user!!.uid
         when (Random(2000).nextInt(6)) {
-            0 -> newUser.avatarMock = R.drawable.
+            0 -> newUser.avatarMock = R.drawable.avatar1
             1 -> newUser.avatarMock = R.drawable.avatar2
             2 -> newUser.avatarMock = R.drawable.avatar3
             3 -> newUser.avatarMock = R.drawable.avatar4
