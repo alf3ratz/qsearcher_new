@@ -2,6 +2,8 @@ package course.ru.qsearcher.activities
 
 import course.ru.qsearcher.R
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -26,7 +28,6 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.*
 import kotlin.random.Random
-
 
 
 class SignInActivity : AppCompatActivity() {
@@ -196,13 +197,32 @@ class SignInActivity : AppCompatActivity() {
         newUser.name = nameEditText.text.toString().trim()
         newUser.email = user!!.email
         newUser.id = user!!.uid
-        when (Random(2000).nextInt(6)) {
-            0 -> newUser.avatarMock = R.drawable.avatar1
-            1 -> newUser.avatarMock = R.drawable.avatar2
-            2 -> newUser.avatarMock = R.drawable.avatar3
-            3 -> newUser.avatarMock = R.drawable.avatar4
-            4 -> newUser.avatarMock = R.drawable.avatar5
-            5 -> newUser.avatarMock = R.drawable.avatar6
+        var file:Uri?=null
+        when ((0..5).random()) {
+            0 -> {
+                newUser.avatarMock = R.drawable.avatar1
+                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar1)
+            }
+            1 -> {
+                newUser.avatarMock = R.drawable.avatar2
+                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar2)
+            }
+            2 -> {
+                newUser.avatarMock = R.drawable.avatar3
+                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar3)
+            }
+            3 -> {
+                newUser.avatarMock = R.drawable.avatar4
+                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar4)
+            }
+            4 -> {
+                newUser.avatarMock = R.drawable.avatar5
+                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar5)
+            }
+            5 -> {
+                newUser.avatarMock = R.drawable.avatar6
+                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar6)
+            }
         }
         newUser.favList = mutableListOf()
         newUser.usersList = mutableListOf()
@@ -212,21 +232,24 @@ class SignInActivity : AppCompatActivity() {
         storage = FirebaseStorage.getInstance()
         storageRef = storage?.reference?.child("avatars")
         var imgRef: StorageReference = storageRef?.child(newUser.email + "avatar")!!
-//        val bm = BitmapFactory.decodeResource(this.resources, newUser.avatarMock)
-//        val baos = ByteArrayOutputStream()
-//        bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
-//        val data = baos.toByteArray()
-        var file = Uri.fromFile(File("android.resource://" + this.packageName + newUser.avatarMock))
-        var uploadTask: UploadTask = imgRef.putFile(file)
+        val bm = BitmapFactory.decodeResource(this.resources, R.drawable.avatar6)
+        val baos = ByteArrayOutputStream()
+        bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val data = baos.toByteArray()
+        //var file = Uri.fromFile(File("android.resource://" + this.packageName + newUser.avatarMock))
+        var uploadTask: UploadTask = imgRef.putBytes(data)
         val urlTask = uploadTask.continueWithTask { task ->
             if (!task.isSuccessful) {
                 task.exception?.let {
+                    Log.i("avatarSign","отправил?")
                     throw it
                 }
             }
             imgRef.downloadUrl
         }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                Log.i("avatarSign","отправил!")
+                //Log.i("avatarSign","отправил?")
 //                val downloadUri = task.result
 //                val msg: Message = Message()
 //                msg.imageURL = downloadUri.toString()

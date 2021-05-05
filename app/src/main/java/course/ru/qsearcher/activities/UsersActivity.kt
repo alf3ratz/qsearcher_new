@@ -79,7 +79,7 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
                         SignInActivity.currentUser.usersList = ArrayList<String>()
                     }
                      if (user.id != auth.currentUser.uid && SignInActivity.currentUser.usersList?.contains(user.id)!!) {
-                        user.avatarMock = R.drawable.ic_person
+                        //user.avatarMock = R.drawable.ic_person
                         users.add(user)
                         userAdapter.notifyDataSetChanged()
                     }

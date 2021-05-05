@@ -2,12 +2,12 @@ package course.ru.qsearcher.activities
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,17 +15,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.EventsAdapter
 import course.ru.qsearcher.databinding.ActivitySettingsBinding
 import course.ru.qsearcher.listeners.EventListener
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.model.User
-import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.responses.SingleEventResponse
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_settings.*
+import java.lang.Exception
 
 
 class SettingsActivity : AppCompatActivity(), EventListener {
@@ -39,11 +43,14 @@ class SettingsActivity : AppCompatActivity(), EventListener {
     private var currentPage: Int = 1;
     private var totalAvailablePages: Int = 1
     private var events: ArrayList<Event> = ArrayList()
-
+    private var storage: FirebaseStorage? = null
+    private var storageRef: StorageReference? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activitySettingsBinding = DataBindingUtil.setContentView(this, R.layout.activity_settings)
+        storage = FirebaseStorage.getInstance()
+        storageRef = storage?.reference?.child("avatars")
         setNavigation()
         doInitialization()
 
@@ -53,8 +60,24 @@ class SettingsActivity : AppCompatActivity(), EventListener {
         activitySettingsBinding.confirmButton.visibility = View.GONE
         activitySettingsBinding.favEventsRecycler?.setHasFixedSize(true)
         activitySettingsBinding.userName.text = SignInActivity.userName
+        storageRef?.child(SignInActivity.currentUser.email + "avatar")?.downloadUrl?.addOnSuccessListener {
+            Picasso.get().load(it).noFade().into(activitySettingsBinding.userImage, object : Callback {
+                override fun onSuccess() {
+                    // photoImageView.animate().setDuration(300).alpha(1f).start()
+                }
+
+                override fun onError(e: Exception) {
+                }
+            })
+            //activitySettingsBinding.userImage.setImageURI(uri)
+        }?.addOnFailureListener {
+            Log.i(
+                "ava",
+                "Не получилось загрузить аватар для " + SignInActivity.currentUser.email
+            )
+        }
         //activitySettingsBinding.userImage.setImageResource(SignInActivity.currentUser.avatarMock)
-        activitySettingsBinding.userImage.setImageURI(Uri.parse("https://disk.yandex.ru/i/uIJBwukIRkePHQ"))
+        //activitySettingsBinding.userImage.setImageURI(Uri.parse("https://disk.yandex.ru/i/uIJBwukIRkePHQ"))
         viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.javaObjectType)
         eventsAdapter = EventsAdapter(events, this)
         activitySettingsBinding.apply {
@@ -71,19 +94,29 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                     database = FirebaseDatabase.getInstance()
                     usersDbRef = database?.reference?.child("users")
                     usersChildEventListener = object : ChildEventListener {
-                        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                        override fun onChildAdded(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
                             val user: User = snapshot.getValue(User::class.java)!!
                             if (user.id == FirebaseAuth.getInstance().currentUser.uid && user.name != newName) {
                                 //getEvents(user.favList[1])
                             }
                         }
+
                         override fun onChildChanged(
                             snapshot: DataSnapshot,
                             previousChildName: String?
                         ) {
                         }
+
                         override fun onChildRemoved(snapshot: DataSnapshot) {}
-                        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                        override fun onChildMoved(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                        }
+
                         override fun onCancelled(error: DatabaseError) {}
                     }
                     usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
@@ -181,7 +214,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
             false
         }
     }
-    private fun getEvents(id:Int) {
+    private fun getEvents(id: Int) {
         //toggleLoading()
         //var temp: ArrayList<Event> = ArrayList()
         viewModel.getEventsById(id).observe(this, Observer { t: SingleEventResponse? ->
@@ -189,11 +222,11 @@ class SettingsActivity : AppCompatActivity(), EventListener {
             Log.i("response_", "вошел в лямбду")
             if (t != null) {
                 Log.i("response_", "если респонс не налл")
-                    //                totalAvailablePages = t.page!!
-                if (t.id   != null) {
+                //                totalAvailablePages = t.page!!
+                if (t.id != null) {
                     val oldCount: Int = events.size
                     Log.i("response_", "если список событий не налл")
-                    t.name = t.name!![0].toUpperCase()+ t.name!!.substring(1, t.name!!.length)
+                    t.name = t.name!![0].toUpperCase() + t.name!!.substring(1, t.name!!.length)
 //                    for (elem in t.events!!) {
 //                        elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
 //                            1,
@@ -218,7 +251,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                     Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
                     Log.i("response_", "список событий  налл")
                 }
-            }else{
+            } else {
                 Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
                 Log.i("response_", "респонс  налл")
             }
