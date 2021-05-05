@@ -199,7 +199,7 @@ class SignInActivity : AppCompatActivity() {
         newUser.email = user!!.email
         newUser.id = user!!.uid
         when (Random(2000).nextInt(6)) {
-            0 -> newUser.avatarMock = R.drawable.avatar1
+            0 -> newUser.avatarMock = R.drawable.
             1 -> newUser.avatarMock = R.drawable.avatar2
             2 -> newUser.avatarMock = R.drawable.avatar3
             3 -> newUser.avatarMock = R.drawable.avatar4
