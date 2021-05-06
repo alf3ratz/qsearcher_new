@@ -89,16 +89,16 @@ class SettingsActivity : AppCompatActivity(), EventListener {
             isEmailEnabled = b
             isTouched = true
         }
+        activitySettingsBinding.isCompanyActivated.setOnCheckedChangeListener { compoundButton, b ->
+            isCompanyEnabled = b
+            isTouched = true
+        }
 
         storageRef?.child(SignInActivity.currentUser.superId + "avatar")?.downloadUrl?.addOnSuccessListener {
             Picasso.get().load(it).noFade().into(
                 activitySettingsBinding.userImage,
                 object : Callback {
-                    override fun onSuccess() {
-//                        activitySettingsBinding.userImage.animate().setDuration(300).alpha(1f)
-//                            .start()
-                    }
-
+                    override fun onSuccess() {}
                     override fun onError(e: Exception) {}
                 })
         }?.addOnFailureListener {
@@ -175,6 +175,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
             activitySettingsBinding.editNetwork.visibility = View.VISIBLE
             activitySettingsBinding.editCity.visibility = View.VISIBLE
             activitySettingsBinding.isEmailActivated.visibility = View.VISIBLE
+            activitySettingsBinding.isCompanyActivated.visibility = View.VISIBLE
             activitySettingsBinding.infoHeader.layoutParams =
                 ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, 800)
         }
@@ -243,6 +244,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                             }
 
                             user.isEmailActivated = isEmailEnabled
+                            user.searchingCompany = isCompanyEnabled
 
                             usersDbRef?.child(user.superId!!)?.setValue(user)
                             SignInActivity.currentUser = user
@@ -272,6 +274,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                             }
 
                             userTemp.isEmailActivated = isEmailEnabled
+                            userTemp.searchingCompany = isCompanyEnabled
 
                             userTemp.email = user.email
                             userTemp.avatarMock = user.avatarMock
@@ -318,6 +321,7 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                 activitySettingsBinding.editCity.visibility = View.GONE
                 activitySettingsBinding.editNetwork.visibility = View.GONE
                 activitySettingsBinding.isEmailActivated.visibility = View.GONE
+                activitySettingsBinding.isCompanyActivated.visibility = View.GONE
                 if(newName.isNotEmpty() && newName.isNotBlank())
                     activitySettingsBinding.userName.text = "Имя: "+newName
 //                if (SignInActivity.currentUser.isOccupationActivated){
@@ -352,6 +356,8 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                 activitySettingsBinding.editNetwork.visibility = View.GONE
                 activitySettingsBinding.userName.visibility = View.VISIBLE
                 activitySettingsBinding.isEmailActivated.visibility = View.GONE
+                activitySettingsBinding.isCompanyActivated.visibility = View.GONE
+
                 val params = ConstraintLayout.LayoutParams(
                     ConstraintLayout.LayoutParams.MATCH_PARENT,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT

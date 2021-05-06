@@ -25,6 +25,8 @@ class User : Serializable, DatabaseReference.CompletionListener {
     var isEmailActivated:Boolean = false
     var superId:String?=null
     var searchingCompany:Boolean = false
+    var friends:ArrayList<String> = ArrayList()
+    var friendsActivated:Boolean = true
     override fun onComplete(error: DatabaseError?, ref: DatabaseReference) {
         Log.i("userClass","deleted")
     }

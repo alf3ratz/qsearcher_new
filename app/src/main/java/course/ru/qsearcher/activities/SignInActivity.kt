@@ -21,6 +21,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import course.ru.qsearcher.databinding.ActivitySignInBinding
+import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.model.Message
 import course.ru.qsearcher.model.User
 import kotlinx.android.synthetic.main.activity_sign_in.*
@@ -44,8 +45,8 @@ class SignInActivity : AppCompatActivity() {
     companion object {
         var userName: String = ""
         var currentUser: User = User()
+        var currentEvents: MutableList<Event> = mutableListOf()
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -198,7 +199,7 @@ class SignInActivity : AppCompatActivity() {
         newUser.email = user!!.email
         newUser.id = user!!.uid
         var file: Uri? = null
-        when ((0..5).random()) {
+        when ((0..5).shuffled().last()) {
             0 -> {
                 newUser.avatarMock = R.drawable.avatar1
                 file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar1)

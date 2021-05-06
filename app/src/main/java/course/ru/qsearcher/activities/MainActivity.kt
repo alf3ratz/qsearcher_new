@@ -160,6 +160,7 @@ class MainActivity : AppCompatActivity(), EventListener {
                         )
                     }
                     events.addAll(t.events!!)
+                    //SignInActivity.currentEvents.addAll(t.events!!)
                     eventsAdapter.notifyDataSetChanged()
                     eventsAdapter.notifyItemRangeChanged(
                         oldCount,

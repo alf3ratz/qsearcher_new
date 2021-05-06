@@ -5,7 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginTop
 import androidx.databinding.DataBindingUtil
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Callback
@@ -13,6 +17,8 @@ import com.squareup.picasso.Picasso
 import course.ru.qsearcher.R
 import course.ru.qsearcher.databinding.ActivityProfileBinding
 import course.ru.qsearcher.model.User
+import org.jetbrains.anko.act
+import org.jetbrains.anko.dip
 import java.lang.Exception
 
 class ProfileActivity : AppCompatActivity() {
@@ -20,6 +26,8 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var user: User
     private var storage: FirebaseStorage? = null
     private var storageRef: StorageReference? = null
+    private var database: FirebaseDatabase? = null
+    private var usersDbRef: DatabaseReference? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +81,27 @@ class ProfileActivity : AppCompatActivity() {
         }else{
             activityProfileBinding.occupation.text = "Деятальность: не указано"
         }
+        if(user.searchingCompany){
+            activityProfileBinding.companyButton.visibility = View.VISIBLE
+        }else{
+//            val params = ConstraintLayout.LayoutParams(
+//                ConstraintLayout.LayoutParams.WRAP_CONTENT,
+//                ConstraintLayout.LayoutParams.WRAP_CONTENT
+//            )
+//            params.setMargins(dip(8),dip(60),dip(8),0)
+//            activityProfileBinding.nameText.layoutParams = params
+            activityProfileBinding.notCompanyButton.visibility = View.VISIBLE
+        }
+        if(user.friendsActivated) {
+            activityProfileBinding.addToFriends.visibility = View.VISIBLE
+            activityProfileBinding.addToFriends.setOnClickListener {
+                database = FirebaseDatabase.getInstance()
+                usersDbRef = database?.reference?.child("users")
+                SignInActivity.currentUser.friends.add(user.superId!!)
+                usersDbRef?.child(SignInActivity.currentUser.superId!!)?.child("friends")?.setValue(SignInActivity.currentUser.friends)
+            }
+        }
         activityProfileBinding.nameText.text = user.name
-
         setAvatar()
     }
 }

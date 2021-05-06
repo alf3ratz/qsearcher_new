@@ -20,7 +20,7 @@ class MostPopularEventsViewModel(@NonNull application: Application):AndroidViewM
     private var eventsDatabase:EventsDatabase?=null
 
     init{
-        eventsDatabase = EventsDatabase.getEventsDatabase(application)//(application)
+        eventsDatabase = EventsDatabase.getEventsDatabase(application)
     }
     fun getMostPopularEvents(page:Int):LiveData<EventResponse>{
         return mostPopularEventsRepository.getMostPopularEvents(page)

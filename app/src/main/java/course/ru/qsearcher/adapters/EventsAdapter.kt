@@ -19,10 +19,11 @@ import kotlin.coroutines.coroutineContext
 import androidx.navigation.ui.NavigationUI
 
 
-class EventsAdapter(events_: List<Event>,eventsListener_: EventListener) : RecyclerView.Adapter<EventViewHolder>() {
+class EventsAdapter(events_: List<Event>, eventsListener_: EventListener) :
+    RecyclerView.Adapter<EventViewHolder>() {
 
     private var events: List<Event> = events_
-    private var layoutInflater: LayoutInflater?=null
+    private var layoutInflater: LayoutInflater? = null
     var eventsListener: EventListener = eventsListener_
 
     inner class EventViewHolder(itemLayoutBinding: ItemContainerEventBinding) :
@@ -33,18 +34,19 @@ class EventsAdapter(events_: List<Event>,eventsListener_: EventListener) : Recyc
             this.itemLayoutBinding = itemLayoutBinding
         }
 
-         fun bindEvent(event: Event) {
+        fun bindEvent(event: Event) {
             itemLayoutBinding?.event = event
+            Log.i("searchAct","adapter")
             itemLayoutBinding?.executePendingBindings()
-            Log.i("adapter"," в ивент адаптере1")
+            Log.i("adapter", " в ивент адаптере1")
             //Toast.makeText(layoutInflater?.context,"в ИвентАдаптере1",Toast.LENGTH_SHORT)
-            if(itemLayoutBinding?.root!=null)
-                Log.i("adapter"," рут не равен налл")
+            if (itemLayoutBinding?.root != null)
+                Log.i("adapter", " рут не равен налл")
 
 
             itemView.setOnClickListener {
                 eventsListener.onEventClicked(event)
-                Log.i("adapter"," в ивент адаптере2222")
+                Log.i("adapter", " в ивент адаптере2222")
 
                 //view.navigate(R.id.action_titleFragment_to_gameFragment)
 
@@ -55,10 +57,9 @@ class EventsAdapter(events_: List<Event>,eventsListener_: EventListener) : Recyc
 //                    eventsListener.onEventClicked(event)
 //                    Log.i("adapter"," в ивент адаптере2222")
 //                    Toast.makeText(Application().applicationContext,"в ИвентАдаптере",Toast.LENGTH_SHORT)
-                    //                    View.OnClickListener {
-                    //                        eventsListener.onEventClicked(event)
-                    //                    }
-
+            //                    View.OnClickListener {
+            //                        eventsListener.onEventClicked(event)
+            //                    }
 
 
         }

@@ -20,6 +20,7 @@
             android:background="@color/colorPrimaryDark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
             <View
                 android:id="@+id/viewFadingEdge"
                 android:layout_width="match_parent"
@@ -27,6 +28,7 @@
                 android:background="@drawable/background_fading_edge"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/topLayout" />
+
             <ImageView
                 android:id="@+id/imageBack"
                 android:layout_width="@dimen/_25sdp"
@@ -40,23 +42,50 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/colorTextIcons" />
+
             <TextView
                 android:id="@+id/nameText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
-                android:layout_marginTop="@dimen/_60sdp"
+                android:layout_marginTop="@dimen/_40sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:fontFamily="@font/ubuntu_regular"
                 android:text="@string/user_name"
-                android:textColor="@color/colorTextPrimary"
                 android:textAlignment="center"
+                android:textColor="@color/colorTextPrimary"
                 android:textSize="@dimen/_25sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <Button
+                android:id="@+id/companyButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_add_to_company"
+                android:text="Ищу компанию"
+                android:textColor="@color/colorPrimaryDark"
+                android:backgroundTint="@color/colorAccent"
+                android:textSize="@dimen/_8ssp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nameText" />
 
+            <Button
+                android:id="@+id/notCompanyButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_clear"
+                android:text="Не ищу компанию"
+                android:textColor="@color/colorTextPrimary"
+                android:backgroundTint="@color/colorThemeExtra"
+                android:textSize="@dimen/_8ssp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nameText" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.makeramen.roundedimageview.RoundedImageView
@@ -66,14 +95,14 @@
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_116sdp"
             android:layout_marginEnd="@dimen/_8sdp"
+            android:contentDescription="@string/app_name"
             android:src="@drawable/ic_person"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:riv_border_color="@color/colorAccent"
             app:riv_border_width="@dimen/_1sdp"
-            app:riv_corner_radius="@dimen/_70sdp"
-            android:contentDescription="@string/app_name"/>
+            app:riv_corner_radius="@dimen/_70sdp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/underPicture"
@@ -124,10 +153,10 @@
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
                 android:layout_marginStart="@dimen/_8sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_email"
-                android:contentDescription="@string/app_name" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/emailText"
@@ -138,10 +167,11 @@
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/infoLayoutRow2"
             android:layout_width="match_parent"
@@ -149,16 +179,17 @@
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_8sdp"
-            app:layout_constraintTop_toBottomOf="@id/infoLayoutRow1"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/infoLayoutRow1">
+
             <ImageView
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
                 android:layout_marginStart="@dimen/_8sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/app_name"
                 android:src="@drawable/ic_people"
-                android:contentDescription="@string/app_name" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/vkText"
@@ -169,23 +200,40 @@
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <Button
             android:id="@+id/sendMessageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/infoLayoutRow2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginEnd="@dimen/_8sdp"
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
             android:backgroundTint="@color/colorAccent"
-            android:textColor="@color/colorPrimaryDark"
+            android:padding="@dimen/_4sdp"
             android:text="@string/message"
-            android:padding="@dimen/_4sdp"/>
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toStartOf="@id/addToFriends"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/infoLayoutRow2" />
+
+        <Button
+            android:id="@+id/addToFriends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:backgroundTint="@color/colorAccent"
+            android:padding="@dimen/_4sdp"
+            android:text="Добавить в друзья"
+            android:textColor="@color/colorPrimaryDark"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/sendMessageButton"
+            app:layout_constraintTop_toBottomOf="@id/infoLayoutRow2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
