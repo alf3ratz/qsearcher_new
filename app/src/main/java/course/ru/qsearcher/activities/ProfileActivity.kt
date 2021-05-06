@@ -93,12 +93,16 @@ class ProfileActivity : AppCompatActivity() {
             activityProfileBinding.notCompanyButton.visibility = View.VISIBLE
         }
         if(user.friendsActivated) {
-            activityProfileBinding.addToFriends.visibility = View.VISIBLE
-            activityProfileBinding.addToFriends.setOnClickListener {
-                database = FirebaseDatabase.getInstance()
-                usersDbRef = database?.reference?.child("users")
-                SignInActivity.currentUser.friends.add(user.superId!!)
-                usersDbRef?.child(SignInActivity.currentUser.superId!!)?.child("friends")?.setValue(SignInActivity.currentUser.friends)
+            if(!SignInActivity.currentUser.friends.contains(user.superId)){
+                activityProfileBinding.addToFriends.visibility = View.VISIBLE
+                activityProfileBinding.addToFriends.setOnClickListener {
+                    database = FirebaseDatabase.getInstance()
+                    usersDbRef = database?.reference?.child("users")
+                    SignInActivity.currentUser.friends.add(user.superId!!)
+                    usersDbRef?.child(SignInActivity.currentUser.superId!!)?.child("friends")?.setValue(SignInActivity.currentUser.friends)
+                }
+            }else{
+                activityProfileBinding.addToFriends.visibility = View.GONE
             }
         }
         activityProfileBinding.nameText.text = user.name

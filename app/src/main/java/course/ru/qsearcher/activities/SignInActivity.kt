@@ -238,7 +238,7 @@ class SignInActivity : AppCompatActivity() {
         storage = FirebaseStorage.getInstance()
         storageRef = storage?.reference?.child("avatars")
         var imgRef: StorageReference = storageRef?.child(newUser.superId + "avatar")!!
-        val bm = BitmapFactory.decodeResource(this.resources, R.drawable.avatar6)
+        val bm = BitmapFactory.decodeResource(this.resources, newUser.avatarMock)
         val baos = ByteArrayOutputStream()
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
         val data = baos.toByteArray()

@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.UsersAdapter
+import course.ru.qsearcher.adapters.UsersAdapterForUsersPage
 import course.ru.qsearcher.databinding.ActivityUsersBinding
 import course.ru.qsearcher.listeners.OnUserClickListener
 import course.ru.qsearcher.model.User
@@ -27,7 +28,7 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
     private var usersChildEventListener: ChildEventListener? = null
     private lateinit var activityUsersBinding: ActivityUsersBinding
     private lateinit var users: MutableList<User>
-    private lateinit var userAdapter: UsersAdapter
+    private lateinit var userAdapter: UsersAdapterForUsersPage
     private lateinit var auth: FirebaseAuth
     private lateinit var userName: String
 
@@ -92,7 +93,7 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
         }
     }
     usersRef.addChildEventListener(usersChildEventListener!!)
-    userAdapter = UsersAdapter(users, this)
+    userAdapter = UsersAdapterForUsersPage(users, this)
     activityUsersBinding.apply {
             activityUsersBinding.usersRecyclerView.adapter = userAdapter
             invalidateAll()

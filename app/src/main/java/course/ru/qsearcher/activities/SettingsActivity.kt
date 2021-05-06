@@ -1,19 +1,25 @@
 package course.ru.qsearcher.activities
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.marginBottom
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.dialog.MaterialDialogs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -23,18 +29,25 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.EventsAdapter
+import course.ru.qsearcher.adapters.UsersAdapter
 import course.ru.qsearcher.databinding.ActivitySettingsBinding
+import course.ru.qsearcher.databinding.DialogForFriemdsBinding
 import course.ru.qsearcher.listeners.EventListener
+import course.ru.qsearcher.listeners.OnUserClickListener
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.model.User
 import course.ru.qsearcher.responses.SingleEventResponse
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.activity_settings.view.*
+import kotlinx.android.synthetic.main.dialog_for_friemds.view.*
+import okhttp3.internal.cache.DiskLruCache
+import org.jetbrains.anko.act
 import org.jetbrains.anko.dip
 
 
-class SettingsActivity : AppCompatActivity(), EventListener {
+class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener {
     private lateinit var activitySettingsBinding: ActivitySettingsBinding
     private lateinit var viewModel: MostPopularEventsViewModel
     private lateinit var eventsAdapter: EventsAdapter
@@ -47,8 +60,64 @@ class SettingsActivity : AppCompatActivity(), EventListener {
     private var storageRef: StorageReference? = null
     private var isEmailEnabled: Boolean = false
     private var isCompanyEnabled: Boolean = false
-    private var isTouched:Boolean=false
+    private var isTouched: Boolean = false
 
+    private lateinit var preferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+    private lateinit var userAdapter: UsersAdapter
+
+    private fun initPrefs() {
+        preferences = getSharedPreferences("My prefs", Context.MODE_PRIVATE)
+        editor = preferences.edit()
+    }
+
+    private fun showDialog() {
+        val dialog = LayoutInflater.from(this).inflate(R.layout.dialog_for_friemds, null)
+        val builder = AlertDialog.Builder(this).setView(dialog).setTitle("Друзья")
+        val alert = builder.show()
+        var friends = ArrayList<User>()
+        database = FirebaseDatabase.getInstance()
+        usersDbRef = database?.reference?.child("users")
+        usersChildEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val user: User = snapshot.getValue(User::class.java)!!
+                if(SignInActivity.currentUser.friends.contains(user.superId)){
+                    friends.add(user)
+                }
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) { }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+
+            override fun onCancelled(error: DatabaseError) {}
+        }
+        usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
+        //for(str in SignInActivity.currentUser.friends){
+//            usersDbRef!!.child(SignInActivity.currentUser.superId!!).child("friends").get().addOnSuccessListener {
+//                val tmp = it.getValue(Collection<User>)
+//                friends.addAll (it.getValue(Collection<User::class.java>)!!)
+//                //Log.i("firebase", "Got value ${it.value}")
+//            }.addOnFailureListener{
+//                Log.e("firebase", "Error getting data", it)
+//            }
+        //val user = usersDbRef?.child(SignInActivity.currentUser.superId!!)!!.child("friends").child(str).get().result.getValue(User::class.java)
+        //friends.add(user!!)
+        //}
+        dialog.friends.layoutManager =
+            LinearLayoutManager(this)
+        userAdapter = UsersAdapter(friends, this)
+        dialog.apply {
+            dialog.friends.adapter = userAdapter
+            //invalidateAll()
+        }
+        userAdapter.notifyDataSetChanged()
+        builder.setNeutralButton("OK") { dialog, which ->
+            alert.dismiss()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,21 +126,21 @@ class SettingsActivity : AppCompatActivity(), EventListener {
         storageRef = storage?.reference?.child("avatars")
         setNavigation()
         doInitialization()
-        if (SignInActivity.currentUser.isEmailActivated){
-            Log.i("switch","zashel")
+        if (SignInActivity.currentUser.isEmailActivated) {
+            Log.i("switch", "zashel")
             activitySettingsBinding.isEmailActivated.isChecked = true
         }
-        if (SignInActivity.currentUser.isOccupationActivated){
+        if (SignInActivity.currentUser.isOccupationActivated) {
             activitySettingsBinding.userOccupation.text =
                 "Деятельность: " + SignInActivity.currentUser.occupation
             activitySettingsBinding.userOccupation.visibility = View.VISIBLE
         }
 
-        if (SignInActivity.currentUser.isCityActivated){
+        if (SignInActivity.currentUser.isCityActivated) {
             activitySettingsBinding.userCity.text = "Город: " + SignInActivity.currentUser.city
             activitySettingsBinding.userCity.visibility = View.VISIBLE
         }
-        if (SignInActivity.currentUser.isNetworkActivated){
+        if (SignInActivity.currentUser.isNetworkActivated) {
             activitySettingsBinding.userNetwork.visibility = View.VISIBLE
             activitySettingsBinding.userNetwork.text =
                 "Соц. сеть: " + SignInActivity.currentUser.socialNetworkUrl
@@ -82,8 +151,10 @@ class SettingsActivity : AppCompatActivity(), EventListener {
 
     private fun doInitialization() {
         activitySettingsBinding.confirmButton.visibility = View.GONE
-
-        activitySettingsBinding.favEventsRecycler?.setHasFixedSize(true)
+        activitySettingsBinding.friendsRow.friendsButton.setOnClickListener {
+            showDialog()
+        }
+        //activitySettingsBinding.favEventsRecycler?.setHasFixedSize(true)
         //activitySettingsBinding.userName.text = SignInActivity.currentUser.name
         activitySettingsBinding.isEmailActivated.setOnCheckedChangeListener { compoundButton, b ->
             isEmailEnabled = b
@@ -115,51 +186,51 @@ class SettingsActivity : AppCompatActivity(), EventListener {
             }
         }
         viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.javaObjectType)
-        eventsAdapter = EventsAdapter(events, this)
-        activitySettingsBinding.apply {
-            activitySettingsBinding.favEventsRecycler.adapter = eventsAdapter
-            invalidateAll()
-        }
-
-
-        activitySettingsBinding.favEventsRecycler.addOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (!activitySettingsBinding.favEventsRecycler.canScrollVertically(1)) {
-                    database = FirebaseDatabase.getInstance()
-                    usersDbRef = database?.reference?.child("users")
-                    usersChildEventListener = object : ChildEventListener {
-                        override fun onChildAdded(
-                            snapshot: DataSnapshot,
-                            previousChildName: String?
-                        ) {
-                            val user: User = snapshot.getValue(User::class.java)!!
-                            if (user.id == FirebaseAuth.getInstance().currentUser.uid && user.name != newName) {
-                                //getEvents(user.favList[1])
-                            }
-                        }
-
-                        override fun onChildChanged(
-                            snapshot: DataSnapshot,
-                            previousChildName: String?
-                        ) {
-                        }
-
-                        override fun onChildRemoved(snapshot: DataSnapshot) {}
-                        override fun onChildMoved(
-                            snapshot: DataSnapshot,
-                            previousChildName: String?
-                        ) {
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {}
-                    }
-                    usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
-
-                }
-            }
-        })
+//        eventsAdapter = EventsAdapter(events, this)
+//        activitySettingsBinding.apply {
+//            activitySettingsBinding.favEventsRecycler.adapter = eventsAdapter
+//            invalidateAll()
+//        }
+//
+//
+//        activitySettingsBinding.favEventsRecycler.addOnScrollListener(object :
+//            RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                if (!activitySettingsBinding.favEventsRecycler.canScrollVertically(1)) {
+//                    database = FirebaseDatabase.getInstance()
+//                    usersDbRef = database?.reference?.child("users")
+//                    usersChildEventListener = object : ChildEventListener {
+//                        override fun onChildAdded(
+//                            snapshot: DataSnapshot,
+//                            previousChildName: String?
+//                        ) {
+//                            val user: User = snapshot.getValue(User::class.java)!!
+//                            if (user.id == FirebaseAuth.getInstance().currentUser.uid && user.name != newName) {
+//                                //getEvents(user.favList[1])
+//                            }
+//                        }
+//
+//                        override fun onChildChanged(
+//                            snapshot: DataSnapshot,
+//                            previousChildName: String?
+//                        ) {
+//                        }
+//
+//                        override fun onChildRemoved(snapshot: DataSnapshot) {}
+//                        override fun onChildMoved(
+//                            snapshot: DataSnapshot,
+//                            previousChildName: String?
+//                        ) {
+//                        }
+//
+//                        override fun onCancelled(error: DatabaseError) {}
+//                    }
+//                    usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
+//
+//                }
+//            }
+//        })
         activitySettingsBinding.exitButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(applicationContext, SignInActivity::class.java))
@@ -287,17 +358,18 @@ class SettingsActivity : AppCompatActivity(), EventListener {
 
                             //usersDbRef?.child(user.email!!)?.removeValue(user)
                         }
-                        if (SignInActivity.currentUser.isOccupationActivated){
+                        if (SignInActivity.currentUser.isOccupationActivated) {
                             activitySettingsBinding.userOccupation.text =
                                 "Деятельность: " + SignInActivity.currentUser.occupation
                             activitySettingsBinding.userOccupation.visibility = View.VISIBLE
                         }
 
-                        if (SignInActivity.currentUser.isCityActivated){
-                            activitySettingsBinding.userCity.text = "Город: " + SignInActivity.currentUser.city
+                        if (SignInActivity.currentUser.isCityActivated) {
+                            activitySettingsBinding.userCity.text =
+                                "Город: " + SignInActivity.currentUser.city
                             activitySettingsBinding.userCity.visibility = View.VISIBLE
                         }
-                        if (SignInActivity.currentUser.isNetworkActivated){
+                        if (SignInActivity.currentUser.isNetworkActivated) {
                             activitySettingsBinding.userNetwork.visibility = View.VISIBLE
                             activitySettingsBinding.userNetwork.text =
                                 "Соц. сеть: " + SignInActivity.currentUser.socialNetworkUrl
@@ -322,8 +394,8 @@ class SettingsActivity : AppCompatActivity(), EventListener {
                 activitySettingsBinding.editNetwork.visibility = View.GONE
                 activitySettingsBinding.isEmailActivated.visibility = View.GONE
                 activitySettingsBinding.isCompanyActivated.visibility = View.GONE
-                if(newName.isNotEmpty() && newName.isNotBlank())
-                    activitySettingsBinding.userName.text = "Имя: "+newName
+                if (newName.isNotEmpty() && newName.isNotBlank())
+                    activitySettingsBinding.userName.text = "Имя: " + newName
 //                if (SignInActivity.currentUser.isOccupationActivated){
 //                    activitySettingsBinding.userOccupation.text =
 //                        "Деятельность: " + SignInActivity.currentUser.occupation
@@ -472,5 +544,21 @@ class SettingsActivity : AppCompatActivity(), EventListener {
             putExtra("event", event)
         }
         startActivity(intent);
+    }
+    override fun onUserCLick(user: User) {
+        super.onUserCLick(user)
+        if (user != null) {
+            Log.i("user", user.name!!)
+            goToProfile(user)
+        } else {
+            Log.i("user", "fail to send user in intent")
+        }
+    }
+
+    private fun goToProfile(user: User) {
+        val intent = Intent(applicationContext, ProfileActivity::class.java).apply {
+            putExtra("user", user)
+        }
+        startActivity(intent)
     }
 }

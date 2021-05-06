@@ -403,13 +403,13 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         super.onUserCLick(user)
         if (user != null) {
             Log.i("user", user.name!!)
-            goToChat(user)
+            goToProfile(user)
         } else {
             Log.i("user", "fail to send user in intent")
         }
     }
 
-    private fun goToChat(user: User) {
+    private fun goToProfile(user: User) {
         val intent = Intent(applicationContext, ProfileActivity::class.java).apply {
             putExtra("user", user)
         }

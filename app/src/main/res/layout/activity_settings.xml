@@ -283,21 +283,47 @@
                     android:shadowColor="@color/colorAccent" />
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/favEventsRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:onClick="onEventClicked"
-                android:orientation="vertical"
-                android:paddingStart="@dimen/_4sdp"
-                android:paddingTop="@dimen/_4sdp"
-                android:paddingEnd="@dimen/_4sdp"
-                android:paddingBottom="@dimen/_4sdp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toTopOf="@id/exitButton"
-                app:layout_constraintTop_toBottomOf="@id/secondRow" />
+<!--            <androidx.recyclerview.widget.RecyclerView-->
+<!--                android:id="@+id/favEventsRecycler"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:clipToPadding="false"-->
+<!--                android:onClick="onEventClicked"-->
+<!--                android:orientation="vertical"-->
+<!--                android:paddingStart="@dimen/_4sdp"-->
+<!--                android:paddingTop="@dimen/_4sdp"-->
+<!--                android:paddingEnd="@dimen/_4sdp"-->
+<!--                android:paddingBottom="@dimen/_4sdp"-->
+<!--                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--                app:layout_constraintBottom_toTopOf="@id/exitButton"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/secondRow" />-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/friendsRow"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/secondRow">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:fontFamily="@font/ubuntu_regular"
+        android:text="Друзья"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="@dimen/_18ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+    <ImageView
+        android:id="@+id/friendsButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:contentDescription="@string/app_name"
 
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:src="@drawable/ic_people"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
             <Button
                 android:id="@+id/exitButton"
                 android:layout_width="wrap_content"
@@ -311,6 +337,7 @@
                 android:textSize="@dimen/_10ssp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/friendsRow"
                 app:layout_constraintStart_toStartOf="parent" />
 
 
