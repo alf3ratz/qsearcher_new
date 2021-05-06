@@ -197,7 +197,7 @@ class SignInActivity : AppCompatActivity() {
         newUser.name = nameEditText.text.toString().trim()
         newUser.email = user!!.email
         newUser.id = user!!.uid
-        var file:Uri?=null
+        var file: Uri? = null
         when ((0..5).random()) {
             0 -> {
                 newUser.avatarMock = R.drawable.avatar1
@@ -226,12 +226,17 @@ class SignInActivity : AppCompatActivity() {
         }
         newUser.favList = mutableListOf()
         newUser.usersList = mutableListOf()
+        newUser.occupation = "-"
+        newUser.city = "-"
+        newUser.socialNetworkUrl = "-"
+        newUser.superId = newUser.email!!.replace(".", "").replace("#", "").replace("$", "").replace("[", "")
+            .replace("]", "")
 //        val newUser: User = User(nameEditText.text.toString().trim(), user!!.email, user!!.uid,R.drawable.ic_person,
 //            mutableListOf
 //       (1,2,3))
         storage = FirebaseStorage.getInstance()
         storageRef = storage?.reference?.child("avatars")
-        var imgRef: StorageReference = storageRef?.child(newUser.email + "avatar")!!
+        var imgRef: StorageReference = storageRef?.child(newUser.superId + "avatar")!!
         val bm = BitmapFactory.decodeResource(this.resources, R.drawable.avatar6)
         val baos = ByteArrayOutputStream()
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
@@ -241,14 +246,14 @@ class SignInActivity : AppCompatActivity() {
         val urlTask = uploadTask.continueWithTask { task ->
             if (!task.isSuccessful) {
                 task.exception?.let {
-                    Log.i("avatarSign","отправил?")
+                    Log.i("avatarSign", "отправил?")
                     throw it
                 }
             }
             imgRef.downloadUrl
         }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Log.i("avatarSign","отправил!")
+                Log.i("avatarSign", "отправил!")
                 //Log.i("avatarSign","отправил?")
 //                val downloadUri = task.result
 //                val msg: Message = Message()
@@ -262,8 +267,7 @@ class SignInActivity : AppCompatActivity() {
                 // ...
             }
         }
-
-        usersDbRef?.child(newUser.name!!)?.setValue(newUser)
+        usersDbRef?.child(newUser.superId!!)?.setValue(newUser)
         userName = newUser.name!!
         currentUser = newUser
     }

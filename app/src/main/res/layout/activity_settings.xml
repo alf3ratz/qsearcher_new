@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -17,7 +18,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/infoHeader"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_120sdp"
             android:layout_margin="@dimen/_4sdp"
             android:background="@color/colorPrimaryDark"
             android:padding="@dimen/_8sdp"
@@ -45,9 +46,54 @@
                 android:paddingTop="@dimen/_8sdp"
                 android:text="Имя пользователя"
                 android:textColor="@color/colorTextPrimary"
-                android:textSize="@dimen/_18ssp"
+                android:textSize="@dimen/_14ssp"
                 app:layout_constraintStart_toEndOf="@id/userImage"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/userOccupation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/ubuntu_medium"
+                android:includeFontPadding="false"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="Деятельность"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/_14ssp"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/userImage"
+                app:layout_constraintTop_toBottomOf="@id/userName" />
+
+            <TextView
+                android:id="@+id/userCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/ubuntu_medium"
+                android:includeFontPadding="false"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="Город"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/_14ssp"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/userImage"
+                app:layout_constraintTop_toBottomOf="@id/userOccupation" />
+
+            <TextView
+                android:id="@+id/userNetwork"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/ubuntu_medium"
+                android:includeFontPadding="false"
+                android:paddingTop="@dimen/_8sdp"
+                android:text="Социальная сеть"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/_14ssp"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/userImage"
+                app:layout_constraintTop_toBottomOf="@id/userCity" />
 
             <EditText
                 android:id="@+id/editUserName"
@@ -58,17 +104,82 @@
                 android:hint="Введите новое имя пользователя"
                 android:includeFontPadding="false"
                 android:paddingTop="@dimen/_8sdp"
+                android:shadowColor="@color/colorAccent"
                 android:textColor="@color/colorTextPrimary"
-                android:textSize="@dimen/_18ssp"
+                android:textColorHint="@color/colorAccent"
+                android:textColorLink="@color/colorAccent"
+                android:textSize="@dimen/_12ssp"
                 android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/userImage"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <EditText
+                android:id="@+id/editOccupation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/ubuntu_medium"
+                android:hint="Введите Вашу деятельность"
+                android:includeFontPadding="false"
+                android:paddingTop="@dimen/_8sdp"
+                android:textColor="@color/colorTextPrimary"
+                android:textColorHint="@color/colorAccent"
+                android:textColorLink="@color/colorAccent"
+                android:textSize="@dimen/_12ssp"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/userImage"
+                app:layout_constraintTop_toBottomOf="@id/editUserName" />
+
+            <EditText
+                android:id="@+id/editCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/ubuntu_medium"
+                android:hint="Введите Ваш город"
+                android:includeFontPadding="false"
+                android:paddingTop="@dimen/_8sdp"
+                android:textColor="@color/colorTextPrimary"
+                android:textColorHint="@color/colorAccent"
+                android:textColorLink="@color/colorAccent"
+                android:textSize="@dimen/_12ssp"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/userImage"
+                app:layout_constraintTop_toBottomOf="@id/editOccupation" />
+
+            <EditText
+                android:id="@+id/editNetwork"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/ubuntu_medium"
+                android:hint="Введите id пользователя"
+                android:includeFontPadding="false"
+                android:paddingTop="@dimen/_8sdp"
+                android:textColor="@color/colorTextPrimary"
+                android:textColorHint="@color/colorAccent"
+                android:textColorLink="@color/colorAccent"
+                android:textSize="@dimen/_12ssp"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/userImage"
+                app:layout_constraintTop_toBottomOf="@id/editCity" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/isEmailActivated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/userImage"
+                app:layout_constraintTop_toBottomOf="@id/editNetwork"
+                android:visibility="gone"
+                android:text="Отображать почту"
+                android:textColor="@color/colorAccent"/>
+
             <ImageView
                 android:id="@+id/confirmButton"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_margin="@dimen/_8sdp"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_6sdp"
+                android:layout_marginBottom="@dimen/_6sdp"
                 android:background="@drawable/ic_baseline_done_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -76,9 +187,10 @@
 
             <ImageView
                 android:id="@+id/editButton"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_margin="@dimen/_8sdp"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                android:layout_marginBottom="@dimen/_6sdp"
                 android:background="@drawable/ic_edit"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -162,27 +274,20 @@
                     android:shadowColor="@color/colorAccent" />
             </LinearLayout>
 
-            <!--            <View-->
-            <!--                android:id="@+id/settingsViewBottom"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="@dimen/_200sdp"-->
-            <!--                app:layout_constraintBottom_toTopOf="@+id/exitButton"-->
-            <!--                app:layout_constraintTop_toBottomOf="@id/secondRow" />-->
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/favEventsRecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:onClick="onEventClicked"
-                    android:orientation="vertical"
-                    android:paddingStart="@dimen/_4sdp"
-                    android:paddingTop="@dimen/_4sdp"
-                    android:paddingEnd="@dimen/_4sdp"
-                    android:paddingBottom="@dimen/_4sdp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintBottom_toTopOf="@id/exitButton"
-                    app:layout_constraintTop_toBottomOf="@id/secondRow"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/favEventsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:onClick="onEventClicked"
+                android:orientation="vertical"
+                android:paddingStart="@dimen/_4sdp"
+                android:paddingTop="@dimen/_4sdp"
+                android:paddingEnd="@dimen/_4sdp"
+                android:paddingBottom="@dimen/_4sdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toTopOf="@id/exitButton"
+                app:layout_constraintTop_toBottomOf="@id/secondRow" />
 
             <Button
                 android:id="@+id/exitButton"
@@ -206,14 +311,14 @@
             android:id="@+id/bottomNavigation"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_37sdp"
-            app:labelVisibilityMode="unlabeled"
+            app:itemBackground="@color/colorPrimaryBottomNav"
+            app:itemIconTint="@drawable/selector"
             app:itemTextAppearanceActive="@style/BottomNavigationView.Active"
             app:itemTextAppearanceInactive="@style/BottomNavigationView"
-            app:itemBackground="@color/colorPrimaryBottomNav"
+            app:itemTextColor="@drawable/selector"
+            app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:itemTextColor="@drawable/selector"
-            app:itemIconTint="@drawable/selector"
             app:menu="@menu/bottom_navigation" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

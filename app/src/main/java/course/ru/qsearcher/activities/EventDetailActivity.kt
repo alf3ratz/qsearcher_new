@@ -94,7 +94,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
 //                }
 //            }
 //        })
-        getUsersWithCurrentFavEvent()
+        //getUsersWithCurrentFavEvent()
         eventDetailActivityBinding?.usersWithEventRecycler?.layoutManager =
             LinearLayoutManager(this)
         userAdapter = UsersAdapter(usersWithCurrentEvent, this)
@@ -106,7 +106,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     }
 
     private fun displayUsersWithCurrentEvent() {
-        if (usersWithCurrentEvent!=null) {
+        if (usersWithCurrentEvent != null) {
             eventDetailActivityBinding?.usersWithEventRecycler?.visibility = View.VISIBLE
             eventDetailActivityBinding?.emptyListImage?.visibility = View.GONE
             eventDetailActivityBinding?.usersWithEventRecycler?.setHasFixedSize(true)
@@ -123,7 +123,11 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
 //            }
         } else {
             //Log.i("bottom_sht", usersWithCurrentEvent.size.toString())
-            Toast.makeText(applicationContext, "Произошла ошибка при обращении к списку пользователей", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                applicationContext,
+                "Произошла ошибка при обращении к списку пользователей",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -137,10 +141,14 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
 //                    "bottom_sht",
 //                    "зашел last_id = " + user.favList[user.favList.size - 1] + " event_id = " + event.id.toString()
 //                )
-                if (user.favList!=null && user.favList!!.contains(event.id) && !usersEmails.contains(user.email) && user.id !=FirebaseAuth.getInstance().currentUser.uid) {
+                if (user.favList != null && user.favList!!.contains(event.id) && !usersEmails.contains(
+                        user.email
+                    ) && user.id != FirebaseAuth.getInstance().currentUser.uid && user.superId != null
+                ) {
                     Log.i("bottom_sht", "добавил " + user.name + "'a")
                     usersWithCurrentEvent.add(user)
-                    
+                    if (usersEmails == null)
+                        usersEmails = ArrayList()
                     usersEmails.add(user.email!!)
                     userAdapter.notifyDataSetChanged()
                 }
@@ -189,7 +197,8 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
             /*intent.getStringExtra("bodyText")*/
             event.bodyText.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY
         ).toString()
-        eventDetailActivityBinding?.rating = event./*place?.coords!![0].toString()*/rating//intent.getStringExtra("rating")!!
+        eventDetailActivityBinding?.rating =
+            event./*place?.coords!![0].toString()*/rating//intent.getStringExtra("rating")!!
         eventDetailActivityBinding?.textReadMore?.visibility = View.VISIBLE
         eventDetailActivityBinding?.textReadMore?.setOnClickListener {
             if (eventDetailActivityBinding?.textReadMore?.text == getString(R.string.read_more)) {
@@ -233,7 +242,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                     ?.subscribe {
                         isEventAvailableInFavorites = false
                         TempDataHolder.IS_FAVORITES_UPDATED = true
-                        eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_watch)
+                        eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_bookmark)
                         Toast.makeText(
                             applicationContext,
                             "Удалено из списка избранного",
@@ -265,11 +274,11 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         }
                         Log.i("favList", snapshot.value.toString())
                         val user: User = snapshot.getValue(User::class.java)!!
-                        if(user.favList == null)
+                        if (user.favList == null)
                             user.favList = ArrayList<Int>()
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
                             user.favList?.add(event.id)
-                            usersDbRef?.child(user.name!!)?.child("favList")?.setValue(user.favList)
+                            usersDbRef?.child(user.superId!!)?.child("favList")?.setValue(user.favList)
                         }
                     }
 
@@ -401,8 +410,8 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     }
 
     private fun goToChat(user: User) {
-        val intent = Intent(applicationContext,ProfileActivity::class.java).apply {
-            putExtra("user",user)
+        val intent = Intent(applicationContext, ProfileActivity::class.java).apply {
+            putExtra("user", user)
         }
         startActivity(intent)
     }

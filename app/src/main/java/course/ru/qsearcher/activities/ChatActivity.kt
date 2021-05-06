@@ -67,7 +67,8 @@ class ChatActivity : AppCompatActivity() {
         }
         // Задаем значение надписи вверху страницы.
         title = receiverUserId
-
+        if (SignInActivity.currentUser.usersList == null)
+            SignInActivity.currentUser.usersList = ArrayList<String>()
 
         database = Firebase.database
         storage = FirebaseStorage.getInstance()
@@ -132,16 +133,16 @@ class ChatActivity : AppCompatActivity() {
             messagesRef!!.push().setValue(msg)
             messageEdit?.setText(" ")
             Log.i("db", "должен был отправить")
-            if (SignInActivity.currentUser.usersList == null)
-                SignInActivity.currentUser.usersList = ArrayList<String>()
             if (!SignInActivity.currentUser.usersList?.contains(receiverUserId)!!) {
                 usersChildEventListener = object : ChildEventListener {
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                         val user: User = snapshot.getValue(User::class.java)!!
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
+                            if(user.usersList == null)
+                                user.usersList = ArrayList()
                             user.usersList?.add(receiverUserId)
                             SignInActivity.currentUser.usersList!!.add(receiverUserId)
-                            usersRef?.child(user.name!!)?.child("usersList")?.setValue(user.usersList)
+                            usersRef?.child(user.superId!!)?.child("usersList")?.setValue(user.usersList)
                         }
                     }
 

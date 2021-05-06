@@ -43,7 +43,7 @@ class UsersAdapter(users:MutableList<User>,listener: OnUserClickListener) : Recy
         }
         fun bindUser(user:User) {
             itemLayoutBinding?.user = user
-            storageRef?.child(user.email + "avatar")?.downloadUrl?.addOnSuccessListener {
+            storageRef?.child(user.superId + "avatar")?.downloadUrl?.addOnSuccessListener {
                 Picasso.get().load(it).noFade().into(itemLayoutBinding?.avatar!!, object :
                     Callback {
                     override fun onSuccess() {
@@ -57,7 +57,7 @@ class UsersAdapter(users:MutableList<User>,listener: OnUserClickListener) : Recy
             }?.addOnFailureListener {
                 Log.i(
                     "usersAdapter",
-                    "Не получилось загрузить аватар для " + user.email
+                    "Не получилось загрузить аватар для " + user.superId
                 )
             }
             //itemLayoutBinding?.avatar?.setImageResource(user.avatarMock)

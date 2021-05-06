@@ -27,7 +27,7 @@ class ProfileActivity : AppCompatActivity() {
         initialize()
     }
     private fun setAvatar(){
-        storageRef?.child(user.email + "avatar")?.downloadUrl?.addOnSuccessListener {
+        storageRef?.child(user.superId+ "avatar")?.downloadUrl?.addOnSuccessListener {
             Picasso.get().load(it).noFade().into(activityProfileBinding.userImage, object :
                 Callback {
                 override fun onSuccess() {}
@@ -35,8 +35,8 @@ class ProfileActivity : AppCompatActivity() {
             })
         }?.addOnFailureListener {
             Log.i(
-                "usersAdapter",
-                "Не получилось загрузить аватар для " + user.email
+                "userProfile",
+                "Не получилось загрузить аватар для " + user.superId
             )
         }
     }
