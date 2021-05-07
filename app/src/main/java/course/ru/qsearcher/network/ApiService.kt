@@ -19,7 +19,7 @@ interface ApiService {
     @GET("search/?ctype=event&fields=images,title,short_title,body_text,site_url,favorites_count,description,id")
     fun searchEvent(@Query("q")query: String): Call<EventResponse>
 
-    @GET("https://kudago.com/public-api/v1.4/events/?fields=images,title,is_free,categories,short_title,body_text,site_url,favorites_count,description,id,place&expand=dates,place&is_free=true")
+    @GET("https://kudago.com/public-api/v1.4/events/?fields=images,title,is_free,categories,short_title,body_text,site_url,favorites_count,description,id,place&expand=dates,place&is_free=true&order_by=-publication_date,-rank")
     fun eventsWithSelectedCategories(@Query("categories")categories:String):Call<EventResponse>
 
 }
