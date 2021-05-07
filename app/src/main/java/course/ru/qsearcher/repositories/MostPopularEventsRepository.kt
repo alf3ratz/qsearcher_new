@@ -49,4 +49,19 @@ class MostPopularEventsRepository() {
         })
         return data
     }
+    fun eventsWithSelectedCategories(categories:String): LiveData<EventResponse>{
+        val data: MutableLiveData<EventResponse> = MutableLiveData()
+        apiService.eventsWithSelectedCategories(categories).enqueue(object : Callback<EventResponse> {
+            override fun onFailure(@NonNull call: Call<EventResponse>, t: Throwable) {
+                data.value = null
+            }
+            override fun onResponse(
+                @NonNull call: Call<EventResponse>,
+                @NonNull response: Response<EventResponse>
+            ) {
+                data.value = response.body()
+            }
+        })
+        return data
+    }
 }

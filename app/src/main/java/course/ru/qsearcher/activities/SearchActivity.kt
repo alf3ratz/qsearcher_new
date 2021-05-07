@@ -1,36 +1,41 @@
 package course.ru.qsearcher.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import course.ru.qsearcher.DataBinderMapperImpl
 import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.EventsAdapter
 import course.ru.qsearcher.databinding.ActivitySearchBinding
 import course.ru.qsearcher.listeners.EventListener
 import course.ru.qsearcher.model.Event
+import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
-import course.ru.qsearcher.viewmodels.SearchViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
+
 class SearchActivity : AppCompatActivity(), EventListener {
     private var activitySearchBinding: ActivitySearchBinding? = null
-    private var viewModel: MostPopularEventsViewModel? = null//SearchViewModel? = null
+    private lateinit var viewModel: MostPopularEventsViewModel//SearchViewModel? = null
     private var events: ArrayList<Event> = ArrayList<Event>();
     private var eventsAdapter: EventsAdapter? = null
     private var currentPage: Int = 1;
     private var totalAvailablePages: Int = 1;
     private var timer: Timer? = null
+    private var categories: ArrayList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +44,71 @@ class SearchActivity : AppCompatActivity(), EventListener {
         doInitialization()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val spanString = SpannableString(item.getTitle().toString())
+        spanString.setSpan(
+            ForegroundColorSpan(Color.RED),
+            0,
+            spanString.length,
+            0
+        ) //fix the color to white
+
+        when (item.itemId) {
+            R.id.exhibition -> {
+                categories.add("exhibition")
+                item.title = spanString
+            }
+            R.id.concert -> {
+                categories.add("concert")
+            }
+            R.id.education -> {
+                categories.add("education")
+            }
+            R.id.entertainment -> {
+                categories.add("entertainment")
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun eventsWithSelectedCategories(categories: ArrayList<String>) {
+        val query = categories.joinToString().replace(" ", "")
+        viewModel.eventsWithSelectedCategories(query).observe(this, Observer { t: EventResponse? ->
+            toggleLoading()
+            Log.i("response", "вошел в лямбду")
+            if (t != null) {
+                Log.i("response", "если респонс не налл")
+                if (t.events != null) {
+                    val oldCount: Int = events.size
+                    Log.i("response", "если список событий не налл")
+                    for (elem in t.events!!) {
+                        elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
+                            1,
+                            elem.name!!.length
+                        )
+                    }
+                    events.addAll(t.events!!)
+                    //SignInActivity.currentEvents.addAll(t.events!!)
+                    eventsAdapter?.notifyDataSetChanged()
+                    eventsAdapter?.notifyItemRangeChanged(
+                        oldCount,
+                        events.size / 1000
+                    )//проблема с выводом - показывает после выхода из экрана
+                } else {
+                    Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
+                    Log.i("response", "список событий  налл")
+                }
+            }
+        })
+
+
+    }
 
     private fun doInitialization() {
         activitySearchBinding?.imageBack?.setOnClickListener { onBackPressed() }
@@ -47,7 +117,11 @@ class SearchActivity : AppCompatActivity(), EventListener {
                 "searchAct",
                 "нажал" + activitySearchBinding?.inputSearch?.text?.trim().toString()
             )
-            searchEvent(activitySearchBinding?.inputSearch?.text?.trim().toString())
+            if (categories.size > 0) {
+                eventsWithSelectedCategories(categories)
+            } else {
+                searchEvent(activitySearchBinding?.inputSearch?.text?.trim().toString())
+            }
         }
         activitySearchBinding?.eventsRecyclerView?.setHasFixedSize(true)
         viewModel =

@@ -5,9 +5,24 @@
     tools:context=".activities.SearchActivity"
     >
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/exhibition"
         android:orderInCategory="100"
-        android:title="Категории"
+        android:title="Выставки"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/concert"
+        android:orderInCategory="100"
+        android:title="Концерты"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/entertainment"
+        android:orderInCategory="100"
+        android:title="Развлечения"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/education"
+        android:orderInCategory="100"
+        android:title="Развивающее"
         app:showAsAction="never"/>
 
 </menu>

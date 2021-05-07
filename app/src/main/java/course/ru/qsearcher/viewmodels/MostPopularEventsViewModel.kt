@@ -12,6 +12,8 @@ import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.responses.SingleEventResponse
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import retrofit2.Call
+import retrofit2.http.Query
 
 class MostPopularEventsViewModel(@NonNull application: Application):AndroidViewModel(application) {
 
@@ -27,6 +29,9 @@ class MostPopularEventsViewModel(@NonNull application: Application):AndroidViewM
     }
     fun getEventsById(id:Int):LiveData<SingleEventResponse>{
         return mostPopularEventsRepository.getEventsById(id)
+    }
+    fun eventsWithSelectedCategories(categories:String): LiveData<EventResponse>{
+        return mostPopularEventsRepository.eventsWithSelectedCategories(categories)
     }
     fun addToFavorites(event:Event): Completable {
         return eventsDatabase?.eventsDao()?.addToFavorites(event)!!

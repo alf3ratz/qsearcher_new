@@ -52,7 +52,6 @@
                 android:textColor="@color/colorTextPrimary"
                 android:textColorHint="@color/colorTextSecondary"
                 android:textSize="@dimen/_13ssp" />
-
             <ImageView
                 android:id="@+id/imageSearch"
                 android:layout_width="@dimen/_24sdp"
