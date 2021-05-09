@@ -10,7 +10,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import course.ru.qsearcher.R
@@ -26,27 +25,24 @@ import kotlin.collections.ArrayList
 
 class SearchActivity : AppCompatActivity(), EventListener {
     private var activitySearchBinding: ActivitySearchBinding? = null
-    private lateinit var viewModel: EventsViewModel//SearchViewModel? = null
-    private var events: ArrayList<Event> = ArrayList<Event>();
+    private lateinit var viewModel: EventsViewModel
+    private var events: ArrayList<Event> = ArrayList()
     private var eventsAdapter: EventsAdapter? = null
-    private var currentPage: Int = 1;
-    private var totalAvailablePages: Int = 1;
     private var timer: Timer? = null
-    var categories: ArrayList<String> = ArrayList()
+    private var categories: ArrayList<String> = ArrayList()
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activitySearchBinding = DataBindingUtil.setContentView(this, R.layout.activity_search)
-        doInitialization()
+        initialize()
     }
 
 
      fun eventsWithSelectedCategories(categories: ArrayList<String>) {
         val query = categories.joinToString().replace(" ", "")
-        viewModel.eventsWithSelectedCategories(query).observe(this, Observer { t: EventResponse? ->
-            //toggleLoading()
+        viewModel.eventsWithSelectedCategories(query).observe(this,  { t: EventResponse? ->
             if (t != null) {
                 if (t.events != null) {
                     val oldCount: Int = events.size
@@ -73,7 +69,7 @@ class SearchActivity : AppCompatActivity(), EventListener {
         })
     }
 
-    private fun doInitialization() {
+    private fun initialize() {
         activitySearchBinding?.imageBack?.setOnClickListener { onBackPressed() }
         activitySearchBinding?.categoriesButton?.setOnClickListener {
             val dialog = CustomDialog(this)
@@ -96,8 +92,7 @@ class SearchActivity : AppCompatActivity(), EventListener {
 
         activitySearchBinding?.eventsRecyclerView?.setHasFixedSize(true)
         viewModel =
-            ViewModelProvider(this).get(/*SearchViewModel::class.java*/EventsViewModel::class.java)
-        //events = MainActivity.staticEvents.slice((1..6)) as ArrayList<Event>
+            ViewModelProvider(this).get(EventsViewModel::class.java)
         eventsAdapter = EventsAdapter(events, this)
         activitySearchBinding?.apply {
             activitySearchBinding?.eventsRecyclerView?.adapter = eventsAdapter
@@ -111,8 +106,6 @@ class SearchActivity : AppCompatActivity(), EventListener {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (timer != null)
                     timer?.cancel()
-//                var str = p0.toString()
-//                searchEvent(str.toLowerCase())
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -124,8 +117,6 @@ class SearchActivity : AppCompatActivity(), EventListener {
                     timer?.schedule(object : TimerTask() {
                         override fun run() {
                             Handler(Looper.getMainLooper()).post {
-                                currentPage = 1;
-                                totalAvailablePages = 1
                                 var str = p0.toString()
                                 str = str.toLowerCase()
 
@@ -134,8 +125,6 @@ class SearchActivity : AppCompatActivity(), EventListener {
                         }
                     }, 800)
                 } else {
-                    Log.i("searchAct", "очистил")
-                    //events.clear()
                     eventsAdapter?.notifyDataSetChanged()
                 }
             }
@@ -158,8 +147,6 @@ class SearchActivity : AppCompatActivity(), EventListener {
             }
         })
         activitySearchBinding?.inputSearch?.requestFocus()
-        //toggleLoading()
-
     }
 
     private fun searchEvent(query: String) {
@@ -175,31 +162,12 @@ class SearchActivity : AppCompatActivity(), EventListener {
         //events = eventsTemp
         eventsAdapter?.notifyDataSetChanged()
         eventsAdapter?.notifyItemRangeChanged(oldCount, events.size)
-//        viewModel?.searchEvent(query)?.observe(this, Observer {
-//            if (it != null) {
-////                totalAvailablePages = it.totalPages!!.toInt()
-//                if (it.events != null) {
-//                    val oldCount: Int = events.size
-//                    events.addAll(it.events!!)
-//                    eventsAdapter?.notifyItemRangeChanged(oldCount, events.size)
-//                }
-//            }
-//        })
     }
 
-    private fun toggleLoading() {
-        if (currentPage == 1) {
-            activitySearchBinding?.isLoading =
-                !(activitySearchBinding?.isLoading != null && activitySearchBinding?.isLoading!!)
-        } else {
-            activitySearchBinding?.isLoadingMore =
-                !(activitySearchBinding?.isLoadingMore != null && activitySearchBinding?.isLoadingMore!!)
-        }
-    }
 
     override fun onEventClicked(event: Event) {
         val intent = Intent(applicationContext, EventDetailActivity::class.java)
-        val images: ArrayList<String> = arrayListOf<String>()
+        val images: ArrayList<String> = arrayListOf()
         for (elem in event.images!!) {
             images.plusAssign(elem.toString())
         }

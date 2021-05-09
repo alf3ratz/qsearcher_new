@@ -52,7 +52,7 @@ class UsersAdapterForUsersPage(private var users: MutableList<User>, private var
             itemLayoutBinding?.executePendingBindings()
             if (itemLayoutBinding?.root != null)
                 itemView.setOnClickListener {
-                    listener.onUserCLick(user)
+                    listener.onUserClick(user)
                 }
         }
     }

@@ -2,13 +2,11 @@ package course.ru.qsearcher.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
@@ -31,24 +29,25 @@ class MainActivity : AppCompatActivity(), EventListener {
 
     var events: ArrayList<Event> = ArrayList()
     private lateinit var eventsAdapter: EventsAdapter
-    private var currentPage: Int = 1;
+    private var currentPage: Int = 1
     private var totalAvailablePages: Int = 1
-    companion object{
-        lateinit var staticEvents:ArrayList<Event>
+
+    companion object {
+        lateinit var staticEvents: ArrayList<Event>
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        doInitialization()
+        initialize()
     }
 
 
-    private fun doInitialization() {
-        activityMainBinding?.eventsRecyclerView?.setHasFixedSize(true)
+    private fun initialize() {
+        activityMainBinding.eventsRecyclerView.setHasFixedSize(true)
         viewModel = ViewModelProvider(this).get(EventsViewModel::class.javaObjectType)
-        var activity: EventsViewModel
+        //var activity: EventsViewModel
         setBottomNavigation()
 
         eventsAdapter = EventsAdapter(events, this)
@@ -64,13 +63,13 @@ class MainActivity : AppCompatActivity(), EventListener {
                 super.onScrolled(recyclerView, dx, dy)
                 if (!activityMainBinding.eventsRecyclerView.canScrollVertically(1)) {
                     if (currentPage <= totalAvailablePages) {
-                        currentPage++;
+                        currentPage++
                         getMostPopularEvents()
                     }
                 }
             }
         })
-        activityMainBinding?.imageFavourites?.setOnClickListener {
+        activityMainBinding.imageFavourites.setOnClickListener {
             startActivity(
                 Intent(
                     applicationContext,
@@ -78,14 +77,14 @@ class MainActivity : AppCompatActivity(), EventListener {
                 )
             )
         }
-        activityMainBinding?.imageSearch?.setOnClickListener {
+        activityMainBinding.imageSearch.setOnClickListener {
             startActivity(Intent(applicationContext, SearchActivity::class.java))
         }
-        activityMainBinding?.imageSign?.setOnClickListener {
+        activityMainBinding.imageSign.setOnClickListener {
             startActivity(Intent(applicationContext, UsersActivity::class.java))
         }
 
-        activityMainBinding?.imageChat?.setOnClickListener {
+        activityMainBinding.imageChat.setOnClickListener {
             startActivity(Intent(applicationContext, ChatActivity::class.java))
         }
 
@@ -107,7 +106,7 @@ class MainActivity : AppCompatActivity(), EventListener {
             iconView.layoutParams = layoutParams
         }
         activityMainBinding.bottomNavigation.selectedItemId = R.id.home
-        activityMainBinding?.bottomNavigation.setOnNavigationItemSelectedListener { item ->
+        activityMainBinding.bottomNavigation.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.favorites -> {
                     startActivity(
@@ -143,16 +142,12 @@ class MainActivity : AppCompatActivity(), EventListener {
 
     private fun getMostPopularEvents() {
         toggleLoading()
-        //var temp: ArrayList<Event> = ArrayList()
-        viewModel.getMostPopularEvents(currentPage).observe(this, Observer { t: EventResponse? ->
+        viewModel.getMostPopularEvents(currentPage).observe(this, { t: EventResponse? ->
             toggleLoading()
-            Log.i("response", "вошел в лямбду")
             if (t != null) {
                 totalAvailablePages = t.page!!
-                Log.i("response", "если респонс не налл")
                 if (t.events != null) {
                     val oldCount: Int = events.size
-                    Log.i("response", "если список событий не налл")
                     for (elem in t.events!!) {
                         elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
                             1,
@@ -160,15 +155,13 @@ class MainActivity : AppCompatActivity(), EventListener {
                         )
                     }
                     events.addAll(t.events!!)
-                    //SignInActivity.currentEvents.addAll(t.events!!)
                     eventsAdapter.notifyDataSetChanged()
                     eventsAdapter.notifyItemRangeChanged(
                         oldCount,
                         events.size / 1000
-                    )//проблема с выводом - показывает после выхода из экрана
+                    )
                 } else {
                     Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
-                    Log.i("response", "список событий  налл")
                 }
             }
         })
@@ -187,7 +180,7 @@ class MainActivity : AppCompatActivity(), EventListener {
     }
 
     override fun onEventClicked(event: Event) {
-        val images: ArrayList<String> = arrayListOf<String>()
+        val images: ArrayList<String> = arrayListOf()
         for (elem in event.images!!) {
             images.plusAssign(elem.toString())
         }
@@ -195,7 +188,7 @@ class MainActivity : AppCompatActivity(), EventListener {
         val intent: Intent = Intent(applicationContext, EventDetailActivity::class.java).apply {
             putExtra("event", event)
         }
-        startActivity(intent);
+        startActivity(intent)
     }
 
 }

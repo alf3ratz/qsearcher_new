@@ -4,6 +4,6 @@ import course.ru.qsearcher.model.User
 
 interface OnUserClickListener {
 
-    fun onUserCLick(user: User) {}
+    fun onUserClick(user: User) {}
 
 }

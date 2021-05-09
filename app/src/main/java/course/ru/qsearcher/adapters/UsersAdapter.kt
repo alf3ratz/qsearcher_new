@@ -50,7 +50,7 @@ class UsersAdapter(private var users: MutableList<User>, private var listener: O
             itemLayoutBinding?.executePendingBindings()
             if(itemLayoutBinding?.root!=null)
             itemView.setOnClickListener {
-                listener.onUserCLick(user)
+                listener.onUserClick(user)
             }
         }
     }

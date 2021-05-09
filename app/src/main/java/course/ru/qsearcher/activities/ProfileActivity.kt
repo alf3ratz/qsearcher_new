@@ -5,10 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginTop
 import androidx.databinding.DataBindingUtil
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -17,8 +14,6 @@ import com.squareup.picasso.Picasso
 import course.ru.qsearcher.R
 import course.ru.qsearcher.databinding.ActivityProfileBinding
 import course.ru.qsearcher.model.User
-import org.jetbrains.anko.act
-import org.jetbrains.anko.dip
 import java.lang.Exception
 
 class ProfileActivity : AppCompatActivity() {
@@ -63,7 +58,6 @@ class ProfileActivity : AppCompatActivity() {
         if(user.isEmailActivated){
             activityProfileBinding.emailText.text = user.email
         }else{
-            //activityProfileBinding.emailText.text = "Не указано"
             activityProfileBinding.infoLayoutRow1.visibility = View.GONE
         }
         if(user.isNetworkActivated){

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
-import android.media.audiofx.Equalizer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,7 +17,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -84,12 +82,12 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWin
                 findViewById(android.R.id.content),
                 "Подтверждение геолокации нужно для корректной работы приложения",
                 Snackbar.LENGTH_INDEFINITE
-            ).setAction("OK", View.OnClickListener {
+            ).setAction("OK") {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION_CODE
                 )
-            }).show()
+            }.show()
         } else {
             ActivityCompat.requestPermissions(
                 this,
@@ -183,10 +181,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWin
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
-                Log.i("map", "сделал локейшн")
                 location = p0.lastLocation
                 Log.i("map", location?.latitude!!.toString())
-
             }
         }
     }
@@ -304,28 +300,33 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWin
     ) {
         //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_LOCATION_CODE) {
-            if (grantResults.isEmpty()) {
-                Log.i("orRequestPermissions", "request was cancelled")
-            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startLocationUpdates()
-            } else {
-                Snackbar.make(
-                    findViewById(android.R.id.content),
-                    "Включите геолокацию в настройках",
-                    Snackbar.LENGTH_INDEFINITE
-                ).setAction("Найстроки", View.OnClickListener {
-                    val intent = Intent().setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    val uri: Uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-                    intent.data = uri
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                }).show()
+            when {
+                grantResults.isEmpty() -> {
+                    Log.i("orRequestPermissions", "request was cancelled")
+                }
+                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
+                    startLocationUpdates()
+                }
+                else -> {
+                    Snackbar.make(
+                        findViewById(android.R.id.content),
+                        "Включите геолокацию в настройках",
+                        Snackbar.LENGTH_INDEFINITE
+                    ).setAction("Найстроки") {
+                        val intent =
+                            Intent().setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        val uri: Uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
+                        intent.data = uri
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                    }.show()
+                }
             }
         }
     }
 
     override fun onInfoWindowClick(marker: Marker?) {
-        if (marker != null && marker.position.latitude != location?.latitude && marker.position.longitude != location?.longitude) {
+        if (marker != null && marker.title!="Ваше местоположение") {
             val event: Event = MainActivity.staticEvents.find { it.shortTitle == marker.title }!!
             val images: ArrayList<String> = arrayListOf()
             for (elem in event.images!!) {
@@ -335,7 +336,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWin
             startActivity(Intent(this, EventDetailActivity::class.java).putExtra("event", event))
             return
         }
-        Log.i("marker", "problem")
         Toast.makeText(
             applicationContext,
             "Произошла ошибка при отображении события",

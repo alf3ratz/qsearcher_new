@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +29,6 @@ import course.ru.qsearcher.databinding.ActivityEventDetailBinding
 import course.ru.qsearcher.listeners.OnUserClickListener
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.model.User
-import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.utilities.TempDataHolder
 import course.ru.qsearcher.viewmodels.EventsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -40,10 +38,10 @@ import kotlinx.android.synthetic.main.activity_event_detail.*
 import kotlin.collections.ArrayList
 
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
-    private var eventViewModel: EventsViewModel? = null;
+    private lateinit var eventViewModel: EventsViewModel
     private var eventDetailActivityBinding: ActivityEventDetailBinding? = null
-    private var auth: FirebaseAuth? = null
     private var database: FirebaseDatabase? = null
     private var usersDbRef: DatabaseReference? = null
     private var usersChildEventListener: ChildEventListener? = null
@@ -59,10 +57,10 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         super.onCreate(savedInstanceState)
         eventDetailActivityBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_event_detail);
-        doInitialization(savedInstanceState)
+        initialize(savedInstanceState)
     }
 
-    private fun doInitialization(savedInstanceState: Bundle?) {
+    private fun initialize(savedInstanceState: Bundle?) {
         eventViewModel = ViewModelProvider(this).get(EventsViewModel::class.java)
         BottomSheetBehavior.from(bottomSheet).apply {
             peekHeight = 55
@@ -72,29 +70,11 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         eventDetailActivityBinding?.imageBack?.setOnClickListener { onBackPressed() }
         event = intent.getSerializableExtra("event") as Event;
         checkEventInFavorites()
-        getEvents(savedInstanceState)
-        usersWithCurrentEvent = ArrayList<User>()
-        usersEmails = ArrayList<String>()
-//        usersWithCurrentEvent.add(
-//            User(
-////                "Чел", "salfmasmdsa@mail.ru", "sdjfbdsbfhdsjf", 123213123,
-////                mutableListOf(1, 2, 3)
-//            )
-//
-//        )
+        getEvents(/*savedInstanceState*/)
+        usersWithCurrentEvent = ArrayList()
+        usersEmails = ArrayList()
         getUsersWithCurrentFavEvent()
         eventDetailActivityBinding?.usersWithEventRecycler?.visibility = View.VISIBLE
-//        eventDetailActivityBinding?.usersWithEventRecycler?.addOnScrollListener(object :
-//            RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                if (!eventDetailActivityBinding?.usersWithEventRecycler?.canScrollVertically(1)!!) {
-//                    Log.i("bottom_sht", "зашел в онСкролл")
-//                    getUsersWithCurrentFavEvent()
-//                }
-//            }
-//        })
-        //getUsersWithCurrentFavEvent()
         eventDetailActivityBinding?.usersWithEventRecycler?.layoutManager =
             LinearLayoutManager(this)
         userAdapter = UsersAdapter(usersWithCurrentEvent, this)
@@ -114,15 +94,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
             eventDetailActivityBinding?.usersWithEventRecycler?.addItemDecoration(
                 dividerItemDecoration
             )
-//            eventDetailActivityBinding?.usersWithEventRecycler?.layoutManager =
-//                LinearLayoutManager(this)
-//            userAdapter = UsersAdapter(usersWithCurrentEvent, this)
-//            eventDetailActivityBinding?.apply {
-//                eventDetailActivityBinding?.usersWithEventRecycler?.adapter = userAdapter
-//                invalidateAll()
-//            }
         } else {
-            //Log.i("bottom_sht", usersWithCurrentEvent.size.toString())
             Toast.makeText(
                 applicationContext,
                 "Произошла ошибка при обращении к списку пользователей",
@@ -137,10 +109,6 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         usersChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val user: User = snapshot.getValue(User::class.java)!!
-//                Log.i(
-//                    "bottom_sht",
-//                    "зашел last_id = " + user.favList[user.favList.size - 1] + " event_id = " + event.id.toString()
-//                )
                 if (user.favList != null && user.favList!!.contains(event.id) && !usersEmails.contains(
                         user.email
                     ) && user.id != FirebaseAuth.getInstance().currentUser.uid && user.superId != null
@@ -168,10 +136,10 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     }
 
     private fun checkEventInFavorites() {
-        var compositeDisposable: CompositeDisposable = CompositeDisposable()
-        eventViewModel?.getEventFromFavorites(event.id.toString())
-            ?.subscribeOn(Schedulers.computation())
-            ?.observeOn(AndroidSchedulers.mainThread())
+        val compositeDisposable = CompositeDisposable()
+        eventViewModel.getEventFromFavorites(event.id.toString())
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
             ?.subscribe {
                 isEventAvailableInFavorites = true
                 eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
@@ -179,26 +147,21 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
             }?.let { compositeDisposable.add(it) }
     }
 
-    private fun getEvents(savedInstanceState: Bundle?) {
-        eventDetailActivityBinding?.isLoading = true;
-//        var eventId: Int = intent.getIntExtra("id", 1);
-//        val images_temp = intent.getStringArrayListExtra("images")
-
-        var eventId: Int = event.id
+    private fun getEvents() {
+        eventDetailActivityBinding?.isLoading = true
         val imagesTemp: ArrayList<String>? = event.imagesAsString
         var images: ArrayList<String> = ArrayList()
 
         for (i in 1 until imagesTemp!!.size) {
             images.plusAssign(imagesTemp[i])
         }
-        eventDetailActivityBinding?.eventImageURL = imagesTemp[0];
+        eventDetailActivityBinding?.eventImageURL = imagesTemp[0]
         eventDetailActivityBinding?.imageEvent!!.visibility = View.VISIBLE
         eventDetailActivityBinding?.eventDescription = HtmlCompat.fromHtml(
-            /*intent.getStringExtra("bodyText")*/
             event.bodyText.toString(), HtmlCompat.FROM_HTML_MODE_LEGACY
         ).toString()
         eventDetailActivityBinding?.rating =
-            event./*place?.coords!![0].toString()*/rating//intent.getStringExtra("rating")!!
+            event.rating
         eventDetailActivityBinding?.textReadMore?.visibility = View.VISIBLE
         eventDetailActivityBinding?.textReadMore?.setOnClickListener {
             if (eventDetailActivityBinding?.textReadMore?.text == getString(R.string.read_more)) {
@@ -209,13 +172,13 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                 eventDetailActivityBinding?.textDescription?.maxLines = 4
                 eventDetailActivityBinding?.textDescription?.ellipsize =
                     TextUtils.TruncateAt.END
-                eventDetailActivityBinding?.textReadMore?.setText(R.string.read_more)//text = R.string.read_more.toString()
+                eventDetailActivityBinding?.textReadMore?.setText(R.string.read_more)
             }
         }
-        eventViewModel?.getMostPopularEvents(34)
-            ?.observe(this, Observer { eventResponse: EventResponse? ->
+        eventViewModel.getMostPopularEvents(34)
+            .observe(this, {
                 run {
-                    eventDetailActivityBinding?.isLoading = false;
+                    eventDetailActivityBinding?.isLoading = false
                     if (images.size == 0)
                         images = imagesTemp
                     loadImageSlider(images)
@@ -229,17 +192,17 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         eventDetailActivityBinding?.textDescription?.visibility = View.VISIBLE
         eventDetailActivityBinding?.buttonWebsite?.visibility = View.VISIBLE
         eventDetailActivityBinding?.buttonWebsite?.setOnClickListener {
-            val intentInner: Intent = Intent(Intent.ACTION_VIEW)
-            intentInner.data = Uri.parse(event.siteUrl/*intent.getStringExtra("siteUrl")*/)
+            val intentInner = Intent(Intent.ACTION_VIEW)
+            intentInner.data = Uri.parse(event.siteUrl)
             startActivity(intentInner)
         }
         eventDetailActivityBinding?.imageFavorites?.setOnClickListener {
-            var compositeDisposable: CompositeDisposable = CompositeDisposable()
+            val compositeDisposable = CompositeDisposable()
             if (isEventAvailableInFavorites) {
-                eventViewModel?.removeEventFromFavorites(event)
-                    ?.subscribeOn(Schedulers.computation())
-                    ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.subscribe {
+                eventViewModel.removeEventFromFavorites(event)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
                         isEventAvailableInFavorites = false
                         TempDataHolder.IS_FAVORITES_UPDATED = true
                         eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_bookmark)
@@ -249,12 +212,12 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                             Toast.LENGTH_SHORT
                         ).show()
                         compositeDisposable.dispose()
-                    }?.let { it1 -> compositeDisposable.add(it1) }
+                    }.let { it1 -> compositeDisposable.add(it1) }
             } else {
-                eventViewModel?.addToFavorites(event)
-                    ?.subscribeOn(Schedulers.io())
-                    ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.subscribe {
+                eventViewModel.addToFavorites(event)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
                         TempDataHolder.IS_FAVORITES_UPDATED = true
                         eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
                         Toast.makeText(
@@ -263,7 +226,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                             Toast.LENGTH_SHORT
                         ).show()
                         compositeDisposable.dispose()
-                    }?.let { it1 -> compositeDisposable.add(it1) }
+                    }.let { it1 -> compositeDisposable.add(it1) }
 
                 database = FirebaseDatabase.getInstance()
                 usersDbRef = database?.reference?.child("users")
@@ -275,10 +238,11 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         Log.i("favList", snapshot.value.toString())
                         val user: User = snapshot.getValue(User::class.java)!!
                         if (user.favList == null)
-                            user.favList = ArrayList<Int>()
+                            user.favList = ArrayList()
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
                             user.favList?.add(event.id)
-                            usersDbRef?.child(user.superId!!)?.child("favList")?.setValue(user.favList)
+                            usersDbRef?.child(user.superId!!)?.child("favList")
+                                ?.setValue(user.favList)
                         }
                     }
 
@@ -286,8 +250,6 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         snapshot: DataSnapshot,
                         previousChildName: String?
                     ) {
-
-                        //usersDbRef!!.push().setValue(user)
                     }
 
                     override fun onChildRemoved(snapshot: DataSnapshot) {}
@@ -323,13 +285,10 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         eventDetailActivityBinding?.sliderViewPager?.adapter = ImageSliderAdapter(sliderImages)
         eventDetailActivityBinding?.sliderViewPager?.visibility = View.VISIBLE
         eventDetailActivityBinding?.viewFadingEdge?.visibility = View.VISIBLE
-        Log.i("картинка", "размер слайдер имеджс" + sliderImages.size)
         setupSliderIndicators(sliderImages.size)
-        Log.i("картинка", "вышел из сетап слайдер индикаторс")
         eventDetailActivityBinding?.sliderViewPager?.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                Log.i("картинка", "колбек, позиция" + position)
                 super.onPageSelected(position)
                 setCurrentSliderIndicator(position)
             }
@@ -337,18 +296,16 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     }
 
     private fun setupSliderIndicators(count: Int) {
-        Log.i("картинка", "вошел в сетап слайдер индикаторс, count= " + count.toString())
         val indicators: MutableList<ImageView> = mutableListOf<ImageView>().toMutableList()
-        for (i in 0..count - 1) {
+        for (i in 0 until count) {
             indicators += ImageView(applicationContext)
         }
-        var layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
+        val layoutParams: LinearLayout.LayoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
         )
         layoutParams.setMargins(8, 0, 8, 0)
-        Log.i("картинка", "размер списка индикаторов " + indicators.size)
 
-        for (i in 0..(count - 1)) {
+        for (i in 0 until count) {
             Log.i("картинка", "ставит индикатор")
             indicators[i] = ImageView(applicationContext)
             indicators[i].setImageDrawable(
@@ -357,18 +314,16 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                 )
             )
             indicators[i].layoutParams = layoutParams
-            eventDetailActivityBinding?.layoutSliderIndicators?.addView(indicators[i]);
+            eventDetailActivityBinding?.layoutSliderIndicators?.addView(indicators[i])
         }
-        eventDetailActivityBinding?.layoutSliderIndicators?.visibility = View.VISIBLE;
-        setCurrentSliderIndicator(0);
+        eventDetailActivityBinding?.layoutSliderIndicators?.visibility = View.VISIBLE
+        setCurrentSliderIndicator(0)
     }
 
     private fun setCurrentSliderIndicator(position: Int) {
         val childCount: Int? = eventDetailActivityBinding?.layoutSliderIndicators?.childCount
-        //if (childCount == 0)
-        Log.i("картинка", "Кол-во детей: " + childCount.toString())
-        for (i in 0..childCount!! - 1) {
-            var imageView: ImageView =
+        for (i in 0 until childCount!!) {
+            val imageView: ImageView =
                 eventDetailActivityBinding?.layoutSliderIndicators?.getChildAt(i) as ImageView
             if (i == position) {
                 imageView.setImageDrawable(
@@ -377,7 +332,6 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         R.drawable.background_slider_indicator_active
                     )
                 )
-                Log.i("картинка", "должен поменять1")
             } else {
                 imageView.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -385,30 +339,32 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         R.drawable.background_slider_indicator_inactive
                     )
                 )
-                Log.i("картинка", "должен поменять1")
             }
-
         }
     }
 
     private fun loadBasicEventDetails() {
-        eventDetailActivityBinding?.eventName = event.name//intent.getStringExtra("title")
         eventDetailActivityBinding?.eventShortName =
-            event.shortTitle//intent.getStringExtra("shortTitle")
+            event.shortTitle
         eventDetailActivityBinding?.textName?.visibility = View.VISIBLE
         eventDetailActivityBinding?.textShortName?.visibility = View.VISIBLE
     }
 
-    override fun onUserCLick(user: User) {
-        super.onUserCLick(user)
+    /**
+     * Обработчик нажатия на элемент списка пользователей.
+     */
+    override fun onUserClick(user: User) {
         if (user != null) {
-            Log.i("user", user.name!!)
+            super.onUserClick(user)
             goToProfile(user)
         } else {
             Log.i("user", "fail to send user in intent")
         }
     }
 
+    /**
+     * Функция осуществления перехода на страницу профиля выбранного пользователя.
+     */
     private fun goToProfile(user: User) {
         val intent = Intent(applicationContext, ProfileActivity::class.java).apply {
             putExtra("user", user)

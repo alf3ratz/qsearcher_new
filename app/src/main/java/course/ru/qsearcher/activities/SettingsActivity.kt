@@ -44,32 +44,23 @@ import org.jetbrains.anko.dip
 class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener {
     private lateinit var activitySettingsBinding: ActivitySettingsBinding
     private lateinit var viewModel: EventsViewModel
-    private lateinit var eventsAdapter: EventsAdapter
     private var database: FirebaseDatabase? = null
     private var usersDbRef: DatabaseReference? = null
     private var usersChildEventListener: ChildEventListener? = null
     private var newName: String = ""
-    private var events: ArrayList<Event> = ArrayList()
     private var storage: FirebaseStorage? = null
     private var storageRef: StorageReference? = null
     private var isEmailEnabled: Boolean = false
     private var isCompanyEnabled: Boolean = false
     private var isTouched: Boolean = false
-
-    private lateinit var preferences: SharedPreferences
-    private lateinit var editor: SharedPreferences.Editor
     private lateinit var userAdapter: UsersAdapter
 
-    private fun initPrefs() {
-        preferences = getSharedPreferences("My prefs", Context.MODE_PRIVATE)
-        editor = preferences.edit()
-    }
 
     private fun showDialog() {
         val dialog = LayoutInflater.from(this).inflate(R.layout.dialog_for_friemds, null)
         val builder = AlertDialog.Builder(this).setView(dialog).setTitle("Друзья")
         val alert = builder.show()
-        var friends = ArrayList<User>()
+        val friends = ArrayList<User>()
         database = FirebaseDatabase.getInstance()
         usersDbRef = database?.reference?.child("users")
         usersChildEventListener = object : ChildEventListener {
@@ -89,17 +80,6 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
             override fun onCancelled(error: DatabaseError) {}
         }
         usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
-        //for(str in SignInActivity.currentUser.friends){
-//            usersDbRef!!.child(SignInActivity.currentUser.superId!!).child("friends").get().addOnSuccessListener {
-//                val tmp = it.getValue(Collection<User>)
-//                friends.addAll (it.getValue(Collection<User::class.java>)!!)
-//                //Log.i("firebase", "Got value ${it.value}")
-//            }.addOnFailureListener{
-//                Log.e("firebase", "Error getting data", it)
-//            }
-        //val user = usersDbRef?.child(SignInActivity.currentUser.superId!!)!!.child("friends").child(str).get().result.getValue(User::class.java)
-        //friends.add(user!!)
-        //}
         dialog.friends.layoutManager =
             LinearLayoutManager(this)
         userAdapter = UsersAdapter(friends, this)
@@ -108,7 +88,7 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
             //invalidateAll()
         }
         userAdapter.notifyDataSetChanged()
-        builder.setNeutralButton("OK") { dialog, which ->
+        builder.setNeutralButton("OK") { _, _ ->
             alert.dismiss()
         }
     }
@@ -148,13 +128,11 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         activitySettingsBinding.friendsRow.friendsButton.setOnClickListener {
             showDialog()
         }
-        //activitySettingsBinding.favEventsRecycler?.setHasFixedSize(true)
-        //activitySettingsBinding.userName.text = SignInActivity.currentUser.name
-        activitySettingsBinding.isEmailActivated.setOnCheckedChangeListener { compoundButton, b ->
+        activitySettingsBinding.isEmailActivated.setOnCheckedChangeListener { _, b ->
             isEmailEnabled = b
             isTouched = true
         }
-        activitySettingsBinding.isCompanyActivated.setOnCheckedChangeListener { compoundButton, b ->
+        activitySettingsBinding.isCompanyActivated.setOnCheckedChangeListener { _, b ->
             isCompanyEnabled = b
             isTouched = true
         }
@@ -180,51 +158,6 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
             }
         }
         viewModel = ViewModelProvider(this).get(EventsViewModel::class.javaObjectType)
-//        eventsAdapter = EventsAdapter(events, this)
-//        activitySettingsBinding.apply {
-//            activitySettingsBinding.favEventsRecycler.adapter = eventsAdapter
-//            invalidateAll()
-//        }
-//
-//
-//        activitySettingsBinding.favEventsRecycler.addOnScrollListener(object :
-//            RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                if (!activitySettingsBinding.favEventsRecycler.canScrollVertically(1)) {
-//                    database = FirebaseDatabase.getInstance()
-//                    usersDbRef = database?.reference?.child("users")
-//                    usersChildEventListener = object : ChildEventListener {
-//                        override fun onChildAdded(
-//                            snapshot: DataSnapshot,
-//                            previousChildName: String?
-//                        ) {
-//                            val user: User = snapshot.getValue(User::class.java)!!
-//                            if (user.id == FirebaseAuth.getInstance().currentUser.uid && user.name != newName) {
-//                                //getEvents(user.favList[1])
-//                            }
-//                        }
-//
-//                        override fun onChildChanged(
-//                            snapshot: DataSnapshot,
-//                            previousChildName: String?
-//                        ) {
-//                        }
-//
-//                        override fun onChildRemoved(snapshot: DataSnapshot) {}
-//                        override fun onChildMoved(
-//                            snapshot: DataSnapshot,
-//                            previousChildName: String?
-//                        ) {
-//                        }
-//
-//                        override fun onCancelled(error: DatabaseError) {}
-//                    }
-//                    usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
-//
-//                }
-//            }
-//        })
         activitySettingsBinding.exitButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(applicationContext, SignInActivity::class.java))
@@ -484,49 +417,49 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         }
     }
 
-    private fun getEvents(id: Int) {
-        //toggleLoading()
-        //var temp: ArrayList<Event> = ArrayList()
-        viewModel.getEventsById(id).observe(this, Observer { t: SingleEventResponse? ->
-            //toggleLoading()
-            Log.i("response_", "вошел в лямбду")
-            if (t != null) {
-                Log.i("response_", "если респонс не налл")
-                //                totalAvailablePages = t.page!!
-                if (t.id != null) {
-                    val oldCount: Int = events.size
-                    Log.i("response_", "если список событий не налл")
-                    t.name = t.name!![0].toUpperCase() + t.name!!.substring(1, t.name!!.length)
-//                    for (elem in t.events!!) {
-//                        elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
-//                            1,
-//                            elem.name!!.length
-//                        )
-//                    }
-                    val event = Event()
-                    event.id = t.id!!
-                    event.name = t.name!!
-                    event.bodyText = t.bodyText!!
-                    event.shortTitle = t.shortTitle!!
-                    event.description = t.description
-                    event.rating = t.rating!!
-                    event.images = t.images!!
-                    events.add(event)
-                    eventsAdapter.notifyDataSetChanged()
-                    eventsAdapter.notifyItemRangeChanged(
-                        oldCount,
-                        events.size / 1000
-                    )//проблема с выводом - показывает после выхода из экрана
-                } else {
-                    Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
-                    Log.i("response_", "список событий  налл")
-                }
-            } else {
-                Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
-                Log.i("response_", "респонс  налл")
-            }
-        })
-    }
+//    private fun getEvents(id: Int) {
+//        //toggleLoading()
+//        //var temp: ArrayList<Event> = ArrayList()
+//        viewModel.getEventsById(id).observe(this, Observer { t: SingleEventResponse? ->
+//            //toggleLoading()
+//            Log.i("response_", "вошел в лямбду")
+//            if (t != null) {
+//                Log.i("response_", "если респонс не налл")
+//                //                totalAvailablePages = t.page!!
+//                if (t.id != null) {
+//                    val oldCount: Int = events.size
+//                    Log.i("response_", "если список событий не налл")
+//                    t.name = t.name!![0].toUpperCase() + t.name!!.substring(1, t.name!!.length)
+////                    for (elem in t.events!!) {
+////                        elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
+////                            1,
+////                            elem.name!!.length
+////                        )
+////                    }
+//                    val event = Event()
+//                    event.id = t.id!!
+//                    event.name = t.name!!
+//                    event.bodyText = t.bodyText!!
+//                    event.shortTitle = t.shortTitle!!
+//                    event.description = t.description
+//                    event.rating = t.rating!!
+//                    event.images = t.images!!
+//                    events.add(event)
+//                    eventsAdapter.notifyDataSetChanged()
+//                    eventsAdapter.notifyItemRangeChanged(
+//                        oldCount,
+//                        events.size / 1000
+//                    )//проблема с выводом - показывает после выхода из экрана
+//                } else {
+//                    Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
+//                    Log.i("response_", "список событий  налл")
+//                }
+//            } else {
+//                Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
+//                Log.i("response_", "респонс  налл")
+//            }
+//        })
+//    }
 
     override fun onEventClicked(event: Event) {
         val images: ArrayList<String> = arrayListOf<String>()
@@ -539,8 +472,8 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         }
         startActivity(intent);
     }
-    override fun onUserCLick(user: User) {
-        super.onUserCLick(user)
+    override fun onUserClick(user: User) {
+        super.onUserClick(user)
         if (user != null) {
             Log.i("user", user.name!!)
             goToProfile(user)

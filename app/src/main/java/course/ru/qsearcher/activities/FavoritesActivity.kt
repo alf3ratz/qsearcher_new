@@ -3,12 +3,13 @@ package course.ru.qsearcher.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.firebase.auth.FirebaseAuth
@@ -26,6 +27,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_map.*
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class FavoritesActivity : AppCompatActivity(), FavoritesListener {
     private lateinit var activityFavoritesBinding: ActivityFavoritesBinding
@@ -36,10 +40,11 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
     private var usersDbRef: DatabaseReference? = null
     private var usersChildEventListener: ChildEventListener? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityFavoritesBinding = DataBindingUtil.setContentView(this, R.layout.activity_favorites)
-        doInitialization()
+        initialize()
     }
 
     private fun setBottomNavigation() {
@@ -84,7 +89,7 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
         }
     }
 
-    private fun doInitialization() {
+    private fun initialize() {
         setBottomNavigation()
         favoritesViewModel = ViewModelProvider(this).get(FavoritesViewModel::class.java)
         favoritesList = mutableListOf()
@@ -93,18 +98,18 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
 
     private fun loadFavorites() {
         activityFavoritesBinding?.isLoading = true
-        var compositeDisposable: CompositeDisposable = CompositeDisposable()
+        val compositeDisposable = CompositeDisposable()
         favoritesViewModel?.loadFavorites()?.subscribeOn(Schedulers.computation())
             ?.observeOn(AndroidSchedulers.mainThread())
             ?.subscribe {
-                activityFavoritesBinding?.isLoading = false
+                activityFavoritesBinding.isLoading = false
                 if (favoritesList?.size!! > 0) {
                     favoritesList?.clear()
                 }
                 favoritesList!!.addAll(it)
                 favoritesAdapter = FavoritesAdapter(favoritesList!!, this)
-                activityFavoritesBinding?.favouritesRecyclerView?.adapter = favoritesAdapter
-                activityFavoritesBinding?.favouritesRecyclerView?.visibility = View.VISIBLE
+                activityFavoritesBinding.favouritesRecyclerView.adapter = favoritesAdapter
+                activityFavoritesBinding.favouritesRecyclerView.visibility = View.VISIBLE
                 compositeDisposable.dispose()
                 Toast.makeText(applicationContext, "Избранное:" + it.size, Toast.LENGTH_SHORT)
                     .show()
@@ -113,12 +118,25 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
                     it
                 )
             }
-        if (SignInActivity.currentUser.favList != null && SignInActivity.currentUser.favList!!.size > 0)
-            for (id in SignInActivity.currentUser.favList!!) {
-                if (!favoritesList?.contains(id)!!) {
-
+        val timer = Timer()
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+                Handler(Looper.getMainLooper()).post {
+                    if (SignInActivity.currentUser.favList != null && SignInActivity.currentUser.favList!!.size > 0) {
+                        val ids = arrayListOf<Int>()
+                        for (event in favoritesList!!) {
+                            ids.add(event.id)
+                            Log.i("fav", event.id.toString())
+                        }
+                        for (id in SignInActivity.currentUser.favList!!) {
+                            if (!ids.contains(id)) {
+                                getEvents(id)
+                            }
+                        }
+                    }
                 }
             }
+        }, 800)
     }
 
     override fun onResume() {
@@ -127,17 +145,23 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
             loadFavorites()
             TempDataHolder.IS_FAVORITES_UPDATED = false
         }
-
     }
 
     override fun onEventClicked(event: Event) {
-        val intentTemp: Intent = Intent(applicationContext, EventDetailActivity::class.java)
+        if (event.imagesAsString == null) {
+            val images: ArrayList<String> = arrayListOf()
+            for (elem in event.images!!) {
+                images.plusAssign(elem.toString())
+            }
+            event.imagesAsString = images
+        }
+        val intentTemp = Intent(applicationContext, EventDetailActivity::class.java)
         intentTemp.putExtra("event", event)
         startActivity(intentTemp)
     }
 
     override fun removeEventFromFavorites(event: Event, position: Int) {
-        var compositeDisposableForDelete: CompositeDisposable = CompositeDisposable()
+        val compositeDisposableForDelete= CompositeDisposable()
         favoritesViewModel?.removeEventFromFavoritesList(event)
             ?.subscribeOn(Schedulers.computation())
             ?.observeOn(AndroidSchedulers.mainThread())
@@ -153,29 +177,46 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
                 compositeDisposableForDelete.dispose()
             }?.let { compositeDisposableForDelete.add(it) }
 
+
         if (SignInActivity.currentUser.favList != null && SignInActivity.currentUser.favList!!.size > 0) {
+            database = FirebaseDatabase.getInstance()
+            usersDbRef = database?.reference?.child("users")
+            usersChildEventListener = object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    val user: User = snapshot.getValue(User::class.java)!!
+                    if (user.favList != null && user.favList!!.contains(event.id) &&
+                        user.id != FirebaseAuth.getInstance().currentUser.uid && user.superId != null
+                    ) {
+                        var pos = 0
+                        for ((i, id) in user.favList!!.withIndex()) {
+                            if (id == event.id)
+                                pos = i
+                        }
+                        user.favList!!.remove(pos)
+                        usersDbRef!!.child(user.superId!!).child("favList").setValue(user.favList)
+                    }
+                }
+
+                override fun onChildChanged(
+                    snapshot: DataSnapshot,
+                    previousChildName: String?
+                ) {
+                }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {}
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                override fun onCancelled(error: DatabaseError) {}
+            }
+            usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
         }
     }
 
     private fun getEvents(id: Int) {
-        //toggleLoading()
-        //var temp: ArrayList<Event> = ArrayList()
-        favoritesViewModel!!.getEventsById(id).observe(this, Observer { t: SingleEventResponse? ->
-            //toggleLoading()
-            Log.i("response_", "вошел в лямбду")
+        favoritesViewModel!!.getEventsById(id).observe(this, { t: SingleEventResponse? ->
             if (t != null) {
-                Log.i("response_", "если респонс не налл")
-                //                totalAvailablePages = t.page!!
                 if (t.id != null) {
                     val oldCount: Int = favoritesList!!.size
-                    Log.i("response_", "если список событий не налл")
                     t.name = t.name!![0].toUpperCase() + t.name!!.substring(1, t.name!!.length)
-//                    for (elem in t.events!!) {
-//                        elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
-//                            1,
-//                            elem.name!!.length
-//                        )
-//                    }
                     val event = Event()
                     event.id = t.id!!
                     event.name = t.name!!
@@ -190,14 +231,12 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
                     favoritesAdapter!!.notifyItemRangeChanged(
                         oldCount,
                         favoritesList!!.size / 1000
-                    )//проблема с выводом - показывает после выхода из экрана
+                    )
                 } else {
-                    Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
-                    Log.i("response_", "список событий  налл")
+                    Toast.makeText(applicationContext, "Произошла ошибка при выгрузке события", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
-                Log.i("response_", "респонс  налл")
+                Toast.makeText(applicationContext, "Проищошла ошибка прии выгрузке события", Toast.LENGTH_SHORT).show()
             }
         })
     }

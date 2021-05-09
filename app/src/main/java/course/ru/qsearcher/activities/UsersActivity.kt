@@ -14,7 +14,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import course.ru.qsearcher.R
-import course.ru.qsearcher.adapters.UsersAdapter
 import course.ru.qsearcher.adapters.UsersAdapterForUsersPage
 import course.ru.qsearcher.databinding.ActivityUsersBinding
 import course.ru.qsearcher.listeners.OnUserClickListener
@@ -22,6 +21,7 @@ import course.ru.qsearcher.model.User
 import kotlinx.android.synthetic.main.activity_map.*
 
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class UsersActivity : AppCompatActivity(), OnUserClickListener {
 
     private lateinit var usersRef: DatabaseReference
@@ -47,7 +47,7 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val user: User = snapshot.getValue(User::class.java)!!
                 if (SignInActivity.currentUser.usersList == null) {
-                    SignInActivity.currentUser.usersList = ArrayList<String>()
+                    SignInActivity.currentUser.usersList = ArrayList()
                 }
                 if (user.id != auth.currentUser.uid && SignInActivity.currentUser.usersList?.contains(
                         user.id
@@ -77,10 +77,9 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     val user: User = snapshot.getValue(User::class.java)!!
                     if(SignInActivity.currentUser.usersList == null){
-                        SignInActivity.currentUser.usersList = ArrayList<String>()
+                        SignInActivity.currentUser.usersList = ArrayList()
                     }
                      if (user.id != auth.currentUser.uid && SignInActivity.currentUser.usersList?.contains(user.id)!!) {
-                        //user.avatarMock = R.drawable.ic_person
                         users.add(user)
                         userAdapter.notifyDataSetChanged()
                     }
@@ -148,8 +147,8 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
         }
     }
 
-    override fun onUserCLick(user: User) {
-        super.onUserCLick(user)
+    override fun onUserClick(user: User) {
+        super.onUserClick(user)
         if (user != null) {
             Log.i("user", user.name!!)
             goToChat(user)
