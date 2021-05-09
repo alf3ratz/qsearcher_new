@@ -5,21 +5,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import course.ru.qsearcher.model.Event
 import java.lang.reflect.Type
-import java.util.*
 import kotlin.collections.ArrayList
 
-//@ProvidedTypeConverter
+
 class CustomTypeConverter {
     companion object {
-        var gson = Gson()
-//        @TypeConverter
-//        fun stringToSomeObjectList(data: String?): List<Enroll> {
-//            if (data == null) {
-//                return Collections.emptyList()
-//            }
-//            val listType: Type = object : TypeToken<List<Enroll?>?>() {}.type
-//            return gson.fromJson<List<Enroll>>(data, listType)
-//        }
+        private var gson = Gson()
 
         @TypeConverter
         @JvmStatic
@@ -84,6 +75,7 @@ class CustomTypeConverter {
             val listType: Type = object : TypeToken<Event.Place?>() {}.type
             return gson.fromJson<Event.Place>(str, listType)
         }
+
         @TypeConverter
         @JvmStatic
         fun coordsToString(someObjects: Event.Place.Coords?): String? {

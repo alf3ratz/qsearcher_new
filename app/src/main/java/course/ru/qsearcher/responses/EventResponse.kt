@@ -14,5 +14,4 @@ class EventResponse {
     @SerializedName("results")
     var events: ArrayList<Event>? = null
 
-    //fun getEvents():List<Event> =events
 }

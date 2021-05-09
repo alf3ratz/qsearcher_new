@@ -38,7 +38,7 @@ import course.ru.qsearcher.model.Event
 import kotlinx.android.synthetic.main.activity_map.*
 
 
-class MapActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerClickListener {
+class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private val REQUEST_LOCATION_CODE: Int = 234
     private val SETTINGS_CODE: Int = 123
 
@@ -140,13 +140,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerCl
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             return
         }
         fusedLocationProviderClient.requestLocationUpdates(
@@ -154,8 +147,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerCl
             locationCallback,
             Looper.getMainLooper()
         ).addOnFailureListener {
-            val statusCode: Int = (it as ApiException).statusCode
-            when (statusCode) {
+            when ((it as ApiException).statusCode) {
                 LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                     try {
                         val ex: ResolvableApiException = it as ResolvableApiException
@@ -258,7 +250,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerCl
     override fun onMapReady(googleMap: GoogleMap?) {
         try {
             map = googleMap!!
-            map.setOnMarkerClickListener(this)
+            map.setOnInfoWindowClickListener(this)
             if (location == null) {
                 val locationResult = fusedLocationProviderClient.lastLocation
                 locationResult.addOnCompleteListener(this) { task ->
@@ -272,7 +264,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerCl
                             map.addMarker(
                                 MarkerOptions()
                                     .position(position)
-                                    .title("Выше местоположение")
+                                    .title("Ваше местоположение")
                             )
                             map.moveCamera(
                                 CameraUpdateFactory.newLatLngZoom(
@@ -296,7 +288,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerCl
                     } else {
                         Log.d("map", "Current location is null. Using defaults.")
                         Log.e("map", "Exception: %s", task.exception)
-                        map?.uiSettings?.isMyLocationButtonEnabled = false
+                        map.uiSettings?.isMyLocationButtonEnabled = false
                     }
                 }
             }
@@ -332,19 +324,22 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback,GoogleMap.OnMarkerCl
         }
     }
 
-    override fun onMarkerClick(marker: Marker?): Boolean {
-        if(marker!=null){
-            val event: Event = MainActivity.staticEvents.find{it.shortTitle == marker.title}!!
+    override fun onInfoWindowClick(marker: Marker?) {
+        if (marker != null && marker.position.latitude != location?.latitude && marker.position.longitude != location?.longitude) {
+            val event: Event = MainActivity.staticEvents.find { it.shortTitle == marker.title }!!
             val images: ArrayList<String> = arrayListOf()
             for (elem in event.images!!) {
                 images.plusAssign(elem.toString())
             }
             event.imagesAsString = images
-            startActivity(Intent(this,EventDetailActivity::class.java).putExtra("event",event))
-            return true
+            startActivity(Intent(this, EventDetailActivity::class.java).putExtra("event", event))
+            return
         }
-        Log.i("marker","problem")
-        Toast.makeText(applicationContext,"Произошла ошибка при отображении события",Toast.LENGTH_LONG).show()
-        return false
+        Log.i("marker", "problem")
+        Toast.makeText(
+            applicationContext,
+            "Произошла ошибка при отображении события",
+            Toast.LENGTH_LONG
+        ).show()
     }
 }

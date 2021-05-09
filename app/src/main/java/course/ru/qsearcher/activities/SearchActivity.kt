@@ -1,26 +1,15 @@
 package course.ru.qsearcher.activities
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
-import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -30,15 +19,14 @@ import course.ru.qsearcher.databinding.ActivitySearchBinding
 import course.ru.qsearcher.listeners.EventListener
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.responses.EventResponse
-import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
-import kotlinx.android.synthetic.main.dialog_for_categories.*
+import course.ru.qsearcher.viewmodels.EventsViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 class SearchActivity : AppCompatActivity(), EventListener {
     private var activitySearchBinding: ActivitySearchBinding? = null
-    private lateinit var viewModel: MostPopularEventsViewModel//SearchViewModel? = null
+    private lateinit var viewModel: EventsViewModel//SearchViewModel? = null
     private var events: ArrayList<Event> = ArrayList<Event>();
     private var eventsAdapter: EventsAdapter? = null
     private var currentPage: Int = 1;
@@ -108,7 +96,7 @@ class SearchActivity : AppCompatActivity(), EventListener {
 
         activitySearchBinding?.eventsRecyclerView?.setHasFixedSize(true)
         viewModel =
-            ViewModelProvider(this).get(/*SearchViewModel::class.java*/MostPopularEventsViewModel::class.java)
+            ViewModelProvider(this).get(/*SearchViewModel::class.java*/EventsViewModel::class.java)
         //events = MainActivity.staticEvents.slice((1..6)) as ArrayList<Event>
         eventsAdapter = EventsAdapter(events, this)
         activitySearchBinding?.apply {

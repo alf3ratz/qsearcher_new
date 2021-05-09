@@ -12,14 +12,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginBottom
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
-import com.google.android.material.dialog.MaterialDialogs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -31,25 +28,22 @@ import course.ru.qsearcher.R
 import course.ru.qsearcher.adapters.EventsAdapter
 import course.ru.qsearcher.adapters.UsersAdapter
 import course.ru.qsearcher.databinding.ActivitySettingsBinding
-import course.ru.qsearcher.databinding.DialogForFriemdsBinding
 import course.ru.qsearcher.listeners.EventListener
 import course.ru.qsearcher.listeners.OnUserClickListener
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.model.User
 import course.ru.qsearcher.responses.SingleEventResponse
-import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
+import course.ru.qsearcher.viewmodels.EventsViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_settings.*
 import kotlinx.android.synthetic.main.activity_settings.view.*
 import kotlinx.android.synthetic.main.dialog_for_friemds.view.*
-import okhttp3.internal.cache.DiskLruCache
-import org.jetbrains.anko.act
 import org.jetbrains.anko.dip
 
 
 class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener {
     private lateinit var activitySettingsBinding: ActivitySettingsBinding
-    private lateinit var viewModel: MostPopularEventsViewModel
+    private lateinit var viewModel: EventsViewModel
     private lateinit var eventsAdapter: EventsAdapter
     private var database: FirebaseDatabase? = null
     private var usersDbRef: DatabaseReference? = null
@@ -185,7 +179,7 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
                 )
             }
         }
-        viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.javaObjectType)
+        viewModel = ViewModelProvider(this).get(EventsViewModel::class.javaObjectType)
 //        eventsAdapter = EventsAdapter(events, this)
 //        activitySettingsBinding.apply {
 //            activitySettingsBinding.favEventsRecycler.adapter = eventsAdapter

@@ -6,8 +6,6 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 
-//class BindingAdapters {
-
     @BindingAdapter("android:imageUrl")
     fun setImageUrl(imageView: ImageView, URL: String) {
         try {
@@ -22,4 +20,3 @@ import java.lang.Exception
         } catch (e: Exception) {
         }
     }
-//}

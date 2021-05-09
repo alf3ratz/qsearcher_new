@@ -85,10 +85,11 @@ dependencies {
 
     //Room & RxJava support
     implementation "androidx.room:room-runtime:$room_version"
+    //noinspection GradleDependency
     implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    annotationProcessor 'androidx.room:room-compiler:2.2.6'
-    implementation 'androidx.room:room-rxjava2:2.2.6'
+    annotationProcessor 'androidx.room:room-compiler:2.3.0'
+    implementation 'androidx.room:room-rxjava2:2.3.0'
     implementation "android.arch.persistence.room:runtime:1.1.1"
     //kapt "android.arch.persistence.room:compiler:1.1.1"
     // Anko Commons

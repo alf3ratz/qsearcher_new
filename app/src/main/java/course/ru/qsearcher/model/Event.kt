@@ -1,9 +1,8 @@
 package course.ru.qsearcher.model
 
-import android.media.Image
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
 import course.ru.qsearcher.utilities.CustomTypeConverter

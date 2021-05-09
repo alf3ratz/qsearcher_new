@@ -1,7 +1,6 @@
 package course.ru.qsearcher.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +33,7 @@ class ImageSliderAdapter(sliderImages: ArrayList<String>) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageSliderViewHolder {
         if (layoutInflater == null)
             layoutInflater = LayoutInflater.from(parent.context)
-        var sliderImageBinding: ItemContainerSliderImageBinding = DataBindingUtil.inflate(
+        val sliderImageBinding: ItemContainerSliderImageBinding = DataBindingUtil.inflate(
             layoutInflater!!, R.layout.item_container_slider_image, parent, false
         )
         return ImageSliderViewHolder(sliderImageBinding)
@@ -42,7 +41,7 @@ class ImageSliderAdapter(sliderImages: ArrayList<String>) :
 
     override fun onBindViewHolder(holder: ImageSliderViewHolder, position: Int) {
         sliderImages?.get(position)
-            ?.let { holder.bindSliderImage(it) } // holder.bindSLiderImage(sliderImages[position])
+            ?.let { holder.bindSliderImage(it) }
 
     }
 

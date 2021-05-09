@@ -4,10 +4,8 @@ import course.ru.qsearcher.R
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -21,16 +19,12 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
 import course.ru.qsearcher.databinding.ActivitySignInBinding
-import course.ru.qsearcher.model.Event
-import course.ru.qsearcher.model.Message
 import course.ru.qsearcher.model.User
 import kotlinx.android.synthetic.main.activity_sign_in.*
 import java.io.ByteArrayOutputStream
-import java.io.File
-import java.util.*
-import kotlin.random.Random
 
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class SignInActivity : AppCompatActivity() {
     private var activitySignInBinding: ActivitySignInBinding? = null
     private var auth: FirebaseAuth? = null
@@ -45,12 +39,18 @@ class SignInActivity : AppCompatActivity() {
     companion object {
         var userName: String = ""
         var currentUser: User = User()
-        var currentEvents: MutableList<Event> = mutableListOf()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseApp.initializeApp(this)
+        initialize()
+    }
+
+    /**
+     * Метод инициализирующий поля доступа к бд и в аутентификации, различные вспомогательные поля и дочерные view страницы регистрации.
+     */
+    private fun initialize() {
         auth = Firebase.auth
         if (auth?.currentUser != null) {
             database = FirebaseDatabase.getInstance()
@@ -75,14 +75,10 @@ class SignInActivity : AppCompatActivity() {
                 override fun onCancelled(error: DatabaseError) {}
             }
             usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
-
-            //userName = auth?.currentUser!!.uid
             startActivity(Intent(applicationContext, MainActivity::class.java))
         }
-
         database = FirebaseDatabase.getInstance()
         usersDbRef = database?.reference?.child("users")
-
         activitySignInBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in)
         loginSignUpButton.setOnClickListener {
             Log.i("login", "voshel")
@@ -93,7 +89,9 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Метод, описывающий логику регистрации нового пользователя в приложении или входа в него уже зарегистрированного пользователя.
+     */
     private fun loginSignUp(email: String, password: String) {
         if (loginMode) {
             when {
@@ -118,30 +116,25 @@ class SignInActivity : AppCompatActivity() {
                 else -> auth?.signInWithEmailAndPassword(email, password)
                     ?.addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            // Sign in success, update UI with the signed-in user's information
                             Log.d("auth", "createUserWithEmail:success")
-                            val user = auth?.currentUser
+                            //val user = auth?.currentUser
                             startActivity(
                                 Intent(
                                     this,
                                     MainActivity::class.java
                                 ).putExtra("userName", nameEditText.text.toString().trim())
                             )
-                            //updateUI(user)
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w("auth", "createUserWithEmail:failure", task.exception)
                             Toast.makeText(
                                 baseContext, "Authentication failed.",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            // updateUI(null)
                         }
                     }
             }
 
         } else {
-            Log.i("login", "v create")
             when {
                 passwordEditText.text.toString().trim() != confirmPasswordEditText.text.toString()
                     .trim() -> {
@@ -162,8 +155,6 @@ class SignInActivity : AppCompatActivity() {
 
                 }
                 else -> {
-                    Log.i("login", "sozdaet")
-                    Log.i("login", email + " _ " + password)
                     auth?.createUserWithEmailAndPassword(email, password)
                         ?.addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
@@ -177,15 +168,12 @@ class SignInActivity : AppCompatActivity() {
                                         MainActivity::class.java
                                     ).putExtra("userName", nameEditText.text.toString().trim())
                                 )
-                                //updateUI(user)
                             } else {
-                                // If sign in fails, display a message to the user.
                                 Log.i("authq", "createUserWithEmail:failure", task.exception)
                                 Toast.makeText(
                                     baseContext, "Authentication failed.",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                // updateUI(null)
                             }
                         }
                 }
@@ -193,36 +181,32 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Метод, создающий объект пользователя и добавлябщий его в базу данныъ
+     */
     private fun createUser(user: FirebaseUser?) {
         val newUser = User()
         newUser.name = nameEditText.text.toString().trim()
         newUser.email = user!!.email
-        newUser.id = user!!.uid
-        var file: Uri? = null
+        newUser.id = user.uid
         when ((0..5).shuffled().last()) {
             0 -> {
                 newUser.avatarMock = R.drawable.avatar1
-                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar1)
             }
             1 -> {
                 newUser.avatarMock = R.drawable.avatar2
-                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar2)
             }
             2 -> {
                 newUser.avatarMock = R.drawable.avatar3
-                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar3)
             }
             3 -> {
                 newUser.avatarMock = R.drawable.avatar4
-                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar4)
             }
             4 -> {
                 newUser.avatarMock = R.drawable.avatar5
-                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar5)
             }
             5 -> {
                 newUser.avatarMock = R.drawable.avatar6
-                file = Uri.parse("android.resource://" + this.packageName + R.drawable.avatar6)
             }
         }
         newUser.favList = mutableListOf()
@@ -230,50 +214,47 @@ class SignInActivity : AppCompatActivity() {
         newUser.occupation = "-"
         newUser.city = "-"
         newUser.socialNetworkUrl = "-"
-        newUser.superId = newUser.email!!.replace(".", "").replace("#", "").replace("$", "").replace("[", "")
-            .replace("]", "")
-//        val newUser: User = User(nameEditText.text.toString().trim(), user!!.email, user!!.uid,R.drawable.ic_person,
-//            mutableListOf
-//       (1,2,3))
+        newUser.superId =
+            newUser.email!!.replace(".", "").replace("#", "").replace("$", "").replace("[", "")
+                .replace("]", "")
         storage = FirebaseStorage.getInstance()
         storageRef = storage?.reference?.child("avatars")
-        var imgRef: StorageReference = storageRef?.child(newUser.superId + "avatar")!!
+        val imgRef: StorageReference = storageRef?.child(newUser.superId + "avatar")!!
         val bm = BitmapFactory.decodeResource(this.resources, newUser.avatarMock)
         val baos = ByteArrayOutputStream()
         bm.compress(Bitmap.CompressFormat.PNG, 100, baos)
         val data = baos.toByteArray()
-        //var file = Uri.fromFile(File("android.resource://" + this.packageName + newUser.avatarMock))
-        var uploadTask: UploadTask = imgRef.putBytes(data)
-        val urlTask = uploadTask.continueWithTask { task ->
-            if (!task.isSuccessful) {
-                task.exception?.let {
-                    Log.i("avatarSign", "отправил?")
-                    throw it
-                }
-            }
-            imgRef.downloadUrl
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.i("avatarSign", "отправил!")
-                //Log.i("avatarSign","отправил?")
-//                val downloadUri = task.result
-//                val msg: Message = Message()
-//                msg.imageURL = downloadUri.toString()
-//                msg.name = userName!!
-//                msg.sender = auth.currentUser.uid
-//                msg.receiver = receiverUserId
-//                messagesRef?.push()?.setValue(msg)
-            } else {
-                // Handle failures
-                // ...
-            }
-        }
+        val uploadTask: UploadTask = imgRef.putBytes(data)
+//        val urlTask = uploadTask.continueWithTask { task ->
+////            if (!task.isSuccessful) {
+////                task.exception?.let {
+////                    Log.i("avatarSign", "отправил?")
+////                    throw it
+////                }
+////            }
+////            imgRef.downloadUrl
+////        }.addOnCompleteListener { task ->
+////            if (task.isSuccessful) {
+////                Log.i("avatarSign", "отправил!")
+////                //Log.i("avatarSign","отправил?")
+//////                val downloadUri = task.result
+//////                val msg: Message = Message()
+//////                msg.imageURL = downloadUri.toString()
+//////                msg.name = userName!!
+//////                msg.sender = auth.currentUser.uid
+//////                msg.receiver = receiverUserId
+//////                messagesRef?.push()?.setValue(msg)
+////            } else {
+////                // Handle failures
+////                // ...
+////            }
+        //   }
         usersDbRef?.child(newUser.superId!!)?.setValue(newUser)
         userName = newUser.name!!
         currentUser = newUser
     }
 
-    fun toggleLoginMode(view: View) {
+    fun toggleLoginMode() {
         if (loginMode) {
             loginMode = false
             loginSignUpButton.text = "зарегистрироваться"
@@ -283,6 +264,5 @@ class SignInActivity : AppCompatActivity() {
             loginSignUpButton.text = "Войдите"
             toggleLoginTextView.text = "или зарегистрируйтесь"
         }
-
     }
 }

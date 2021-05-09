@@ -11,25 +11,21 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MostPopularEventsRepository() {
+class EventsRepository() {
 
-    private lateinit var apiService: ApiService
-
-    init {
-        apiService = ApiClient.getRetrofit().create(ApiService::class.java)
-    }
+    private var apiService: ApiService = ApiClient.getRetrofit().create(ApiService::class.java)
 
     fun getMostPopularEvents(page: Int): LiveData<EventResponse> {
         val data: MutableLiveData<EventResponse> = MutableLiveData()
         apiService.getMostPopularEvents(page).enqueue(object : Callback<EventResponse> {
             override fun onFailure(@NonNull call: Call<EventResponse>, t: Throwable) {
-                data.setValue(null)
+                data.value = null
             }
             override fun onResponse(
                 @NonNull call: Call<EventResponse>,
                 @NonNull response: Response<EventResponse>
             ) {
-                data.setValue(response.body())
+                data.value = response.body()
             }
         })
         return data

@@ -8,6 +8,6 @@ class Message(
     var receiver: String,
     var isMine:Boolean
 ) {
-    //var imageURL:String = image
+
     constructor() : this("", "", "", "", "",true) {}
 }

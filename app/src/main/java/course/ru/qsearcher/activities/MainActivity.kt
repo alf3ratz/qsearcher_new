@@ -19,12 +19,12 @@ import course.ru.qsearcher.databinding.ActivityMainBinding
 import course.ru.qsearcher.listeners.EventListener
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.responses.EventResponse
-import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
+import course.ru.qsearcher.viewmodels.EventsViewModel
 import kotlinx.android.synthetic.main.activity_map.*
 
 
 class MainActivity : AppCompatActivity(), EventListener {
-    private lateinit var viewModel: MostPopularEventsViewModel
+    private lateinit var viewModel: EventsViewModel
     private lateinit var activityMainBinding: ActivityMainBinding
     //ActivityMainBinding
 
@@ -47,8 +47,8 @@ class MainActivity : AppCompatActivity(), EventListener {
 
     private fun doInitialization() {
         activityMainBinding?.eventsRecyclerView?.setHasFixedSize(true)
-        viewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.javaObjectType)
-        var activity: MostPopularEventsViewModel
+        viewModel = ViewModelProvider(this).get(EventsViewModel::class.javaObjectType)
+        var activity: EventsViewModel
         setBottomNavigation()
 
         eventsAdapter = EventsAdapter(events, this)

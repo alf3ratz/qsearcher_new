@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ApiClient {
     companion object {
         private var retrofit: Retrofit? = null
-        public fun getRetrofit(): Retrofit {
+        fun getRetrofit(): Retrofit {
             if (retrofit == null)
                 retrofit = Retrofit.Builder()
                     .baseUrl("https://kudago.com/public-api/v1.4/")//

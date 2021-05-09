@@ -32,7 +32,7 @@ import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.model.User
 import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.utilities.TempDataHolder
-import course.ru.qsearcher.viewmodels.MostPopularEventsViewModel
+import course.ru.qsearcher.viewmodels.EventsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -41,7 +41,7 @@ import kotlin.collections.ArrayList
 
 
 class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
-    private var eventViewModel: MostPopularEventsViewModel? = null;
+    private var eventViewModel: EventsViewModel? = null;
     private var eventDetailActivityBinding: ActivityEventDetailBinding? = null
     private var auth: FirebaseAuth? = null
     private var database: FirebaseDatabase? = null
@@ -63,7 +63,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     }
 
     private fun doInitialization(savedInstanceState: Bundle?) {
-        eventViewModel = ViewModelProvider(this).get(MostPopularEventsViewModel::class.java)
+        eventViewModel = ViewModelProvider(this).get(EventsViewModel::class.java)
         BottomSheetBehavior.from(bottomSheet).apply {
             peekHeight = 55
             state = BottomSheetBehavior.STATE_HIDDEN

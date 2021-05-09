@@ -1,22 +1,14 @@
 package course.ru.qsearcher.adapters
 
-import android.app.Application
-import android.os.Bundle
-import android.util.Log
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import course.ru.qsearcher.R
-import course.ru.qsearcher.adapters.EventsAdapter.EventViewHolder
 import course.ru.qsearcher.databinding.ItemContainerEventBinding
-import course.ru.qsearcher.listeners.EventListener
 import course.ru.qsearcher.model.Event
-import kotlinx.coroutines.withContext
-import kotlin.coroutines.coroutineContext
-import androidx.navigation.ui.NavigationUI
 import course.ru.qsearcher.listeners.FavoritesListener
 
 
@@ -35,21 +27,15 @@ class FavoritesAdapter(events_: List<Event>, favoritesListener_: FavoritesListen
             this.itemLayoutBinding = itemLayoutBinding
         }
 
-        public fun bindEvent(event: Event) {
+        fun bindEvent(event: Event) {
             itemLayoutBinding?.event = event
             itemLayoutBinding?.executePendingBindings()
-            Log.i("adapter", " в ивент адаптере1")
-            //Toast.makeText(layoutInflater?.context,"в ИвентАдаптере1",Toast.LENGTH_SHORT)
             if (itemLayoutBinding?.root != null)
-                Log.i("adapter", " рут не равен налл")
-
-
-            itemView.setOnClickListener {
-                favoritesListener.onEventClicked(event)
-                Log.i("adapter", " в ивент адаптере2222")
-            }
+                itemView.setOnClickListener {
+                    favoritesListener.onEventClicked(event)
+                }
             itemLayoutBinding?.imageDelete?.setOnClickListener {
-                favoritesListener?.removeEventFromFavorites(
+                favoritesListener.removeEventFromFavorites(
                     event, adapterPosition
                 )
             }
@@ -61,7 +47,7 @@ class FavoritesAdapter(events_: List<Event>, favoritesListener_: FavoritesListen
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritesViewHolder {
         if (layoutInflater == null)
             layoutInflater = LayoutInflater.from(parent.context)
-        var eventBinding: ItemContainerEventBinding =
+        val eventBinding: ItemContainerEventBinding =
             DataBindingUtil.inflate(layoutInflater!!, R.layout.item_container_event, parent, false)
         return FavoritesViewHolder(eventBinding)
     }
