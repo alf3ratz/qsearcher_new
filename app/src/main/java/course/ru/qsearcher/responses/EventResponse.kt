@@ -8,8 +8,8 @@ class EventResponse {
     @SerializedName("count")
     var page: Int? = null
 
-    @SerializedName("next")
-    var totalPages: String? = null
+//    @SerializedName("next")
+//    var totalPages: String? = null
 
     @SerializedName("results")
     var events: ArrayList<Event>? = null

@@ -46,7 +46,7 @@ class Event : Serializable {
     class Image:Serializable {
         @SerializedName("image")
         var image: String? = null;
-        override fun toString(): String = image!!
+        //override fun toString(): String = image!!
     }
 
     @SerializedName("imagesAsString")

@@ -18,14 +18,14 @@ class ImageSliderAdapter(sliderImages: ArrayList<String>) :
 
     inner class ImageSliderViewHolder(itemContainerSliderImageBinding: ItemContainerSliderImageBinding) :
         RecyclerView.ViewHolder(itemContainerSliderImageBinding.root) {
-        private var itemContainerSliderImageBinding: ItemContainerSliderImageBinding? = null;
+        private var itemContainerSliderImageBinding: ItemContainerSliderImageBinding? = null
 
         init {
-            this.itemContainerSliderImageBinding = itemContainerSliderImageBinding;
+            this.itemContainerSliderImageBinding = itemContainerSliderImageBinding
         }
 
         fun bindSliderImage(imageUrl: String) {
-            itemContainerSliderImageBinding?.imageUrl = imageUrl;
+            itemContainerSliderImageBinding?.imageUrl = imageUrl
         }
 
     }

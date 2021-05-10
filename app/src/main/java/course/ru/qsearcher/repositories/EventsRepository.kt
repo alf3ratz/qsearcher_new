@@ -11,7 +11,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class EventsRepository() {
+class EventsRepository {
 
     private var apiService: ApiService = ApiClient.getRetrofit().create(ApiService::class.java)
 
