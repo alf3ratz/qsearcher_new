@@ -69,23 +69,8 @@ class MainActivity : AppCompatActivity(), EventListener {
                 }
             }
         })
-        activityMainBinding.imageFavourites.setOnClickListener {
-            startActivity(
-                Intent(
-                    applicationContext,
-                    FavoritesActivity::class.java
-                )
-            )
-        }
         activityMainBinding.imageSearch.setOnClickListener {
             startActivity(Intent(applicationContext, SearchActivity::class.java))
-        }
-        activityMainBinding.imageSign.setOnClickListener {
-            startActivity(Intent(applicationContext, UsersActivity::class.java))
-        }
-
-        activityMainBinding.imageChat.setOnClickListener {
-            startActivity(Intent(applicationContext, ChatActivity::class.java))
         }
 
         getMostPopularEvents()

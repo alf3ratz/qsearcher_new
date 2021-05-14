@@ -116,8 +116,6 @@ class SignInActivity : AppCompatActivity() {
                 else -> auth?.signInWithEmailAndPassword(email, password)
                     ?.addOnCompleteListener(this) { task ->
                         if (task.isSuccessful) {
-                            Log.d("auth", "createUserWithEmail:success")
-                            //val user = auth?.currentUser
                             startActivity(
                                 Intent(
                                     this,
@@ -125,10 +123,9 @@ class SignInActivity : AppCompatActivity() {
                                 ).putExtra("userName", nameEditText.text.toString().trim())
                             )
                         } else {
-                            Log.w("auth", "createUserWithEmail:failure", task.exception)
                             Toast.makeText(
                                 baseContext, "Authentication failed.",
-                                Toast.LENGTH_SHORT
+                                Toast.LENGTH_LONG
                             ).show()
                         }
                     }
@@ -138,17 +135,17 @@ class SignInActivity : AppCompatActivity() {
             when {
                 passwordEditText.text.toString().trim() != confirmPasswordEditText.text.toString()
                     .trim() -> {
-                    Toast.makeText(this, "Пароли не совпадают", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Пароли не совпадают", Toast.LENGTH_LONG).show()
                 }
                 passwordEditText.text.toString().trim().length < 7 -> {
                     Toast.makeText(
                         this,
                         "Пароль должен содердать минимум 7 символов",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_LONG
                     ).show()
                 }
                 emailEditText.text.toString() == "" -> {
-                    Toast.makeText(this, "Введите почту", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Введите почту", Toast.LENGTH_LONG).show()
                 }
                 nameEditText.text.toString().trim() == "" -> {
                     Toast.makeText(this, "Введите имя пользователя", Toast.LENGTH_LONG).show()
@@ -171,8 +168,8 @@ class SignInActivity : AppCompatActivity() {
                             } else {
                                 Log.i("authq", "createUserWithEmail:failure", task.exception)
                                 Toast.makeText(
-                                    baseContext, "Authentication failed.",
-                                    Toast.LENGTH_SHORT
+                                    baseContext, "Произошла ошибка аутентификации",
+                                    Toast.LENGTH_LONG
                                 ).show()
                             }
                         }

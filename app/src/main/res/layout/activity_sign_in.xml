@@ -37,7 +37,7 @@
             android:hint="Ваш пароль"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
+            android:inputType="textPassword"
             android:layout_marginTop="@dimen/_8sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/emailEditText"/>
@@ -46,7 +46,7 @@
             android:hint="@string/repeat_your_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
+            android:inputType="textPassword"
             android:layout_marginTop="@dimen/_8sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/passwordEditText"
@@ -56,7 +56,7 @@
             android:hint="Ваше имя"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
+            android:inputType="textPersonName"
             android:layout_marginTop="@dimen/_8sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/confirmPasswordEditText"/>

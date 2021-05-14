@@ -209,7 +209,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         Toast.makeText(
                             applicationContext,
                             "Удалено из списка избранного",
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_LONG
                         ).show()
                         compositeDisposable.dispose()
                     }.let { it1 -> compositeDisposable.add(it1) }
@@ -223,7 +223,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         Toast.makeText(
                             applicationContext,
                             "Добавлено в список избранного",
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_LONG
                         ).show()
                         compositeDisposable.dispose()
                     }.let { it1 -> compositeDisposable.add(it1) }
@@ -306,7 +306,6 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         layoutParams.setMargins(8, 0, 8, 0)
 
         for (i in 0 until count) {
-            Log.i("картинка", "ставит индикатор")
             indicators[i] = ImageView(applicationContext)
             indicators[i].setImageDrawable(
                 ContextCompat.getDrawable(
@@ -358,7 +357,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
             super.onUserClick(user)
             goToProfile(user)
         } else {
-            Log.i("user", "fail to send user in intent")
+            Log.i("user", "Невозможно перейти на страницу профиля")
         }
     }
 

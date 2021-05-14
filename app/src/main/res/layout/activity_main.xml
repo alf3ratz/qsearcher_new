@@ -49,16 +49,6 @@
                 android:textSize="@dimen/_14ssp" />
 
             <ImageView
-                android:id="@+id/imageSign"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:contentDescription="@string/app_name"
-                android:padding="@dimen/_2sdp"
-                android:src="@drawable/ic_watch"
-                app:tint="@color/colorTextIcons" />
-
-            <ImageView
                 android:id="@+id/imageSearch"
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
@@ -68,25 +58,6 @@
                 android:src="@drawable/ic_search"
                 app:tint="@color/colorTextIcons" />
 
-            <ImageView
-                android:id="@+id/imageFavourites"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:contentDescription="@string/app_name"
-                android:padding="@dimen/_2sdp"
-                android:src="@drawable/ic_bookmark"
-                app:tint="@color/colorTextIcons" />
-
-            <ImageView
-                android:id="@+id/imageChat"
-                android:layout_width="@dimen/_24sdp"
-                android:layout_height="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:contentDescription="@string/app_name"
-                android:padding="@dimen/_2sdp"
-                android:src="@drawable/ic_message"
-                app:tint="@color/colorTextIcons" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -126,14 +97,14 @@
             android:id="@+id/bottomNavigation"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_37sdp"
-            app:labelVisibilityMode="unlabeled"
+            app:itemBackground="@color/colorPrimaryBottomNav"
+            app:itemIconTint="@drawable/selector"
             app:itemTextAppearanceActive="@style/BottomNavigationView.Active"
             app:itemTextAppearanceInactive="@style/BottomNavigationView"
-            app:itemBackground="@color/colorPrimaryBottomNav"
+            app:itemTextColor="@drawable/selector"
+            app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:itemTextColor="@drawable/selector"
-            app:itemIconTint="@drawable/selector"
             app:menu="@menu/bottom_navigation" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
