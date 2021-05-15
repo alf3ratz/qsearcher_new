@@ -97,7 +97,7 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
             activityUsersBinding.usersRecyclerView.adapter = userAdapter
             invalidateAll()
         }
-        activityUsersBinding.imageBack.setOnClickListener { onBackPressed() }
+        //activityUsersBinding.imageBack.setOnClickListener { onBackPressed() }
     }
 
     private fun setBottomNavigation() {

@@ -1,14 +1,20 @@
 package course.ru.qsearcher.activities
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -24,9 +30,14 @@ import course.ru.qsearcher.model.Message
 import course.ru.qsearcher.model.User
 import kotlinx.android.synthetic.main.activity_chat.*
 
+
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ChatActivity : AppCompatActivity() {
     private val RC_IMAGE: Int = 1
+    companion object {
+        const val NOTIFICATION_ID = 101
+        const val CHANNEL_ID = "channelID"
+    }
 
     private var messageAdapter: MessageAdapter? = null
     private var database: FirebaseDatabase? = null
@@ -48,7 +59,7 @@ class ChatActivity : AppCompatActivity() {
 
     // Имя пользователя, с которым ведется диалог. Отображается вверху экрана.
     private lateinit var receiverUserName: String
-
+    private  lateinit var builder:NotificationCompat.Builder
     /**
      * Метод, срабатывающий при открытии страницы
      */
@@ -56,6 +67,33 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityChatBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat)
         initialize()
+        createNotificationChannel()
+        builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_message)
+            .setContentTitle("Напоминание")
+            .setContentText("Пора покормить кота")
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        with(NotificationManagerCompat.from(this)) {
+            notify(NOTIFICATION_ID, builder.build())
+        }// посылаем уведомление
+
+    }
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = CHANNEL_ID
+            val descriptionText = CHANNEL_ID
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 
     /**
