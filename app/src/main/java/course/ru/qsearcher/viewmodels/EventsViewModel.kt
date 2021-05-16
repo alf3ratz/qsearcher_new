@@ -8,7 +8,6 @@ import course.ru.qsearcher.database.EventsDatabase
 import course.ru.qsearcher.model.Event
 import course.ru.qsearcher.repositories.EventsRepository
 import course.ru.qsearcher.responses.EventResponse
-import course.ru.qsearcher.responses.SingleEventResponse
 import io.reactivex.Completable
 import io.reactivex.Flowable
 

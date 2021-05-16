@@ -1,5 +1,6 @@
 package course.ru.qsearcher.activities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -41,6 +42,7 @@ import kotlinx.android.synthetic.main.dialog_for_friemds.view.*
 import org.jetbrains.anko.dip
 
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener {
     private lateinit var activitySettingsBinding: ActivitySettingsBinding
     private lateinit var viewModel: EventsViewModel
@@ -94,6 +96,7 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activitySettingsBinding = DataBindingUtil.setContentView(this, R.layout.activity_settings)
@@ -124,6 +127,7 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         activitySettingsBinding.userName.text = "Имя: " + SignInActivity.currentUser.name
     }
 
+    @SuppressLint("SetTextI18n")
     private fun doInitialization() {
         activitySettingsBinding.confirmButton.visibility = View.GONE
         activitySettingsBinding.friendsRow.friendsButton.setOnClickListener {
@@ -193,11 +197,11 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
                     .isNotBlank() || editNetwork.text.toString().trim()
                     .isNotBlank() || isTouched
             ) {
-                var newOccupation: String = "-"
-                var newCity: String = "-"
-                var newNetwork: String = "-"
-                var isOcAct: Boolean = false
-                var isCityAct: Boolean = false
+                var newOccupation = "-"
+                var newCity = "-"
+                var newNetwork = "-"
+                var isOcAct = false
+                var isCityAct= false
                 var isNetAct = false
                 if (editUserName.text.toString().trim().isNotBlank() && editUserName.text.toString()
                         .trim().isNotEmpty()
@@ -224,6 +228,7 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
                 database = FirebaseDatabase.getInstance()
                 usersDbRef = database?.reference?.child("users")
                 usersChildEventListener = object : ChildEventListener {
+                    @SuppressLint("SetTextI18n")
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                         val user: User = snapshot.getValue(User::class.java)!!
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid && newName.isEmpty() && newName.isBlank()) {
@@ -321,7 +326,7 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
                 activitySettingsBinding.isEmailActivated.visibility = View.GONE
                 activitySettingsBinding.isCompanyActivated.visibility = View.GONE
                 if (newName.isNotEmpty() && newName.isNotBlank())
-                    activitySettingsBinding.userName.text = "Имя: " + newName
+                    activitySettingsBinding.userName.text = "Имя: $newName"
 //                if (SignInActivity.currentUser.isOccupationActivated){
 //                    activitySettingsBinding.userOccupation.text =
 //                        "Деятельность: " + SignInActivity.currentUser.occupation
@@ -461,7 +466,7 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
 //    }
 
     override fun onEventClicked(event: Event) {
-        val images: ArrayList<String> = arrayListOf<String>()
+        val images: ArrayList<String> = arrayListOf()
         for (elem in event.images!!) {
             images.plusAssign(elem.toString())
         }
@@ -469,7 +474,7 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         val intent: Intent = Intent(applicationContext, EventDetailActivity::class.java).apply {
             putExtra("event", event)
         }
-        startActivity(intent);
+        startActivity(intent)
     }
     override fun onUserClick(user: User) {
         super.onUserClick(user)

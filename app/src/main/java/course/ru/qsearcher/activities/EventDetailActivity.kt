@@ -55,11 +55,11 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         eventDetailActivityBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_event_detail);
-        initialize(savedInstanceState)
+            DataBindingUtil.setContentView(this, R.layout.activity_event_detail)
+        initialize()
     }
 
-    private fun initialize(savedInstanceState: Bundle?) {
+    private fun initialize() {
         eventViewModel = ViewModelProvider(this).get(EventsViewModel::class.java)
         BottomSheetBehavior.from(bottomSheet).apply {
             peekHeight = 55
@@ -67,7 +67,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
             isHideable = false
         }
         eventDetailActivityBinding?.imageBack?.setOnClickListener { onBackPressed() }
-        event = intent.getSerializableExtra("event") as Event;
+        event = intent.getSerializableExtra("event") as Event
         checkEventInFavorites()
         getEvents(/*savedInstanceState*/)
         usersWithCurrentEvent = ArrayList()

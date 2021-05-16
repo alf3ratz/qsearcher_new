@@ -30,6 +30,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class FavoritesActivity : AppCompatActivity(), FavoritesListener {
     private lateinit var activityFavoritesBinding: ActivityFavoritesBinding
     private var favoritesViewModel: FavoritesViewModel? = null
@@ -96,7 +97,7 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
     }
 
     private fun loadFavorites() {
-        activityFavoritesBinding?.isLoading = true
+        activityFavoritesBinding.isLoading = true
         val compositeDisposable = CompositeDisposable()
         favoritesViewModel?.loadFavorites()?.subscribeOn(Schedulers.computation())
             ?.observeOn(AndroidSchedulers.mainThread())

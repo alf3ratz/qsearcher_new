@@ -253,7 +253,6 @@ class ChatActivity : AppCompatActivity() {
                     msg.sender = auth.currentUser.uid
                     msg.receiver = receiverUserId
                     messagesRef?.push()?.setValue(msg)
-                } else {
                 }
             }
         }

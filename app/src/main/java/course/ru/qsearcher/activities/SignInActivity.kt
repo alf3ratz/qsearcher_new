@@ -29,7 +29,7 @@ class SignInActivity : AppCompatActivity() {
     private var auth: FirebaseAuth? = null
     private var database: FirebaseDatabase? = null
     private var usersDbRef: DatabaseReference? = null
-    private var loginMode: Boolean = false;
+    private var loginMode: Boolean = false
     private var usersChildEventListener: ChildEventListener? = null
 
     private var storage: FirebaseStorage? = null

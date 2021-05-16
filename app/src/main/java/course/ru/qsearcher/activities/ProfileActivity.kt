@@ -1,5 +1,6 @@
 package course.ru.qsearcher.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -40,6 +41,7 @@ class ProfileActivity : AppCompatActivity() {
             Toast.makeText(applicationContext,"Ошибка при загрузке аватара",Toast.LENGTH_LONG).show()
         }
     }
+    @SuppressLint("SetTextI18n")
     private fun initialize() {
         storage = FirebaseStorage.getInstance()
         storageRef = storage?.reference?.child("avatars")

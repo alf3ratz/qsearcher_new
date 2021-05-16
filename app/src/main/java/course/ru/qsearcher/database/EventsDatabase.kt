@@ -25,6 +25,6 @@ abstract class EventsDatabase : RoomDatabase() {
             return eventsDatabase as EventsDatabase
         }
     }
-    abstract fun eventsDao(): EventDao;
+    abstract fun eventsDao(): EventDao
 }
 

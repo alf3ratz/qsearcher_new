@@ -8,7 +8,7 @@ import io.reactivex.Flowable
 @Dao
 interface EventDao {
     @Query("SELECT*FROM events")
-    fun getFavorites(): Flowable<List<Event>>;
+    fun getFavorites(): Flowable<List<Event>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addToFavorites(event: Event):Completable;

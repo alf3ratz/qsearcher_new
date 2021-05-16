@@ -1,5 +1,6 @@
 package course.ru.qsearcher.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -103,11 +104,9 @@ class SearchActivity : AppCompatActivity(), EventListener {
                     timer?.cancel()
             }
 
+            @SuppressLint("DefaultLocale")
             override fun afterTextChanged(p0: Editable?) {
                 if (p0.toString().trim().isNotEmpty()) {
-                    var str = p0.toString()
-                    str = str.toLowerCase()
-                    searchEvent(str)
                     timer = Timer()
                     timer?.schedule(object : TimerTask() {
                         override fun run() {
@@ -128,26 +127,26 @@ class SearchActivity : AppCompatActivity(), EventListener {
             RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (!activitySearchBinding?.eventsRecyclerView?.canScrollVertically(1)!!) {
-                    if (activitySearchBinding?.inputSearch?.text.toString()
-                            .isNotEmpty() && activitySearchBinding?.inputSearch?.text.toString()
-                            .isNotBlank()
-                    ) {
-//                        searchEvent(
-//                            activitySearchBinding?.inputSearch?.text.toString().trim().toLowerCase()
-//                        )
-//                        activitySearchBinding?.inputSearch?.setText("")
-                    }
-                }
+//                if (!activitySearchBinding?.eventsRecyclerView?.canScrollVertically(1)!!) {
+////                    if (activitySearchBinding?.inputSearch?.text.toString()
+////                            .isNotEmpty() && activitySearchBinding?.inputSearch?.text.toString()
+////                            .isNotBlank()
+////                    ) {
+//////                        searchEvent(
+//////                            activitySearchBinding?.inputSearch?.text.toString().trim().toLowerCase()
+//////                        )
+//////                        activitySearchBinding?.inputSearch?.setText("")
+////                    }
+//                }
             }
         })
         activitySearchBinding?.inputSearch?.requestFocus()
     }
 
+    @SuppressLint("DefaultLocale")
     private fun searchEvent(query: String) {
         //toggleLoading()
         val oldCount = events.size
-        var eventsTemp = ArrayList<Event>()
         for (event in MainActivity.staticEvents) {
             if (event.name!!.toLowerCase().contains(query)) {
                 if (!events.contains(event))
