@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -113,7 +112,6 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         user.email
                     ) && user.id != FirebaseAuth.getInstance().currentUser.uid && user.superId != null
                 ) {
-                    Log.i("bottom_sht", "добавил " + user.name + "'a")
                     usersWithCurrentEvent.add(user)
                     if (usersEmails == null)
                         usersEmails = ArrayList()
@@ -199,6 +197,38 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
         eventDetailActivityBinding?.imageFavorites?.setOnClickListener {
             val compositeDisposable = CompositeDisposable()
             if (isEventAvailableInFavorites) {
+                database = FirebaseDatabase.getInstance()
+                usersDbRef = database?.reference?.child("users")
+                usersChildEventListener = object : ChildEventListener {
+                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                        val user: User = snapshot.getValue(User::class.java)!!
+                        if (user.favList == null)
+                            user.favList = ArrayList()
+                        if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
+                            if(!user.favList!!.contains(event.id)){
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                                    user.favList!!.removeIf{ i-> i==event.id}
+                                }
+                                usersDbRef?.child(user.superId!!)?.child("favList")
+                                    ?.setValue(user.favList)
+                            }
+                        }
+                    }
+
+                    override fun onChildChanged(
+                        snapshot: DataSnapshot,
+                        previousChildName: String?
+                    ) {
+                    }
+
+                    override fun onChildRemoved(snapshot: DataSnapshot) {}
+                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                    override fun onCancelled(error: DatabaseError) {}
+                }
+                usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    SignInActivity.currentUser.favList!!.removeIf { i -> i == event.id }
+                }
                 eventViewModel.removeEventFromFavorites(event)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -214,66 +244,50 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
                         compositeDisposable.dispose()
                     }.let { it1 -> compositeDisposable.add(it1) }
             } else {
-                eventViewModel.addToFavorites(event)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        TempDataHolder.IS_FAVORITES_UPDATED = true
-                        eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
-                        Toast.makeText(
-                            applicationContext,
-                            "Добавлено в список избранного",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        compositeDisposable.dispose()
-                    }.let { it1 -> compositeDisposable.add(it1) }
+                if(!SignInActivity.currentUser.favList!!.contains(event.id)){
+                    SignInActivity.currentUser.favList!!.add(event.id)
+                    eventViewModel.addToFavorites(event)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            TempDataHolder.IS_FAVORITES_UPDATED = true
+                            eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
+                            Toast.makeText(
+                                applicationContext,
+                                "Добавлено в список избранного",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            compositeDisposable.dispose()
+                        }.let { it1 -> compositeDisposable.add(it1) }
 
-                database = FirebaseDatabase.getInstance()
-                usersDbRef = database?.reference?.child("users")
-                usersChildEventListener = object : ChildEventListener {
-                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                        for (temp in snapshot.children) {
-                            Log.i("favList", temp.value.toString())
+                    database = FirebaseDatabase.getInstance()
+                    usersDbRef = database?.reference?.child("users")
+                    usersChildEventListener = object : ChildEventListener {
+                        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                            val user: User = snapshot.getValue(User::class.java)!!
+                            if (user.favList == null)
+                                user.favList = ArrayList()
+                            if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
+                                if(!user.favList!!.contains(event.id)){
+                                    user.favList?.add(event.id)
+                                    usersDbRef?.child(user.superId!!)?.child("favList")
+                                        ?.setValue(user.favList)
+                                }
+                            }
                         }
-                        Log.i("favList", snapshot.value.toString())
-                        val user: User = snapshot.getValue(User::class.java)!!
-                        if (user.favList == null)
-                            user.favList = ArrayList()
-                        if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
-                            user.favList?.add(event.id)
-                            usersDbRef?.child(user.superId!!)?.child("favList")
-                                ?.setValue(user.favList)
+
+                        override fun onChildChanged(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
                         }
-                    }
 
-                    override fun onChildChanged(
-                        snapshot: DataSnapshot,
-                        previousChildName: String?
-                    ) {
+                        override fun onChildRemoved(snapshot: DataSnapshot) {}
+                        override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                        override fun onCancelled(error: DatabaseError) {}
                     }
-
-                    override fun onChildRemoved(snapshot: DataSnapshot) {}
-                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-                    override fun onCancelled(error: DatabaseError) {}
+                    usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
                 }
-                usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
-//                eventViewModel?.addToFavorites(event)
-////                    ?.subscribeOn(Schedulers.io())
-////                    ?.observeOn(AndroidSchedulers.mainThread())
-////                    ?.subscribe {
-////                        eventDetailActivityBinding?.imageFavorites?.setImageResource(R.drawable.ic_added)
-////                        Toast.makeText(
-////                            applicationContext,
-////                            "Добавлено в список озбранного",
-////                            Toast.LENGTH_SHORT
-////                        ).show()
-////
-////                    }?.let {
-////                        CompositeDisposable().add(
-////                            it
-////                        )
-////                        it.dispose()
-////                    }
             }
         }
         eventDetailActivityBinding?.imageFavorites?.visibility = View.VISIBLE
@@ -357,7 +371,7 @@ class EventDetailActivity : AppCompatActivity(), OnUserClickListener {
             super.onUserClick(user)
             goToProfile(user)
         } else {
-            Log.i("user", "Невозможно перейти на страницу профиля")
+            Toast.makeText(applicationContext,"Невозможно перейти на страницу пользователя",Toast.LENGTH_LONG).show()
         }
     }
 

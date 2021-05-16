@@ -2,6 +2,7 @@ package course.ru.qsearcher.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
@@ -148,7 +149,7 @@ class MainActivity : AppCompatActivity(), EventListener {
                         events.size / 1000
                     )
                 } else {
-                    Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Не удалось отобразить события", Toast.LENGTH_LONG).show()
                 }
             }
         })

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
@@ -126,13 +125,14 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
                         val ids = arrayListOf<Int>()
                         for (event in favoritesList!!) {
                             ids.add(event.id)
-                            Log.i("fav", event.id.toString())
                         }
-                        for (id in SignInActivity.currentUser.favList!!) {
-                            if (!ids.contains(id)) {
-                                getEvents(id)
+                        if (SignInActivity.currentUser.favList != null && SignInActivity.currentUser!=null)
+
+                            for (id in SignInActivity.currentUser.favList!!) {
+                                if (!ids.contains(id)) {
+                                    getEvents(id)
+                                }
                             }
-                        }
                     }
                 }
             }
@@ -161,7 +161,7 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
     }
 
     override fun removeEventFromFavorites(event: Event, position: Int) {
-        val compositeDisposableForDelete= CompositeDisposable()
+        val compositeDisposableForDelete = CompositeDisposable()
         favoritesViewModel?.removeEventFromFavoritesList(event)
             ?.subscribeOn(Schedulers.computation())
             ?.observeOn(AndroidSchedulers.mainThread())
@@ -176,39 +176,39 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
                 }
                 compositeDisposableForDelete.dispose()
             }?.let { compositeDisposableForDelete.add(it) }
-
-
-        if (SignInActivity.currentUser.favList != null && SignInActivity.currentUser.favList!!.size > 0) {
-            database = FirebaseDatabase.getInstance()
-            usersDbRef = database?.reference?.child("users")
-            usersChildEventListener = object : ChildEventListener {
-                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                    val user: User = snapshot.getValue(User::class.java)!!
-                    if (user.favList != null && user.favList!!.contains(event.id) &&
-                        user.id != FirebaseAuth.getInstance().currentUser.uid && user.superId != null
-                    ) {
-                        var pos = 0
-                        for ((i, id) in user.favList!!.withIndex()) {
-                            if (id == event.id)
-                                pos = i
+        database = FirebaseDatabase.getInstance()
+        usersDbRef = database?.reference?.child("users")
+        usersChildEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val user: User = snapshot.getValue(User::class.java)!!
+                if (user.favList == null)
+                    user.favList = ArrayList()
+                if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
+                    if (!user.favList!!.contains(event.id)) {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            user.favList!!.removeIf { i -> i == event.id }
                         }
-                        user.favList!!.remove(pos)
-                        usersDbRef!!.child(user.superId!!).child("favList").setValue(user.favList)
+                        usersDbRef?.child(user.superId!!)?.child("favList")
+                            ?.setValue(user.favList)
                     }
                 }
-
-                override fun onChildChanged(
-                    snapshot: DataSnapshot,
-                    previousChildName: String?
-                ) {
-                }
-
-                override fun onChildRemoved(snapshot: DataSnapshot) {}
-                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-                override fun onCancelled(error: DatabaseError) {}
             }
-            usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
+
+            override fun onChildChanged(
+                snapshot: DataSnapshot,
+                previousChildName: String?
+            ) {
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
         }
+        usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            SignInActivity.currentUser.favList!!.removeIf { i -> i == event.id }
+        }
+
     }
 
     private fun getEvents(id: Int) {
@@ -233,10 +233,18 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
                         favoritesList!!.size / 1000
                     )
                 } else {
-                    Toast.makeText(applicationContext, "Произошла ошибка при выгрузке события", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Произошла ошибка при выгрузке события",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } else {
-                Toast.makeText(applicationContext, "Проищошла ошибка прии выгрузке события", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    applicationContext,
+                    "Проищошла ошибка прии выгрузке события",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }

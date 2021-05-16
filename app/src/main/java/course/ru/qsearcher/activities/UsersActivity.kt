@@ -2,9 +2,9 @@ package course.ru.qsearcher.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -150,10 +150,9 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
     override fun onUserClick(user: User) {
         super.onUserClick(user)
         if (user != null) {
-            Log.i("user", user.name!!)
             goToChat(user)
         } else {
-            Log.i("user", "jopa")
+            Toast.makeText(applicationContext,"Невозможно перейти на страницу пользователя", Toast.LENGTH_LONG).show()
         }
     }
 

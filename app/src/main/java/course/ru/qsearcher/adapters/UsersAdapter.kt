@@ -3,6 +3,7 @@ package course.ru.qsearcher.adapters
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.storage.FirebaseStorage
@@ -42,10 +43,7 @@ class UsersAdapter(private var users: MutableList<User>, private var listener: O
                     }
                 })
             }?.addOnFailureListener {
-                Log.i(
-                    "usersAdapter",
-                    "Не получилось загрузить аватар для " + user.superId
-                )
+
             }
             itemLayoutBinding?.executePendingBindings()
             if(itemLayoutBinding?.root!=null)

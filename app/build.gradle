@@ -28,13 +28,35 @@ android {
     }
 
 
-    buildTypes {
+//    buildTypes {
+//        debug {
+//            signingConfig signingConfigs.debug
+//        }
+//        release {
+//            minifyEnabled false
+//           // signingConfig signingConfigs.release
+////            minifyEnabled enableProguardInReleaseBuilds
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//        }
+//    }
+    signingConfigs {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            storeFile file("C:\\Users\\User1337\\keystores\\qsearcherKey.jks")
+            storePassword "qsearcherPswd"
+            keyAlias "qsearcher"
+            keyPassword "qsearcherPswd"
+        }
+
+        buildTypes {
+            release {
+                minifyEnabled true
+                signingConfig signingConfigs.release
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            }
         }
     }
 }
+
 
 dependencies {
     def room_version = "2.2.6"

@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -79,10 +78,6 @@ class SearchActivity : AppCompatActivity(), EventListener {
                 eventsWithSelectedCategories(categories)
         }
         activitySearchBinding?.imageSearch?.setOnClickListener {
-            Log.i(
-                "searchAct",
-                "нажал" + activitySearchBinding?.inputSearch?.text?.trim().toString()
-            )
             if (categories.size > 0) {
                 eventsWithSelectedCategories(categories)
             } else {

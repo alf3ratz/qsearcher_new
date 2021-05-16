@@ -20,5 +20,6 @@ class User : Serializable {
     var searchingCompany:Boolean = false
     var friends:ArrayList<String> = ArrayList()
     var friendsActivated:Boolean = true
+    var notification:Boolean = true;
 
 }

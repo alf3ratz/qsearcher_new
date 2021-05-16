@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -81,7 +80,6 @@ class SignInActivity : AppCompatActivity() {
         usersDbRef = database?.reference?.child("users")
         activitySignInBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in)
         loginSignUpButton.setOnClickListener {
-            Log.i("login", "voshel")
             loginSignUp(
                 emailEditText.text.toString().trim(),
                 passwordEditText.text.toString().trim()
@@ -156,7 +154,6 @@ class SignInActivity : AppCompatActivity() {
                         ?.addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
                                 // Sign in success, update UI with the signed-in user's information
-                                Log.d("auth", "createUserWithEmail:success")
                                 val user = auth?.currentUser
                                 createUser(user)
                                 startActivity(
@@ -166,7 +163,6 @@ class SignInActivity : AppCompatActivity() {
                                     ).putExtra("userName", nameEditText.text.toString().trim())
                                 )
                             } else {
-                                Log.i("authq", "createUserWithEmail:failure", task.exception)
                                 Toast.makeText(
                                     baseContext, "Произошла ошибка аутентификации",
                                     Toast.LENGTH_LONG

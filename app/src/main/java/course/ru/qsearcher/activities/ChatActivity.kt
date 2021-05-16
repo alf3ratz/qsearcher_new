@@ -68,16 +68,6 @@ class ChatActivity : AppCompatActivity() {
         activityChatBinding = DataBindingUtil.setContentView(this, R.layout.activity_chat)
         initialize()
         createNotificationChannel()
-        builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_message)
-            .setContentTitle("Напоминание")
-            .setContentText("Пора покормить кота")
-            .setAutoCancel(true)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        with(NotificationManagerCompat.from(this)) {
-            notify(NOTIFICATION_ID, builder.build())
-        }// посылаем уведомление
-
     }
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
@@ -218,6 +208,17 @@ class ChatActivity : AppCompatActivity() {
                 } else if (msg.receiver == auth.currentUser.uid && msg.sender == receiverUserId) {
                     msg.isMine = false
                     messageAdapter?.add(msg)
+                    if(SignInActivity.currentUser.notification){
+                        builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+                            .setSmallIcon(R.drawable.ic_message)
+                            .setContentTitle(receiverUserName)
+                            .setContentText("Отправил Вам сообщение")
+                            .setAutoCancel(true)
+                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        with(NotificationManagerCompat.from(applicationContext)) {
+                            notify(NOTIFICATION_ID, builder.build())
+                        }
+                    }
                 }
             }
 

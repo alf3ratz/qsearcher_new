@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.Toast
@@ -113,11 +112,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWin
             SETTINGS_CODE -> {
                 when (resultCode) {
                     Activity.RESULT_OK -> {
-                        Log.i("MapActivity", "Подтвердил использование местоположения")
                         startLocationUpdates()
                     }
                     Activity.RESULT_CANCELED -> {
-                        Log.i("MapActivity", "Отклонил использование местоположения")
                     }
                 }
 
@@ -182,7 +179,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWin
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
                 location = p0.lastLocation
-                Log.i("map", location?.latitude!!.toString())
             }
         }
     }
@@ -282,14 +278,16 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWin
                             }
                         }
                     } else {
-                        Log.d("map", "Current location is null. Using defaults.")
-                        Log.e("map", "Exception: %s", task.exception)
+                        Toast.makeText(
+                            applicationContext,
+                            "Произошла ошибка при получении геолокации пользоватея",
+                            Toast.LENGTH_LONG
+                        ).show()
                         map.uiSettings?.isMyLocationButtonEnabled = false
                     }
                 }
             }
         } catch (e: SecurityException) {
-            Log.e("Exception: %s", e.message, e)
         }
     }
 
@@ -302,7 +300,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWin
         if (requestCode == REQUEST_LOCATION_CODE) {
             when {
                 grantResults.isEmpty() -> {
-                    Log.i("orRequestPermissions", "request was cancelled")
                 }
                 grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
                     startLocationUpdates()
@@ -326,7 +323,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWin
     }
 
     override fun onInfoWindowClick(marker: Marker?) {
-        if (marker != null && marker.title!="Ваше местоположение") {
+        if (marker != null && marker.title != "Ваше местоположение") {
             val event: Event = MainActivity.staticEvents.find { it.shortTitle == marker.title }!!
             val images: ArrayList<String> = arrayListOf()
             for (elem in event.images!!) {
@@ -335,6 +332,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnInfoWin
             event.imagesAsString = images
             startActivity(Intent(this, EventDetailActivity::class.java).putExtra("event", event))
             return
+        } else if (marker!!.title != "Ваше местоположение") {
         }
         Toast.makeText(
             applicationContext,

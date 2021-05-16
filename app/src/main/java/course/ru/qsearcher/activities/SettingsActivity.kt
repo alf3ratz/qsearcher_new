@@ -91,6 +91,7 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         builder.setNeutralButton("OK") { _, _ ->
             alert.dismiss()
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,8 +101,8 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         storageRef = storage?.reference?.child("avatars")
         setNavigation()
         doInitialization()
-        if (SignInActivity.currentUser.isEmailActivated) {
-            Log.i("switch", "zashel")
+        activitySettingsBinding.notification.isChecked =SignInActivity.currentUser.notification
+            if (SignInActivity.currentUser.isEmailActivated) {
             activitySettingsBinding.isEmailActivated.isChecked = true
         }
         if (SignInActivity.currentUser.isOccupationActivated) {
@@ -136,6 +137,22 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
             isCompanyEnabled = b
             isTouched = true
         }
+        activitySettingsBinding.notification.setOnCheckedChangeListener{_,b->
+            usersChildEventListener = object:ChildEventListener{
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    val user: User = snapshot.getValue(User::class.java)!!
+                    if(user.id == FirebaseAuth.getInstance().currentUser.uid){
+                        user.notification = b
+                        usersDbRef?.child(user.superId!!)?.setValue(user)
+                    }
+                }
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+                override fun onChildRemoved(snapshot: DataSnapshot) { }
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                override fun onCancelled(error: DatabaseError) {}
+            }
+            usersDbRef?.addChildEventListener(usersChildEventListener as ChildEventListener)
+        }
 
         storageRef?.child(SignInActivity.currentUser.superId + "avatar")?.downloadUrl?.addOnSuccessListener {
             Picasso.get().load(it).noFade().into(
@@ -145,16 +162,9 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
                     override fun onError(e: Exception) {}
                 })
         }?.addOnFailureListener {
-            Log.i(
-                "ava",
-                "Не получилось загрузить аватар для " + SignInActivity.currentUser.superId
-            )
+            Toast.makeText(applicationContext,"Ошибка при загрузке аватара",Toast.LENGTH_LONG).show()
             try {
             } catch (e: StorageException) {
-                Log.i(
-                    "ava",
-                    " at catch Не получилось загрузить аватар для " + SignInActivity.currentUser.superId
-                )
             }
         }
         viewModel = ViewModelProvider(this).get(EventsViewModel::class.javaObjectType)
@@ -217,17 +227,6 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                         val user: User = snapshot.getValue(User::class.java)!!
                         if (user.id == FirebaseAuth.getInstance().currentUser.uid && newName.isEmpty() && newName.isBlank()) {
-//                            usersDbRef?.child(user.name!!)?.child("name")?.setValue(newName)
-//                            usersDbRef?.child(user.name!!)?.child("occupation")?.setValue(newOccupation)
-//                            usersDbRef?.child(user.name!!)?.child("city")?.setValue(newCity)
-//                            usersDbRef?.child(user.name!!)?.child("socialNetwork")?.setValue(newNetwork)
-//                            usersDbRef?.child(user.name!!)?.child("cityActivated")?.setValue(isCityAct)
-//                            usersDbRef?.child(user.name!!)?.child("occupationActivated")?.setValue(isOcAct)
-//                            usersDbRef?.child(user.name!!)?.child("networkActivated")?.setValue(isNetAct)
-//                            if(activitySettingsBinding.isEmailActivated.isEnabled)
-//                                usersDbRef?.child(user.name!!)?.child("emailActivated")?.setValue(true)
-//                            else
-//                                usersDbRef?.child(user.name!!)?.child("emailActivated")?.setValue(false)
                             if (newCity != "-") {
                                 user.city = newCity
                                 user.isCityActivated = isCityAct
@@ -475,10 +474,9 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
     override fun onUserClick(user: User) {
         super.onUserClick(user)
         if (user != null) {
-            Log.i("user", user.name!!)
             goToProfile(user)
         } else {
-            Log.i("user", "fail to send user in intent")
+            Toast.makeText(applicationContext,"Не получилось перейти на страницу профиля",Toast.LENGTH_LONG).show()
         }
     }
 

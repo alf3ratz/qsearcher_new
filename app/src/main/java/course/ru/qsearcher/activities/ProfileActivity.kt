@@ -3,8 +3,8 @@ package course.ru.qsearcher.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.google.firebase.database.*
 import com.google.firebase.storage.FirebaseStorage
@@ -37,10 +37,7 @@ class ProfileActivity : AppCompatActivity() {
                 override fun onError(e: Exception) {}
             })
         }?.addOnFailureListener {
-            Log.i(
-                "userProfile",
-                "Не получилось загрузить аватар для " + user.superId
-            )
+            Toast.makeText(applicationContext,"Ошибка при загрузке аватара",Toast.LENGTH_LONG).show()
         }
     }
     private fun initialize() {

@@ -226,7 +226,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/_8sdp"
-                app:layout_constraintBottom_toTopOf="@id/secondRow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -242,6 +241,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/notification"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_4sdp"
@@ -252,36 +252,7 @@
                     android:shadowColor="@color/colorAccent" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/secondRow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/firstRow">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_8sdp"
-                    android:fontFamily="@font/ubuntu_regular"
-                    android:text="Что-то еще"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="@dimen/_18ssp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_4sdp"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:outlineAmbientShadowColor="@color/colorAccent"
-                    android:outlineSpotShadowColor="@color/colorAccent"
-                    android:shadowColor="@color/colorAccent" />
-            </LinearLayout>
 
 <!--            <androidx.recyclerview.widget.RecyclerView-->
 <!--                android:id="@+id/favEventsRecycler"-->
@@ -301,7 +272,7 @@
     android:id="@+id/friendsRow"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_constraintTop_toBottomOf="@id/secondRow">
+    app:layout_constraintTop_toBottomOf="@id/firstRow">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
