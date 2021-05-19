@@ -12,7 +12,7 @@ import java.io.Serializable
 class Event : Serializable {
     @PrimaryKey
     @SerializedName("id")
-    var id:Int = -1
+    var id: Int = -1
 
     @SerializedName("favorites_count")
     var rating: String? = null
@@ -43,7 +43,7 @@ class Event : Serializable {
     @TypeConverters(CustomTypeConverter::class)
     var images: ArrayList<Image>? = null
 
-    class Image:Serializable {
+    class Image : Serializable {
         @SerializedName("image")
         var image: String? = null;
         override fun toString(): String = image!!
@@ -51,25 +51,26 @@ class Event : Serializable {
 
     @SerializedName("imagesAsString")
     @TypeConverters(CustomTypeConverter::class)
-    var imagesAsString:ArrayList<String>?=null
+    var imagesAsString: ArrayList<String>? = null
 
     @SerializedName("place")
     @TypeConverters(CustomTypeConverter::class)
-    var place:Place?=null
+    var place: Place? = null
 
-    class Place:Serializable{
+    class Place : Serializable {
         @SerializedName("location")
-        var location:String?=null
+        var location: String? = null
 
         @SerializedName("coords")
         @TypeConverters(CustomTypeConverter::class)
-        var coords:Coords ?=null
+        var coords: Coords? = null
 
-        class Coords:Serializable{
+        class Coords : Serializable {
             @SerializedName("lat")
-            var lat:Double?=null
+            var lat: Double? = null
+
             @SerializedName("lon")
-            var lon:Double?=null
+            var lon: Double? = null
         }
     }
 }

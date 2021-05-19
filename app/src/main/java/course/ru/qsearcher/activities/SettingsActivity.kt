@@ -68,12 +68,12 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         usersChildEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val user: User = snapshot.getValue(User::class.java)!!
-                if(SignInActivity.currentUser.friends.contains(user.superId)){
+                if (SignInActivity.currentUser.friends.contains(user.superId)) {
                     friends.add(user)
                 }
             }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) { }
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
 
             override fun onChildRemoved(snapshot: DataSnapshot) {}
 
@@ -104,8 +104,8 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         storageRef = storage?.reference?.child("avatars")
         setNavigation()
         doInitialization()
-        activitySettingsBinding.notification.isChecked =SignInActivity.currentUser.notification
-            if (SignInActivity.currentUser.isEmailActivated) {
+        activitySettingsBinding.notification.isChecked = SignInActivity.currentUser.notification
+        if (SignInActivity.currentUser.isEmailActivated) {
             activitySettingsBinding.isEmailActivated.isChecked = true
         }
         if (SignInActivity.currentUser.isOccupationActivated) {
@@ -141,17 +141,18 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
             isCompanyEnabled = b
             isTouched = true
         }
-        activitySettingsBinding.notification.setOnCheckedChangeListener{_,b->
-            usersChildEventListener = object:ChildEventListener{
+        activitySettingsBinding.notification.setOnCheckedChangeListener { _, b ->
+            usersChildEventListener = object : ChildEventListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     val user: User = snapshot.getValue(User::class.java)!!
-                    if(user.id == FirebaseAuth.getInstance().currentUser.uid){
+                    if (user.id == FirebaseAuth.getInstance().currentUser.uid) {
                         user.notification = b
                         usersDbRef?.child(user.superId!!)?.setValue(user)
                     }
                 }
+
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-                override fun onChildRemoved(snapshot: DataSnapshot) { }
+                override fun onChildRemoved(snapshot: DataSnapshot) {}
                 override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
                 override fun onCancelled(error: DatabaseError) {}
             }
@@ -166,7 +167,8 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
                     override fun onError(e: Exception) {}
                 })
         }?.addOnFailureListener {
-            Toast.makeText(applicationContext,"Ошибка при загрузке аватара",Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, "Ошибка при загрузке аватара", Toast.LENGTH_LONG)
+                .show()
             try {
             } catch (e: StorageException) {
             }
@@ -201,7 +203,7 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
                 var newCity = "-"
                 var newNetwork = "-"
                 var isOcAct = false
-                var isCityAct= false
+                var isCityAct = false
                 var isNetAct = false
                 if (editUserName.text.toString().trim().isNotBlank() && editUserName.text.toString()
                         .trim().isNotEmpty()
@@ -327,22 +329,6 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
                 activitySettingsBinding.isCompanyActivated.visibility = View.GONE
                 if (newName.isNotEmpty() && newName.isNotBlank())
                     activitySettingsBinding.userName.text = "Имя: $newName"
-//                if (SignInActivity.currentUser.isOccupationActivated){
-//                    activitySettingsBinding.userOccupation.text =
-//                        "Деятельность: " + SignInActivity.currentUser.occupation
-//                    activitySettingsBinding.userOccupation.visibility = View.VISIBLE
-//                }
-//
-//                if (SignInActivity.currentUser.isCityActivated){
-//                    activitySettingsBinding.userCity.text = "Город: " + SignInActivity.currentUser.city
-//                    activitySettingsBinding.userCity.visibility = View.VISIBLE
-//                }
-//                if (SignInActivity.currentUser.isNetworkActivated){
-//                    activitySettingsBinding.userNetwork.visibility = View.VISIBLE
-//                    activitySettingsBinding.userNetwork.text =
-//                        "Соц. сеть: " + SignInActivity.currentUser.socialNetworkUrl
-//                }
-
                 activitySettingsBinding.userName.visibility = View.VISIBLE
                 val params = ConstraintLayout.LayoutParams(
                     ConstraintLayout.LayoutParams.MATCH_PARENT,
@@ -421,50 +407,6 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         }
     }
 
-//    private fun getEvents(id: Int) {
-//        //toggleLoading()
-//        //var temp: ArrayList<Event> = ArrayList()
-//        viewModel.getEventsById(id).observe(this, Observer { t: SingleEventResponse? ->
-//            //toggleLoading()
-//            Log.i("response_", "вошел в лямбду")
-//            if (t != null) {
-//                Log.i("response_", "если респонс не налл")
-//                //                totalAvailablePages = t.page!!
-//                if (t.id != null) {
-//                    val oldCount: Int = events.size
-//                    Log.i("response_", "если список событий не налл")
-//                    t.name = t.name!![0].toUpperCase() + t.name!!.substring(1, t.name!!.length)
-////                    for (elem in t.events!!) {
-////                        elem.name = elem.name!![0].toUpperCase() + elem.name!!.substring(
-////                            1,
-////                            elem.name!!.length
-////                        )
-////                    }
-//                    val event = Event()
-//                    event.id = t.id!!
-//                    event.name = t.name!!
-//                    event.bodyText = t.bodyText!!
-//                    event.shortTitle = t.shortTitle!!
-//                    event.description = t.description
-//                    event.rating = t.rating!!
-//                    event.images = t.images!!
-//                    events.add(event)
-//                    eventsAdapter.notifyDataSetChanged()
-//                    eventsAdapter.notifyItemRangeChanged(
-//                        oldCount,
-//                        events.size / 1000
-//                    )//проблема с выводом - показывает после выхода из экрана
-//                } else {
-//                    Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
-//                    Log.i("response_", "список событий  налл")
-//                }
-//            } else {
-//                Toast.makeText(applicationContext, "Smth went wrong", Toast.LENGTH_SHORT).show()
-//                Log.i("response_", "респонс  налл")
-//            }
-//        })
-//    }
-
     override fun onEventClicked(event: Event) {
         val images: ArrayList<String> = arrayListOf()
         for (elem in event.images!!) {
@@ -476,12 +418,17 @@ class SettingsActivity : AppCompatActivity(), EventListener, OnUserClickListener
         }
         startActivity(intent)
     }
+
     override fun onUserClick(user: User) {
         super.onUserClick(user)
         if (user != null) {
             goToProfile(user)
         } else {
-            Toast.makeText(applicationContext,"Не получилось перейти на страницу профиля",Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                applicationContext,
+                "Не получилось перейти на страницу профиля",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

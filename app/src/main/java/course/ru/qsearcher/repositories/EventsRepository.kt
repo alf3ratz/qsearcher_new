@@ -21,6 +21,7 @@ class EventsRepository {
             override fun onFailure(@NonNull call: Call<EventResponse>, t: Throwable) {
                 data.value = null
             }
+
             override fun onResponse(
                 @NonNull call: Call<EventResponse>,
                 @NonNull response: Response<EventResponse>
@@ -30,12 +31,14 @@ class EventsRepository {
         })
         return data
     }
-    fun getEventsById(id:Int): LiveData<SingleEventResponse> {
+
+    fun getEventsById(id: Int): LiveData<SingleEventResponse> {
         val data: MutableLiveData<SingleEventResponse> = MutableLiveData()
         apiService.getEventById(id).enqueue(object : Callback<SingleEventResponse> {
             override fun onFailure(@NonNull call: Call<SingleEventResponse>, t: Throwable) {
                 data.value = null
             }
+
             override fun onResponse(
                 @NonNull call: Call<SingleEventResponse>,
                 @NonNull response: Response<SingleEventResponse>
@@ -45,19 +48,22 @@ class EventsRepository {
         })
         return data
     }
-    fun eventsWithSelectedCategories(categories:String): LiveData<EventResponse>{
+
+    fun eventsWithSelectedCategories(categories: String): LiveData<EventResponse> {
         val data: MutableLiveData<EventResponse> = MutableLiveData()
-        apiService.eventsWithSelectedCategories(categories).enqueue(object : Callback<EventResponse> {
-            override fun onFailure(@NonNull call: Call<EventResponse>, t: Throwable) {
-                data.value = null
-            }
-            override fun onResponse(
-                @NonNull call: Call<EventResponse>,
-                @NonNull response: Response<EventResponse>
-            ) {
-                data.value = response.body()
-            }
-        })
+        apiService.eventsWithSelectedCategories(categories)
+            .enqueue(object : Callback<EventResponse> {
+                override fun onFailure(@NonNull call: Call<EventResponse>, t: Throwable) {
+                    data.value = null
+                }
+
+                override fun onResponse(
+                    @NonNull call: Call<EventResponse>,
+                    @NonNull response: Response<EventResponse>
+                ) {
+                    data.value = response.body()
+                }
+            })
         return data
     }
 }

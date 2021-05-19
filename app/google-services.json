@@ -15,6 +15,38 @@
       },
       "oauth_client": [
         {
+          "client_id": "829084103388-3tpahgn6frrugm75g1i7sgk5ti8c1jm7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "course.ru.qsearcher",
+            "certificate_hash": "5e6cab8ca30ad4b305428fcc99df14a7fec988f6"
+          }
+        },
+        {
+          "client_id": "829084103388-5d9233itr2nur0tert0hg23s1ufkn87s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "course.ru.qsearcher",
+            "certificate_hash": "94be8a5c9a98bb0e1d1410d19d6dfa0438996ee8"
+          }
+        },
+        {
+          "client_id": "829084103388-8rh39jf8v0atgjeuhklpb6pspv5c5dbv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "course.ru.qsearcher",
+            "certificate_hash": "76791b22dbc389438c9c200984e0b9ef8b7f0f75"
+          }
+        },
+        {
+          "client_id": "829084103388-dnahis2b894fv1jtqpmqocsqro6n4t4c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "course.ru.qsearcher",
+            "certificate_hash": "78c2e9e220912a0c5fa142e6ce36052f0256ea55"
+          }
+        },
+        {
           "client_id": "829084103388-avbp66tkh37cbj4h4643los7spp8i3pi.apps.googleusercontent.com",
           "client_type": 3
         }

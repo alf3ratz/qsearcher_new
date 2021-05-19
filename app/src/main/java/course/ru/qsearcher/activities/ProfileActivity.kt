@@ -30,17 +30,20 @@ class ProfileActivity : AppCompatActivity() {
         activityProfileBinding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
         initialize()
     }
-    private fun setAvatar(){
-        storageRef?.child(user.superId+ "avatar")?.downloadUrl?.addOnSuccessListener {
+
+    private fun setAvatar() {
+        storageRef?.child(user.superId + "avatar")?.downloadUrl?.addOnSuccessListener {
             Picasso.get().load(it).noFade().into(activityProfileBinding.userImage, object :
                 Callback {
                 override fun onSuccess() {}
                 override fun onError(e: Exception) {}
             })
         }?.addOnFailureListener {
-            Toast.makeText(applicationContext,"Ошибка при загрузке аватара",Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, "Ошибка при загрузке аватара", Toast.LENGTH_LONG)
+                .show()
         }
     }
+
     @SuppressLint("SetTextI18n")
     private fun initialize() {
         storage = FirebaseStorage.getInstance()
@@ -54,47 +57,42 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(intent)
         }
         activityProfileBinding.imageBack.setOnClickListener { onBackPressed() }
-        if(user.isEmailActivated){
+        if (user.isEmailActivated) {
             activityProfileBinding.emailText.text = user.email
-        }else{
+        } else {
             activityProfileBinding.infoLayoutRow1.visibility = View.GONE
         }
-        if(user.isNetworkActivated){
+        if (user.isNetworkActivated) {
             activityProfileBinding.vkText.text = user.socialNetworkUrl
-        }else{
+        } else {
             activityProfileBinding.infoLayoutRow2.visibility = View.GONE
         }
-        if(user.isCityActivated){
-            activityProfileBinding.city.text = "Город: "+user.city
-        }else{
+        if (user.isCityActivated) {
+            activityProfileBinding.city.text = "Город: " + user.city
+        } else {
             activityProfileBinding.city.text = "Город: не указано"
         }
-        if(user.isOccupationActivated){
-            activityProfileBinding.occupation.text = "Деятельность: "+user.occupation
-        }else{
+        if (user.isOccupationActivated) {
+            activityProfileBinding.occupation.text = "Деятельность: " + user.occupation
+        } else {
             activityProfileBinding.occupation.text = "Деятальность: не указано"
         }
-        if(user.searchingCompany){
+        if (user.searchingCompany) {
             activityProfileBinding.companyButton.visibility = View.VISIBLE
-        }else{
-//            val params = ConstraintLayout.LayoutParams(
-//                ConstraintLayout.LayoutParams.WRAP_CONTENT,
-//                ConstraintLayout.LayoutParams.WRAP_CONTENT
-//            )
-//            params.setMargins(dip(8),dip(60),dip(8),0)
-//            activityProfileBinding.nameText.layoutParams = params
+        } else {
             activityProfileBinding.notCompanyButton.visibility = View.VISIBLE
         }
-        if(user.friendsActivated) {
-            if(!SignInActivity.currentUser.friends.contains(user.superId)){
+        if (user.friendsActivated) {
+            if (!SignInActivity.currentUser.friends.contains(user.superId)) {
                 activityProfileBinding.addToFriends.visibility = View.VISIBLE
                 activityProfileBinding.addToFriends.setOnClickListener {
                     database = FirebaseDatabase.getInstance()
                     usersDbRef = database?.reference?.child("users")
                     SignInActivity.currentUser.friends.add(user.superId!!)
-                    usersDbRef?.child(SignInActivity.currentUser.superId!!)?.child("friends")?.setValue(SignInActivity.currentUser.friends)
+                    usersDbRef?.child(SignInActivity.currentUser.superId!!)?.child("friends")
+                        ?.setValue(SignInActivity.currentUser.friends)
                 }
-            }else{
+            } else {
                 activityProfileBinding.addToFriends.visibility = View.GONE
             }
         }

@@ -8,10 +8,11 @@ import course.ru.qsearcher.utilities.CustomTypeConverter
 class EventBySearching {
     @PrimaryKey
     @SerializedName("id")
-    var id:Int = -1
+    var id: Int = -1
 
     @SerializedName("favorites_count")
     var rating: String? = null
+
     @SerializedName("comments_count")
     var comments: String? = null
 
@@ -29,6 +30,7 @@ class EventBySearching {
 
     @SerializedName("site_url")
     var siteUrl: String? = null
+
     @SerializedName("item_url")
     var itemUrl: String? = null
 
@@ -39,13 +41,14 @@ class EventBySearching {
     var lon: Double = 0.0
 
     @SerializedName("disable_comments")
-    var disComm:Boolean = false
+    var disComm: Boolean = false
 
     @SerializedName("place")
-    var places: ArrayList<Int>?=null
+    var places: ArrayList<Int>? = null
 
     @SerializedName("age_restriction")
-    var age:Int = -1
+    var age: Int = -1
+
     @SerializedName("images")
     @TypeConverters(CustomTypeConverter::class)
     var images: ArrayList<Event.Image>? = null

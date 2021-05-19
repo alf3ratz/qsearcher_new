@@ -20,13 +20,9 @@ import course.ru.qsearcher.responses.EventResponse
 import course.ru.qsearcher.viewmodels.EventsViewModel
 
 
-
 class MainActivity : AppCompatActivity(), EventListener {
     private lateinit var viewModel: EventsViewModel
     private lateinit var activityMainBinding: ActivityMainBinding
-    //ActivityMainBinding
-
-
     var events: ArrayList<Event> = ArrayList()
     private lateinit var eventsAdapter: EventsAdapter
     private var currentPage: Int = 1
@@ -146,7 +142,11 @@ class MainActivity : AppCompatActivity(), EventListener {
                         events.size / 1000
                     )
                 } else {
-                    Toast.makeText(applicationContext, "Не удалось отобразить события", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Не удалось отобразить события",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         })

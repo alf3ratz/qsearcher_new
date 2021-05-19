@@ -15,7 +15,10 @@ import course.ru.qsearcher.listeners.OnUserClickListener
 import course.ru.qsearcher.model.User
 import java.lang.Exception
 
-class UsersAdapterForUsersPage(private var users: MutableList<User>, private var listener: OnUserClickListener) :
+class UsersAdapterForUsersPage(
+    private var users: MutableList<User>,
+    private var listener: OnUserClickListener
+) :
     RecyclerView.Adapter<UsersAdapterForUsersPage.UsersViewHolder>() {
     private var layoutInflater: LayoutInflater? = null
     private var storage: FirebaseStorage? = null

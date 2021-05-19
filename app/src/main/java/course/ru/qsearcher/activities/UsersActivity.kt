@@ -65,6 +65,7 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
             override fun onCancelled(error: DatabaseError) {}
         }
     }
+
     private fun doInitialization() {
         setBottomNavigation()
         activityUsersBinding.usersRecyclerView.setHasFixedSize(true)
@@ -76,24 +77,27 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
             usersChildEventListener = object : ChildEventListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     val user: User = snapshot.getValue(User::class.java)!!
-                    if(SignInActivity.currentUser.usersList == null){
+                    if (SignInActivity.currentUser.usersList == null) {
                         SignInActivity.currentUser.usersList = ArrayList()
                     }
-                     if (user.id != auth.currentUser.uid && SignInActivity.currentUser.usersList?.contains(user.id)!!) {
+                    if (user.id != auth.currentUser.uid && SignInActivity.currentUser.usersList?.contains(
+                            user.id
+                        )!!
+                    ) {
                         users.add(user)
                         userAdapter.notifyDataSetChanged()
                     }
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onChildRemoved(snapshot: DataSnapshot) {}
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onCancelled(error: DatabaseError) {}
+                override fun onChildRemoved(snapshot: DataSnapshot) {}
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+                override fun onCancelled(error: DatabaseError) {}
+            }
         }
-    }
-    usersRef.addChildEventListener(usersChildEventListener!!)
-    userAdapter = UsersAdapterForUsersPage(users, this)
-    activityUsersBinding.apply {
+        usersRef.addChildEventListener(usersChildEventListener!!)
+        userAdapter = UsersAdapterForUsersPage(users, this)
+        activityUsersBinding.apply {
             activityUsersBinding.usersRecyclerView.adapter = userAdapter
             invalidateAll()
         }
@@ -152,13 +156,17 @@ class UsersActivity : AppCompatActivity(), OnUserClickListener {
         if (user != null) {
             goToChat(user)
         } else {
-            Toast.makeText(applicationContext,"Невозможно перейти на страницу пользователя", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                applicationContext,
+                "Невозможно перейти на страницу пользователя",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
     private fun goToChat(user: User) {
         val intent: Intent = Intent(applicationContext, ChatActivity::class.java).apply {
-            putExtra("user",user)
+            putExtra("user", user)
         }
         startActivity(intent)
     }

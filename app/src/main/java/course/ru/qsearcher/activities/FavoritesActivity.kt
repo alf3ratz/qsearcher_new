@@ -127,7 +127,7 @@ class FavoritesActivity : AppCompatActivity(), FavoritesListener {
                         for (event in favoritesList!!) {
                             ids.add(event.id)
                         }
-                        if (SignInActivity.currentUser.favList != null && SignInActivity.currentUser!=null)
+                        if (SignInActivity.currentUser.favList != null && SignInActivity.currentUser != null)
 
                             for (id in SignInActivity.currentUser.favList!!) {
                                 if (!ids.contains(id)) {

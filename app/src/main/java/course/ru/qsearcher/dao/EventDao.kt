@@ -11,10 +11,10 @@ interface EventDao {
     fun getFavorites(): Flowable<List<Event>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addToFavorites(event: Event):Completable;
+    fun addToFavorites(event: Event): Completable;
 
     @Delete
-    fun removeFromFavourites(event: Event):Completable
+    fun removeFromFavourites(event: Event): Completable
 
     @Query("SELECT * FROM events WHERE id = :eventId")
     fun getEventFromFavorites(eventId: String): Flowable<Event>

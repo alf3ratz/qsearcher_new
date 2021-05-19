@@ -44,22 +44,6 @@ class CustomTypeConverter {
             return gson.fromJson<ArrayList<String>>(str, listType)
         }
 
-//        @TypeConverter
-//        @JvmStatic
-//        fun doubleListToString(someObjects: List<Double>?): String? {
-//            return gson.toJson(someObjects)
-//        }
-//
-//        @TypeConverter
-//        @JvmStatic
-//        fun stringToDoubleList(str: String?): ArrayList<Double>? {
-//            if (str == null) {
-//                return ArrayList()
-//            }
-//            val listType: Type = object : TypeToken<ArrayList<Double?>?>() {}.type
-//            return gson.fromJson<ArrayList<Double>>(str, listType)
-//        }
-
         @TypeConverter
         @JvmStatic
         fun placeToString(someObjects: Event.Place?): String? {
@@ -76,21 +60,6 @@ class CustomTypeConverter {
             return gson.fromJson<Event.Place>(str, listType)
         }
 
-//        @TypeConverter
-//        @JvmStatic
-//        fun coordsToString(someObjects: Event.Place.Coords?): String? {
-//            return gson.toJson(someObjects)
-//        }
-//
-//        @TypeConverter
-//        @JvmStatic
-//        fun stringToCoords(str: String?): Event.Place.Coords? {
-//            if (str == null) {
-//                return Event.Place.Coords()
-//            }
-//            val listType: Type = object : TypeToken<Event.Place.Coords?>() {}.type
-//            return gson.fromJson<Event.Place.Coords>(str, listType)
-//        }
 
     }
 }

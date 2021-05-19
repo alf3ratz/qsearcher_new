@@ -16,7 +16,10 @@ import course.ru.qsearcher.listeners.OnUserClickListener
 import course.ru.qsearcher.model.User
 import java.lang.Exception
 
-class UsersAdapter(private var users: MutableList<User>, private var listener: OnUserClickListener) : RecyclerView.Adapter<UsersAdapter.UsersViewHolder>() {
+class UsersAdapter(
+    private var users: MutableList<User>,
+    private var listener: OnUserClickListener
+) : RecyclerView.Adapter<UsersAdapter.UsersViewHolder>() {
     private var layoutInflater: LayoutInflater? = null
     private var storage: FirebaseStorage? = null
     private var storageRef: StorageReference? = null
@@ -31,7 +34,8 @@ class UsersAdapter(private var users: MutableList<User>, private var listener: O
             storage = FirebaseStorage.getInstance()
             storageRef = storage?.reference?.child("avatars")
         }
-        fun bindUser(user:User) {
+
+        fun bindUser(user: User) {
             itemLayoutBinding?.user = user
             storageRef?.child(user.superId + "avatar")?.downloadUrl?.addOnSuccessListener {
                 Picasso.get().load(it).noFade().into(itemLayoutBinding?.avatar!!, object :
@@ -46,10 +50,10 @@ class UsersAdapter(private var users: MutableList<User>, private var listener: O
 
             }
             itemLayoutBinding?.executePendingBindings()
-            if(itemLayoutBinding?.root!=null)
-            itemView.setOnClickListener {
-                listener.onUserClick(user)
-            }
+            if (itemLayoutBinding?.root != null)
+                itemView.setOnClickListener {
+                    listener.onUserClick(user)
+                }
         }
     }
 
@@ -65,7 +69,7 @@ class UsersAdapter(private var users: MutableList<User>, private var listener: O
     }
 
     override fun onBindViewHolder(holder: UsersAdapter.UsersViewHolder, position: Int) {
-       holder.bindUser(users[position])
+        holder.bindUser(users[position])
     }
 
     override fun getItemCount(): Int {

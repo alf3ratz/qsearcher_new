@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -80,6 +81,14 @@ class SignInActivity : AppCompatActivity() {
         usersDbRef = database?.reference?.child("users")
         activitySignInBinding = DataBindingUtil.setContentView(this, R.layout.activity_sign_in)
         loginSignUpButton.setOnClickListener {
+            loginMode = false
+            loginSignUp(
+                emailEditText.text.toString().trim(),
+                passwordEditText.text.toString().trim()
+            )
+        }
+        toggleLoginTextView.setOnClickListener {
+            loginMode = true
             loginSignUp(
                 emailEditText.text.toString().trim(),
                 passwordEditText.text.toString().trim()
@@ -122,7 +131,7 @@ class SignInActivity : AppCompatActivity() {
                             )
                         } else {
                             Toast.makeText(
-                                baseContext, "Authentication failed.",
+                                baseContext, "Такого пользователя на существует",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
@@ -247,15 +256,15 @@ class SignInActivity : AppCompatActivity() {
         currentUser = newUser
     }
 
-    fun toggleLoginMode() {
-        if (loginMode) {
-            loginMode = false
-            loginSignUpButton.text = "зарегистрироваться"
-            toggleLoginTextView.text = "Или войдите"
-        } else {
-            loginMode = true
-            loginSignUpButton.text = "Войдите"
-            toggleLoginTextView.text = "или зарегистрируйтесь"
-        }
-    }
+//    fun toggleLoginMode(view: View) {
+//        if (loginMode) {
+//            loginMode = false
+//            loginSignUpButton.text = "зарегистрироваться"
+//            toggleLoginTextView.text = "Или войдите"
+//        } else {
+//            loginMode = true
+//            loginSignUpButton.text = "Войдите"
+//            toggleLoginTextView.text = "или зарегистрируйтесь"
+//        }
+//    }
 }

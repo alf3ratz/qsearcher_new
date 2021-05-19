@@ -1,6 +1,5 @@
 package course.ru.qsearcher.activities
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -34,6 +33,7 @@ import kotlinx.android.synthetic.main.activity_chat.*
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ChatActivity : AppCompatActivity() {
     private val RC_IMAGE: Int = 1
+
     companion object {
         const val NOTIFICATION_ID = 101
         const val CHANNEL_ID = "channelID"
@@ -59,7 +59,8 @@ class ChatActivity : AppCompatActivity() {
 
     // Имя пользователя, с которым ведется диалог. Отображается вверху экрана.
     private lateinit var receiverUserName: String
-    private  lateinit var builder:NotificationCompat.Builder
+    private lateinit var builder: NotificationCompat.Builder
+
     /**
      * Метод, срабатывающий при открытии страницы
      */
@@ -69,9 +70,8 @@ class ChatActivity : AppCompatActivity() {
         initialize()
         createNotificationChannel()
     }
+
     private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = CHANNEL_ID
             val descriptionText = CHANNEL_ID
@@ -208,7 +208,7 @@ class ChatActivity : AppCompatActivity() {
                 } else if (msg.receiver == auth.currentUser.uid && msg.sender == receiverUserId) {
                     msg.isMine = false
                     messageAdapter?.add(msg)
-                    if(SignInActivity.currentUser.notification){
+                    if (SignInActivity.currentUser.notification) {
                         builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
                             .setSmallIcon(R.drawable.ic_message)
                             .setContentTitle(receiverUserName)

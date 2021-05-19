@@ -8,18 +8,18 @@ class User : Serializable {
     var id: String? = null
     var avatarMock: Int = 0
     var favList: MutableList<Int>? = null
-    var usersList:MutableList<String>?=null
-    var occupation:String?=null
-    var isOccupationActivated:Boolean = false
-    var city:String?=null
-    var isCityActivated:Boolean = false
-    var socialNetworkUrl:String?=null
-    var isNetworkActivated:Boolean = false
-    var isEmailActivated:Boolean = false
-    var superId:String?=null
-    var searchingCompany:Boolean = false
-    var friends:ArrayList<String> = ArrayList()
-    var friendsActivated:Boolean = true
-    var notification:Boolean = true;
+    var usersList: MutableList<String>? = null
+    var occupation: String? = null
+    var isOccupationActivated: Boolean = false
+    var city: String? = null
+    var isCityActivated: Boolean = false
+    var socialNetworkUrl: String? = null
+    var isNetworkActivated: Boolean = false
+    var isEmailActivated: Boolean = false
+    var superId: String? = null
+    var searchingCompany: Boolean = false
+    var friends: ArrayList<String> = ArrayList()
+    var friendsActivated: Boolean = true
+    var notification: Boolean = true;
 
 }

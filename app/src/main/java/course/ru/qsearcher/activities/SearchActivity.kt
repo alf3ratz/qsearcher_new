@@ -32,7 +32,6 @@ class SearchActivity : AppCompatActivity(), EventListener {
     private var categories: ArrayList<String> = ArrayList()
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activitySearchBinding = DataBindingUtil.setContentView(this, R.layout.activity_search)
@@ -40,9 +39,9 @@ class SearchActivity : AppCompatActivity(), EventListener {
     }
 
 
-     fun eventsWithSelectedCategories(categories: ArrayList<String>) {
+    fun eventsWithSelectedCategories(categories: ArrayList<String>) {
         val query = categories.joinToString().replace(" ", "")
-        viewModel.eventsWithSelectedCategories(query).observe(this,  { t: EventResponse? ->
+        viewModel.eventsWithSelectedCategories(query).observe(this, { t: EventResponse? ->
             if (t != null) {
                 if (t.events != null) {
                     val oldCount: Int = events.size
@@ -127,17 +126,6 @@ class SearchActivity : AppCompatActivity(), EventListener {
             RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-//                if (!activitySearchBinding?.eventsRecyclerView?.canScrollVertically(1)!!) {
-////                    if (activitySearchBinding?.inputSearch?.text.toString()
-////                            .isNotEmpty() && activitySearchBinding?.inputSearch?.text.toString()
-////                            .isNotBlank()
-////                    ) {
-//////                        searchEvent(
-//////                            activitySearchBinding?.inputSearch?.text.toString().trim().toLowerCase()
-//////                        )
-//////                        activitySearchBinding?.inputSearch?.setText("")
-////                    }
-//                }
             }
         })
         activitySearchBinding?.inputSearch?.requestFocus()
@@ -145,7 +133,6 @@ class SearchActivity : AppCompatActivity(), EventListener {
 
     @SuppressLint("DefaultLocale")
     private fun searchEvent(query: String) {
-        //toggleLoading()
         val oldCount = events.size
         for (event in MainActivity.staticEvents) {
             if (event.name!!.toLowerCase().contains(query)) {
@@ -153,7 +140,6 @@ class SearchActivity : AppCompatActivity(), EventListener {
                     events.add(event)
             }
         }
-        //events = eventsTemp
         eventsAdapter?.notifyDataSetChanged()
         eventsAdapter?.notifyItemRangeChanged(oldCount, events.size)
     }

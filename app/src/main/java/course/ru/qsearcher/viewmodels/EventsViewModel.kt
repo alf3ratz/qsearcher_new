@@ -25,9 +25,6 @@ class EventsViewModel(@NonNull application: Application) : AndroidViewModel(appl
         return eventsRepository.getMostPopularEvents(page)
     }
 
-//    fun getEventsById(id: Int): LiveData<SingleEventResponse> {
-//        return eventsRepository.getEventsById(id)
-//    }
 
     fun eventsWithSelectedCategories(categories: String): LiveData<EventResponse> {
         return eventsRepository.eventsWithSelectedCategories(categories)

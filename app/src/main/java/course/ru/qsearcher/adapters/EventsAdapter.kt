@@ -12,7 +12,6 @@ import course.ru.qsearcher.listeners.EventListener
 import course.ru.qsearcher.model.Event
 
 
-
 class EventsAdapter(events_: List<Event>, eventsListener_: EventListener) :
     RecyclerView.Adapter<EventViewHolder>() {
 

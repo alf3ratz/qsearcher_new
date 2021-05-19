@@ -5,6 +5,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: "kotlin-kapt"
 apply plugin: 'androidx.navigation.safeargs'
 
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.1"
@@ -13,8 +14,8 @@ android {
         applicationId "course.ru.qsearcher"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "4"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,9 +42,9 @@ android {
 //    }
     signingConfigs {
         release {
-            storeFile file("C:\\Users\\User1337\\keystores\\qsearcherKey.jks")
+            storeFile file("C:\\Users\\User1337\\keystores\\qsearcherRelease.jks")
             storePassword "qsearcherPswd"
-            keyAlias "qsearcher"
+            keyAlias "key0"
             keyPassword "qsearcherPswd"
         }
 
@@ -53,6 +54,11 @@ android {
                 signingConfig signingConfigs.release
                 proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             }
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -65,6 +71,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
     // Google
     implementation 'com.google.android.gms:play-services-location:18.0.0'
     implementation 'com.google.maps.android:maps-ktx:2.3.0'

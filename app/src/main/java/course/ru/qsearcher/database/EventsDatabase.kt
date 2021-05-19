@@ -15,6 +15,7 @@ import course.ru.qsearcher.utilities.CustomTypeConverter
 abstract class EventsDatabase : RoomDatabase() {
     companion object {
         private var eventsDatabase: EventsDatabase? = null
+
         @Synchronized
         fun getEventsDatabase(context: Context): EventsDatabase {
             if (eventsDatabase == null) {
@@ -25,6 +26,7 @@ abstract class EventsDatabase : RoomDatabase() {
             return eventsDatabase as EventsDatabase
         }
     }
+
     abstract fun eventsDao(): EventDao
 }
 
